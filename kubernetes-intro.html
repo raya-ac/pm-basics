@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kubernetes Introduction -- ref.guide</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0f0f13; color: #e8e8f0; font-family: system-ui, -apple-system, sans-serif; font-size: 15px; line-height: 1.7; }
+    a { color: #7c6af7; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .progress-bar { position: fixed; top: 0; left: 0; width: 60%; height: 4px; background: #7c6af7; z-index: 1000; }
+    nav { position: fixed; top: 4px; left: 0; right: 0; height: 56px; background: #17171d; border-bottom: 1px solid #2a2a36; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; z-index: 999; }
+    .nav-logo { font-weight: 700; font-size: 1.1rem; color: #e8e8f0; letter-spacing: -0.02em; }
+    .nav-logo span { color: #7c6af7; }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a { color: #888899; font-size: 0.85rem; font-weight: 500; transition: color 0.15s; }
+    .nav-links a:hover { color: #e8e8f0; text-decoration: none; }
+    main { max-width: 860px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .hero { margin-bottom: 3rem; }
+    .hero h1 { font-size: 2.6rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+    .hero p { color: #888899; font-size: 1.1rem; max-width: 580px; }
+    .hero-meta { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1.25rem; }
+    .tag { background: #1e1e27; color: #7c6af7; font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 20px; letter-spacing: 0.02em; }
+    section { margin-bottom: 2rem; }
+    .card { background: #17171d; border: 1px solid #2a2a36; border-radius: 10px; padding: 1.5rem; }
+    h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: #e8e8f0; }
+    h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; color: #e8e8f0; }
+    p { margin-bottom: 0.75rem; color: #c8c8d8; }
+    p:last-child { margin-bottom: 0; }
+    ul, ol { padding-left: 1.25rem; margin-bottom: 0.75rem; color: #c8c8d8; }
+    li { margin-bottom: 0.35rem; }
+    pre { background: #1e1e27; color: #4dd0e1; padding: 1rem 1.25rem; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; line-height: 1.6; margin: 0.75rem 0; font-family: 'Menlo', 'Consolas', monospace; }
+    code { background: #1e1e27; color: #4dd0e1; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85rem; font-family: 'Menlo', 'Consolas', monospace; }
+    .table-wrap { overflow-x: auto; margin-top: 0.75rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th { text-align: left; padding: 0.6rem 0.9rem; background: #1e1e27; color: #888899; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #2a2a36; }
+    td { padding: 0.7rem 0.9rem; border-bottom: 1px solid #2a2a36; color: #c8c8d8; vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #1e1e27; }
+    .concept-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .concept-card { background: #1e1e27; border: 1px solid #2a2a36; border-radius: 8px; padding: 1rem; }
+    .concept-name { font-weight: 700; font-size: 0.95rem; color: #7c6af7; margin-bottom: 0.3rem; }
+    .concept-desc { font-size: 0.82rem; color: #888899; line-height: 1.55; }
+    .deploy-flow { display: flex; flex-direction: column; gap: 0; margin-top: 1rem; }
+    .deploy-step { display: flex; align-items: flex-start; gap: 1rem; padding: 0.85rem 0; border-bottom: 1px solid #2a2a36; position: relative; }
+    .deploy-step:last-child { border-bottom: none; }
+    .step-icon { flex-shrink: 0; width: 32px; height: 32px; background: #1e1e27; border: 2px solid #7c6af7; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; color: #7c6af7; margin-top: 0.1rem; }
+    .step-content h3 { margin-bottom: 0.15rem; font-size: 0.95rem; }
+    .step-content p { margin-bottom: 0; font-size: 0.85rem; color: #888899; }
+    .scaling-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+    .scaling-card { background: #1e1e27; border: 1px solid #2a2a36; border-radius: 8px; padding: 1rem; }
+    .scaling-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #7c6af7; margin-bottom: 0.4rem; }
+    .scaling-card p { font-size: 0.85rem; margin-bottom: 0; }
+    .pm-box { background: #17171d; border: 1px solid #7c6af7; border-radius: 10px; padding: 1.5rem; }
+    .pm-box h2 { color: #7c6af7; }
+  </style>
+</head>
+<body>
+  <div class="progress-bar"></div>
+  <nav>
+    <a href="/code/pm-site/index.html" class="nav-logo">ref<span>.</span>guide</a>
+    <div class="nav-links">
+      <a href="#">Engineering</a>
+      <a href="#">Data</a>
+      <a href="#">Writing</a>
+      <a href="#">Product</a>
+      <a href="#">DevOps</a>
+      <a href="#">Web</a>
+      <a href="#">Career</a>
+    </div>
+  </nav>
+  <main>
+    <div class="hero">
+      <h1>Kubernetes</h1>
+      <p>Container orchestration -- how teams run Docker at scale across many servers.</p>
+      <div class="hero-meta">
+        <span class="tag">kubernetes</span>
+        <span class="tag">k8s</span>
+        <span class="tag">containers</span>
+        <span class="tag">devops</span>
+        <span class="tag">scaling</span>
+      </div>
+    </div>
+
+    <section>
+      <div class="card">
+        <h2>What is Kubernetes?</h2>
+        <p>Kubernetes (abbreviated <strong>k8s</strong> -- the 8 letters between K and s) is an open-source system for automating the deployment, scaling, and management of containerised applications. Originally created at Google, it is now maintained by the Cloud Native Computing Foundation (CNCF) and is the industry standard for running containers in production.</p>
+        <p>If Docker is the technology that packages an application into a container, Kubernetes is the system that decides <em>where</em> that container runs, keeps it healthy, scales it up when traffic spikes, and rolls out new versions without downtime.</p>
+        <p>Kubernetes handles four hard problems at scale:</p>
+        <ul>
+          <li><strong>Scheduling:</strong> Placing containers onto the right servers based on available CPU and memory.</li>
+          <li><strong>Self-healing:</strong> Automatically restarting crashed containers, replacing unhealthy ones, and rescheduling when a server fails.</li>
+          <li><strong>Scaling:</strong> Adding or removing container instances in response to traffic load -- automatically or on command.</li>
+          <li><strong>Rolling deploys:</strong> Updating containers to a new version gradually, with zero downtime and automatic rollback on failure.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Core Concepts</h2>
+        <div class="concept-grid">
+          <div class="concept-card"><div class="concept-name">Pod</div><div class="concept-desc">The smallest deployable unit in k8s. A pod wraps one or more containers that share a network and storage. Most pods contain a single container.</div></div>
+          <div class="concept-card"><div class="concept-name">Node</div><div class="concept-desc">A physical or virtual machine in the cluster. Kubernetes schedules pods onto nodes based on available resources. A cluster typically has many nodes.</div></div>
+          <div class="concept-card"><div class="concept-name">Cluster</div><div class="concept-desc">The full set of nodes managed by Kubernetes. The control plane manages the cluster state; worker nodes run the actual application pods.</div></div>
+          <div class="concept-card"><div class="concept-name">Deployment</div><div class="concept-desc">Describes the desired state of your application: which image to run, how many replicas, update strategy. Kubernetes reconciles actual state with the desired state continuously.</div></div>
+          <div class="concept-card"><div class="concept-name">Service</div><div class="concept-desc">A stable network endpoint that routes traffic to a set of pods. Since pods are ephemeral and change IPs, a Service provides a consistent address for other services to connect to.</div></div>
+          <div class="concept-card"><div class="concept-name">Ingress</div><div class="concept-desc">Manages external HTTP/HTTPS traffic into the cluster. Routes requests from the internet to the correct internal Service based on hostname or URL path rules.</div></div>
+          <div class="concept-card"><div class="concept-name">Namespace</div><div class="concept-desc">A virtual partition within a cluster. Teams use namespaces to separate environments (staging vs production) or different services within a cluster.</div></div>
+          <div class="concept-card"><div class="concept-name">ConfigMap</div><div class="concept-desc">Stores non-secret configuration data (feature flags, API endpoints, env vars) separately from the container image, so config can change without rebuilding the image.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>How a Deploy Works in Kubernetes</h2>
+        <p>From a code push to running in production, here is the typical flow:</p>
+        <div class="deploy-flow">
+          <div class="deploy-step"><div class="step-icon">1</div><div class="step-content"><h3>Code push triggers CI</h3><p>Engineer merges a pull request. The CI pipeline runs tests and, on success, builds a new Docker image tagged with the commit SHA.</p></div></div>
+          <div class="deploy-step"><div class="step-icon">2</div><div class="step-content"><h3>Image pushed to registry</h3><p>The new image is pushed to a container registry (AWS ECR, GCR, etc.) with its unique tag. The old image remains available for rollbacks.</p></div></div>
+          <div class="deploy-step"><div class="step-icon">3</div><div class="step-content"><h3>Deployment manifest updated</h3><p>The CI pipeline updates the Kubernetes Deployment manifest with the new image tag, then applies it to the cluster with <code>kubectl apply -f</code>.</p></div></div>
+          <div class="deploy-step"><div class="step-icon">4</div><div class="step-content"><h3>Kubernetes rolls out new pods</h3><p>k8s starts new pods with the updated image. By default, it uses a rolling update: brings up new pods one at a time before terminating old ones. Traffic shifts gradually.</p></div></div>
+          <div class="deploy-step"><div class="step-icon">5</div><div class="step-content"><h3>Health checks gate the rollout</h3><p>k8s runs readiness probes on each new pod. If a pod fails its health check, the rollout pauses automatically -- old pods keep serving traffic while engineers investigate.</p></div></div>
+          <div class="deploy-step"><div class="step-icon">6</div><div class="step-content"><h3>Old pods terminate</h3><p>Once all new pods are healthy and serving traffic, the old pods are gracefully terminated. A full rollback is one command: <code>kubectl rollout undo deployment/my-app</code>.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Key kubectl Commands</h2>
+        <p><code>kubectl</code> is the command-line tool for interacting with a Kubernetes cluster. Engineers use these in day-to-day operations and incident response:</p>
+        <pre># List all pods in the current namespace
+kubectl get pods
+
+# List pods in all namespaces
+kubectl get pods --all-namespaces
+
+# Get detailed info about a specific pod (useful for debugging)
+kubectl describe pod &lt;pod-name&gt;
+
+# Stream logs from a pod
+kubectl logs -f &lt;pod-name&gt;
+
+# Apply a configuration file (deploy a new version, update config)
+kubectl apply -f deployment.yaml
+
+# Check the status of a rolling deployment
+kubectl rollout status deployment/my-app
+
+# Roll back to the previous version
+kubectl rollout undo deployment/my-app
+
+# Scale a deployment to 5 replicas manually
+kubectl scale deployment/my-app --replicas=5
+
+# Open a shell inside a running pod
+kubectl exec -it &lt;pod-name&gt; -- sh</pre>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Scaling in Kubernetes</h2>
+        <div class="scaling-grid">
+          <div class="scaling-card">
+            <div class="scaling-label">Horizontal Pod Autoscaler (HPA)</div>
+            <p>Automatically adjusts the number of pod replicas based on observed CPU utilisation or custom metrics (like request rate). When traffic spikes, k8s adds pods. When it drops, pods are removed.</p>
+          </div>
+          <div class="scaling-card">
+            <div class="scaling-label">Resource Requests and Limits</div>
+            <p>Each container declares how much CPU and memory it <em>requests</em> (guaranteed) and its <em>limit</em> (maximum). This lets the scheduler pack pods efficiently and prevents a runaway process from starving its neighbours.</p>
+          </div>
+        </div>
+        <p style="margin-top:1rem">Setting accurate resource requests is one of the most impactful reliability improvements a team can make. Under-provisioned limits cause OOM kills; over-provisioned requests waste money on idle capacity.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="pm-box">
+        <h2>For PMs: What Kubernetes Enables</h2>
+        <p><strong>What k8s enables for your product:</strong></p>
+        <ul>
+          <li><strong>Zero-downtime deploys:</strong> Rolling updates mean users never hit a "down for maintenance" page. New versions roll out while old ones keep serving traffic.</li>
+          <li><strong>Auto-scaling for traffic spikes:</strong> If you run a marketing campaign and traffic 10x's, k8s can spin up additional pods within seconds -- no manual intervention, no weekend on-call scramble.</li>
+          <li><strong>Environment parity:</strong> Staging and production run identical Kubernetes configs, making staging a reliable signal of production behaviour.</li>
+          <li><strong>Faster incident recovery:</strong> Self-healing means crashed pods restart automatically. Many incidents resolve themselves before users notice.</li>
+        </ul>
+        <p style="margin-top:1rem"><strong>Questions to ask your SRE or platform team:</strong></p>
+        <ul>
+          <li>Do we have Horizontal Pod Autoscaling configured for high-traffic services? What metrics trigger scaling?</li>
+          <li>What is our rollback strategy for a bad deploy? How long does a rollback take?</li>
+          <li>Do our pods have readiness and liveness probes configured? (These are what make zero-downtime deploys and self-healing actually work.)</li>
+          <li>Are resource requests and limits set accurately? When did we last review them against actual usage?</li>
+          <li>What is our process for a full cluster incident vs. a single pod issue?</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
