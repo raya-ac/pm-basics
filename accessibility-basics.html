@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accessibility Basics — ref.guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0f0f13;
+    --surface: #17171d;
+    --surface2: #1e1e27;
+    --border: #2a2a36;
+    --accent: #7c6af7;
+    --text: #e8e8f0;
+    --muted: #888899;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; font-size: 15px; line-height: 1.7; }
+
+  .progress-bar { position: fixed; top: 0; left: 0; width: 60%; height: 4px; background: var(--accent); z-index: 1000; }
+
+  nav { position: fixed; top: 4px; left: 0; right: 0; height: 56px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; z-index: 999; }
+  .nav-logo { font-weight: 700; font-size: 1.1rem; color: var(--accent); text-decoration: none; letter-spacing: -0.02em; }
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+
+  main { max-width: 860px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+
+  .hero { margin-bottom: 3rem; }
+  .hero h1 { font-size: 2.6rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+  .hero p { font-size: 1.15rem; color: var(--muted); max-width: 580px; }
+
+  section { margin-bottom: 2.5rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
+  h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--text); }
+  h3 { font-size: 1rem; font-weight: 600; color: var(--accent); margin: 1.2rem 0 0.4rem; }
+  p { margin-bottom: 0.75rem; }
+  p:last-child { margin-bottom: 0; }
+  ul, ol { padding-left: 1.4rem; margin-bottom: 0.75rem; }
+  li { margin-bottom: 0.3rem; }
+
+  pre { background: var(--surface2); border-radius: 8px; padding: 1rem; overflow-x: auto; margin: 1rem 0; }
+  code { font-family: 'Fira Mono', 'Cascadia Code', monospace; font-size: 0.88rem; color: #4dd0e1; }
+  p code, li code { background: var(--surface2); padding: 0.1em 0.4em; border-radius: 4px; font-size: 0.85em; }
+
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+  th { background: var(--surface2); color: var(--muted); font-weight: 600; text-align: left; padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--border); }
+  td { padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(124,106,247,0.04); }
+
+  /* POUR grid */
+  .pour-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1rem 0; }
+  .pour-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem; }
+  .pour-card .pour-title { font-size: 1rem; font-weight: 700; color: var(--accent); margin-bottom: 0.4rem; }
+  .pour-card p { font-size: 0.88rem; color: var(--muted); margin: 0; }
+
+  /* Level badges */
+  .level-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0; }
+  .level-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem; text-align: center; }
+  .level-badge { display: inline-block; font-size: 1.3rem; font-weight: 800; color: var(--accent); margin-bottom: 0.4rem; }
+  .level-card p { font-size: 0.83rem; color: var(--muted); margin: 0; }
+
+  .callout { background: rgba(124,106,247,0.08); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin: 1rem 0; }
+  .callout strong { color: var(--accent); }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+  .tag { background: var(--surface2); color: var(--accent); border: 1px solid var(--border); border-radius: 20px; padding: 0.2rem 0.75rem; font-size: 0.78rem; font-weight: 500; }
+
+  .impact-high { color: #f87171; font-weight: 600; }
+  .impact-med { color: #facc15; font-weight: 600; }
+
+  @media (max-width: 600px) {
+    .pour-grid, .level-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 1.9rem; }
+    nav { padding: 0 1rem; }
+    .nav-links { gap: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+<div class="progress-bar"></div>
+
+<nav>
+  <a href="/code/pm-site/index.html" class="nav-logo">ref.guide</a>
+  <ul class="nav-links">
+    <li><a href="#">Engineering</a></li>
+    <li><a href="#">Data</a></li>
+    <li><a href="#">Writing</a></li>
+    <li><a href="#">Product</a></li>
+    <li><a href="#">DevOps</a></li>
+    <li><a href="#">Web</a></li>
+    <li><a href="#">Career</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="hero">
+    <h1>Accessibility Basics</h1>
+    <p>Building products that work for everyone — and why it's non-negotiable.</p>
+  </div>
+
+  <!-- Why it matters -->
+  <section>
+    <div class="card">
+      <h2>Why Accessibility Matters</h2>
+      <p>Accessibility (a11y) is about ensuring people with disabilities can perceive, understand, navigate, and interact with your product. It's not a niche concern.</p>
+      <ul>
+        <li>An estimated <strong>1.3 billion people</strong> — about 16% of the global population — live with some form of disability (WHO, 2023).</li>
+        <li>Disabilities include visual (blindness, low vision, colour blindness), motor (limited fine motor control), hearing (deafness, hard of hearing), and cognitive (dyslexia, ADHD, memory impairments).</li>
+        <li>Many users experience <em>situational</em> disabilities: bright sunlight, a broken arm, a noisy environment. Accessible design helps everyone.</li>
+      </ul>
+      <h3>Legal Requirements</h3>
+      <ul>
+        <li><strong>WCAG 2.1/2.2:</strong> The W3C's Web Content Accessibility Guidelines. The globally accepted technical standard. Most laws reference WCAG 2.1 AA as the baseline.</li>
+        <li><strong>ADA (USA):</strong> The Americans with Disabilities Act. Courts have increasingly ruled that websites must be accessible. High-profile lawsuits (Domino's, Netflix) have set precedent.</li>
+        <li><strong>EN 301 549 (EU):</strong> The European standard for ICT accessibility, required for public sector procurement. The European Accessibility Act (EAA) extends this to private sector products from June 2025.</li>
+        <li><strong>AODA (Canada), DDA (Australia), Equality Act (UK):</strong> Similar requirements in other major markets.</li>
+      </ul>
+      <div class="callout">
+        <strong>The business case:</strong> Beyond compliance, accessible products reach more users, often have better SEO (semantic HTML helps crawlers), and require less retrofitting debt. It's cheaper to build it right than to fix it later.
+      </div>
+    </div>
+  </section>
+
+  <!-- WCAG POUR -->
+  <section>
+    <div class="card">
+      <h2>WCAG: The POUR Principles</h2>
+      <p>WCAG is organised around four core principles. Every guideline and success criterion maps to one of these.</p>
+      <div class="pour-grid">
+        <div class="pour-card">
+          <div class="pour-title">Perceivable</div>
+          <p>Information and UI components must be presentable to users in ways they can perceive. Content can't be invisible to all their senses. Example: text alternatives for images, captions for video.</p>
+        </div>
+        <div class="pour-card">
+          <div class="pour-title">Operable</div>
+          <p>UI components and navigation must be operable. Users can't be required to do things they cannot perform. Example: all functionality available via keyboard, no seizure-inducing flashes.</p>
+        </div>
+        <div class="pour-card">
+          <div class="pour-title">Understandable</div>
+          <p>Information and operation of the UI must be understandable. Example: consistent navigation, clear error messages, readable text, predictable page behaviour.</p>
+        </div>
+        <div class="pour-card">
+          <div class="pour-title">Robust</div>
+          <p>Content must be robust enough to be interpreted by assistive technologies. Example: valid HTML, correct ARIA usage, forward-compatible markup that works with future tools.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WCAG Levels -->
+  <section>
+    <div class="card">
+      <h2>WCAG Conformance Levels</h2>
+      <div class="level-grid">
+        <div class="level-card">
+          <div class="level-badge">A</div>
+          <p>Minimum. Addresses the most critical barriers. Not meeting Level A means some users simply cannot use the product at all.</p>
+        </div>
+        <div class="level-card">
+          <div class="level-badge">AA</div>
+          <p>The legal and industry standard. Covers the most common barriers. This is what laws and procurement requirements typically specify.</p>
+        </div>
+        <div class="level-card">
+          <div class="level-badge">AAA</div>
+          <p>Highest level. Not required by most standards. Some criteria are impossible to meet for all content types. Aim for where feasible.</p>
+        </div>
+      </div>
+      <p style="margin-top:0.75rem;">In practice, targeting <strong>WCAG 2.1 AA</strong> covers the vast majority of users with disabilities and satisfies legal requirements in most jurisdictions. Focus here first.</p>
+    </div>
+  </section>
+
+  <!-- Common issues table -->
+  <section>
+    <div class="card">
+      <h2>Common Accessibility Issues</h2>
+      <table>
+        <thead>
+          <tr><th>Issue</th><th>Impact</th><th>Fix</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Low colour contrast</strong></td>
+            <td><span class="impact-high">High</span> — affects users with low vision or colour blindness</td>
+            <td>Ensure text meets 4.5:1 contrast ratio (AA). Large text: 3:1. Use a contrast checker tool.</td>
+          </tr>
+          <tr>
+            <td><strong>Missing alt text</strong></td>
+            <td><span class="impact-high">High</span> — screen reader users get no context for images</td>
+            <td>Add descriptive <code>alt</code> attributes. Decorative images: <code>alt=""</code>. Informative images: describe their content and purpose.</td>
+          </tr>
+          <tr>
+            <td><strong>Keyboard traps</strong></td>
+            <td><span class="impact-high">High</span> — keyboard-only users get stuck in modals or widgets</td>
+            <td>Ensure focus can always move out of any component with Tab or Escape. Test without a mouse.</td>
+          </tr>
+          <tr>
+            <td><strong>No focus indicator</strong></td>
+            <td><span class="impact-high">High</span> — keyboard users can't see where they are on the page</td>
+            <td>Never do <code>outline: none</code> without a custom visible replacement. Use <code>:focus-visible</code> for styling.</td>
+          </tr>
+          <tr>
+            <td><strong>Missing form labels</strong></td>
+            <td><span class="impact-med">Med</span> — screen readers can't announce what a field is for</td>
+            <td>Use <code>&lt;label for="..."&gt;</code> associated with every input. Placeholders alone are not sufficient.</td>
+          </tr>
+          <tr>
+            <td><strong>ARIA misuse</strong></td>
+            <td><span class="impact-med">Med</span> — incorrect roles confuse assistive technologies</td>
+            <td>Use native HTML elements first (<code>&lt;button&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>). Add ARIA only to supplement, never to replace semantics.</td>
+          </tr>
+          <tr>
+            <td><strong>No skip navigation</strong></td>
+            <td><span class="impact-med">Med</span> — keyboard users must tab through entire nav on every page</td>
+            <td>Add a visually hidden "Skip to main content" link as the first focusable element on every page.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Testing tools -->
+  <section>
+    <div class="card">
+      <h2>Testing Tools</h2>
+      <table>
+        <thead>
+          <tr><th>Tool</th><th>Type</th><th>What It Covers</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>axe DevTools</strong></td><td>Automated (browser extension)</td><td>Catches ~30–40% of WCAG issues automatically. Fast, zero setup. Available as a Chrome/Firefox extension and CI integration (axe-core).</td></tr>
+          <tr><td><strong>Lighthouse Accessibility Audit</strong></td><td>Automated</td><td>Built into Chrome DevTools. Scores 0–100. Good starting point, overlaps with axe. Run in CI with Lighthouse CI.</td></tr>
+          <tr><td><strong>NVDA (Windows)</strong></td><td>Manual (screen reader)</td><td>Free, widely-used Windows screen reader. Essential for testing the actual user experience of blind users.</td></tr>
+          <tr><td><strong>VoiceOver (macOS/iOS)</strong></td><td>Manual (screen reader)</td><td>Built into Apple devices. Cmd+F5 to enable on Mac. Critical for testing iOS experiences.</td></tr>
+          <tr><td><strong>Keyboard-only navigation</strong></td><td>Manual</td><td>Unplug your mouse. Tab through every flow. Can you complete every task? Is focus always visible? Simple and powerful.</td></tr>
+          <tr><td><strong>Colour Contrast Analyser</strong></td><td>Manual</td><td>Desktop app by TPGi. Pick any two colours on screen, get the contrast ratio instantly.</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">
+        <strong>No automated tool catches everything.</strong> Automated tools reliably find ~30–40% of issues. Manual testing with a screen reader and keyboard is the only way to find the rest. Include at least one manual check in your QA process.
+      </div>
+    </div>
+  </section>
+
+  <!-- For PMs -->
+  <section>
+    <div class="card">
+      <h2>For PMs: Making Accessibility Stick</h2>
+      <h3>Include A11y in Acceptance Criteria</h3>
+      <p>If accessibility isn't in the definition of done, it won't get done. Add criteria like:</p>
+      <ul>
+        <li>All interactive elements are reachable and operable by keyboard.</li>
+        <li>All images have appropriate alt text.</li>
+        <li>New UI passes axe DevTools with zero critical violations.</li>
+        <li>New UI has been tested with a screen reader on at least one flow.</li>
+      </ul>
+      <h3>Estimating Remediation vs Building Right</h3>
+      <p>Industry data consistently shows that <strong>retrofitting accessibility costs 3–10x more</strong> than building it in from the start. A contrast issue caught in design review takes minutes to fix. The same issue found post-launch requires a code change, QA cycle, and release.</p>
+      <p>When scoping remediation work, common effort categories are:</p>
+      <ul>
+        <li><strong>Quick wins (hours):</strong> contrast fixes, alt text, label associations, skip links.</li>
+        <li><strong>Medium effort (days):</strong> focus management in modals/SPAs, ARIA refactoring, form error patterns.</li>
+        <li><strong>High effort (sprints):</strong> rebuilding inaccessible custom components (date pickers, data tables, drag-and-drop).</li>
+      </ul>
+      <h3>Practical Starting Point</h3>
+      <p>Don't try to fix everything at once. Run axe on your most-used pages, fix all critical violations, then add accessibility checks to your CI pipeline so the debt doesn't grow back.</p>
+    </div>
+  </section>
+
+  <div class="tags">
+    <span class="tag">accessibility</span>
+    <span class="tag">a11y</span>
+    <span class="tag">wcag</span>
+    <span class="tag">inclusive-design</span>
+    <span class="tag">screen-readers</span>
+    <span class="tag">keyboard</span>
+  </div>
+</main>
+</body>
+</html>
