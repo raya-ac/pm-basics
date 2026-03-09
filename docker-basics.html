@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Docker Basics -- ref.guide</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0f0f13; color: #e8e8f0; font-family: system-ui, -apple-system, sans-serif; font-size: 15px; line-height: 1.7; }
+    a { color: #7c6af7; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .progress-bar { position: fixed; top: 0; left: 0; width: 60%; height: 4px; background: #7c6af7; z-index: 1000; }
+    nav { position: fixed; top: 4px; left: 0; right: 0; height: 56px; background: #17171d; border-bottom: 1px solid #2a2a36; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; z-index: 999; }
+    .nav-logo { font-weight: 700; font-size: 1.1rem; color: #e8e8f0; letter-spacing: -0.02em; }
+    .nav-logo span { color: #7c6af7; }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a { color: #888899; font-size: 0.85rem; font-weight: 500; transition: color 0.15s; }
+    .nav-links a:hover { color: #e8e8f0; text-decoration: none; }
+    main { max-width: 860px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .hero { margin-bottom: 3rem; }
+    .hero h1 { font-size: 2.6rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+    .hero p { color: #888899; font-size: 1.1rem; max-width: 580px; }
+    .hero-meta { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1.25rem; }
+    .tag { background: #1e1e27; color: #7c6af7; font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 20px; letter-spacing: 0.02em; }
+    section { margin-bottom: 2rem; }
+    .card { background: #17171d; border: 1px solid #2a2a36; border-radius: 10px; padding: 1.5rem; }
+    h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: #e8e8f0; }
+    h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; color: #e8e8f0; }
+    p { margin-bottom: 0.75rem; color: #c8c8d8; }
+    p:last-child { margin-bottom: 0; }
+    ul, ol { padding-left: 1.25rem; margin-bottom: 0.75rem; color: #c8c8d8; }
+    li { margin-bottom: 0.35rem; }
+    pre { background: #1e1e27; color: #4dd0e1; padding: 1rem 1.25rem; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; line-height: 1.6; margin: 0.75rem 0; font-family: 'Menlo', 'Consolas', monospace; }
+    code { background: #1e1e27; color: #4dd0e1; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85rem; font-family: 'Menlo', 'Consolas', monospace; }
+    .table-wrap { overflow-x: auto; margin-top: 0.75rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th { text-align: left; padding: 0.6rem 0.9rem; background: #1e1e27; color: #888899; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #2a2a36; }
+    td { padding: 0.7rem 0.9rem; border-bottom: 1px solid #2a2a36; color: #c8c8d8; vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #1e1e27; }
+    .concept-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .concept-card { background: #1e1e27; border: 1px solid #2a2a36; border-radius: 8px; padding: 1rem; }
+    .concept-name { font-weight: 700; font-size: 0.95rem; color: #7c6af7; margin-bottom: 0.3rem; }
+    .concept-desc { font-size: 0.82rem; color: #888899; line-height: 1.55; }
+    .workflow-steps { display: flex; flex-direction: column; gap: 0; margin-top: 1rem; }
+    .workflow-step { display: flex; align-items: flex-start; gap: 1rem; padding: 0.85rem 0; border-bottom: 1px solid #2a2a36; }
+    .workflow-step:last-child { border-bottom: none; }
+    .step-num { flex-shrink: 0; width: 28px; height: 28px; background: #7c6af7; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: #fff; margin-top: 0.1rem; }
+    .step-body h3 { margin-bottom: 0.2rem; }
+    .step-body p { margin-bottom: 0; font-size: 0.88rem; color: #888899; }
+    .pm-box { background: #17171d; border: 1px solid #7c6af7; border-radius: 10px; padding: 1.5rem; }
+    .pm-box h2 { color: #7c6af7; }
+    .vs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+    .vs-card { background: #1e1e27; border: 1px solid #2a2a36; border-radius: 8px; padding: 1rem; }
+    .vs-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
+    .vs-label.vm { color: #f0a04d; }
+    .vs-label.container { color: #7c6af7; }
+    .vs-card ul { font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <div class="progress-bar"></div>
+  <nav>
+    <a href="/code/pm-site/index.html" class="nav-logo">ref<span>.</span>guide</a>
+    <div class="nav-links">
+      <a href="#">Engineering</a>
+      <a href="#">Data</a>
+      <a href="#">Writing</a>
+      <a href="#">Product</a>
+      <a href="#">DevOps</a>
+      <a href="#">Web</a>
+      <a href="#">Career</a>
+    </div>
+  </nav>
+  <main>
+    <div class="hero">
+      <h1>Docker Basics</h1>
+      <p>Containers explained -- what they are, why they matter, and what PMs need to know.</p>
+      <div class="hero-meta">
+        <span class="tag">docker</span>
+        <span class="tag">containers</span>
+        <span class="tag">devops</span>
+        <span class="tag">deployment</span>
+      </div>
+    </div>
+
+    <section>
+      <div class="card">
+        <h2>What is a Container?</h2>
+        <p>A container is a lightweight, standalone, executable package of software that includes everything needed to run an application: code, runtime, system tools, system libraries, and settings. Containers isolate software from its environment and ensure it works uniformly across development, staging, and production.</p>
+        <p>The famous problem containers solve: <strong>"It works on my machine."</strong> When a developer says this, it usually means their local environment has different OS versions, library versions, or config than production. Docker eliminates that gap by packaging the environment alongside the code.</p>
+        <div class="vs-grid">
+          <div class="vs-card">
+            <div class="vs-label vm">Virtual Machines (VMs)</div>
+            <ul>
+              <li>Include a full OS guest layer</li>
+              <li>Slow to start (minutes)</li>
+              <li>Heavy -- GBs per VM</li>
+              <li>Strong isolation boundary</li>
+              <li>Good for running different OSes</li>
+            </ul>
+          </div>
+          <div class="vs-card">
+            <div class="vs-label container">Containers (Docker)</div>
+            <ul>
+              <li>Share the host OS kernel</li>
+              <li>Fast to start (seconds or less)</li>
+              <li>Lightweight -- MBs per image</li>
+              <li>Process-level isolation</li>
+              <li>Ideal for microservices and CI/CD</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Key Concepts</h2>
+        <div class="concept-grid">
+          <div class="concept-card"><div class="concept-name">Image</div><div class="concept-desc">A read-only template used to create containers. Built from a Dockerfile. Think of it as a snapshot of the application and its environment. Images are versioned and stored in registries.</div></div>
+          <div class="concept-card"><div class="concept-name">Container</div><div class="concept-desc">A running instance of an image. You can run many containers from the same image. Containers are ephemeral by default -- stopping one loses any data written inside it.</div></div>
+          <div class="concept-card"><div class="concept-name">Dockerfile</div><div class="concept-desc">A text file with instructions for building a Docker image. Defines the base OS, copies in code, runs install commands, and sets the startup command.</div></div>
+          <div class="concept-card"><div class="concept-name">Registry</div><div class="concept-desc">A storage and distribution system for Docker images. Docker Hub is the public default. Teams use private registries like AWS ECR, Google Artifact Registry, or GitHub Container Registry.</div></div>
+          <div class="concept-card"><div class="concept-name">Volume</div><div class="concept-desc">A way to persist data generated and used by containers. Volumes live outside the container filesystem so data survives container restarts and removals.</div></div>
+          <div class="concept-card"><div class="concept-name">Network</div><div class="concept-desc">Docker's virtual network layer. Containers on the same network can talk to each other by name. By default, containers are isolated from the host network.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Dockerfile Example</h2>
+        <p>A Dockerfile for a Node.js application. Each line is an instruction that creates a layer in the image:</p>
+        <pre># Use the official Node 18 Alpine image as the base (small footprint)
+FROM node:18-alpine
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy dependency manifests first (enables Docker layer caching)
+COPY package*.json ./
+
+# Install production dependencies
+RUN npm install --production
+
+# Copy the rest of the application source code
+COPY . .
+
+# Expose the port the app listens on
+EXPOSE 3000
+
+# Define the command to run when the container starts
+CMD ["node", "server.js"]</pre>
+        <p>The order of instructions matters for build performance. Copying <code>package.json</code> before the source code means Docker only re-runs <code>npm install</code> when dependencies change -- not on every code edit.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Common Docker Commands</h2>
+        <p>Engineers use these commands daily. Useful to recognise them in PR descriptions, CI logs, and runbooks:</p>
+        <pre># Build an image from the Dockerfile in the current directory
+docker build -t my-app:latest .
+
+# Run a container from an image, mapping port 3000
+docker run -p 3000:3000 my-app:latest
+
+# Run in detached (background) mode
+docker run -d -p 3000:3000 my-app:latest
+
+# List running containers
+docker ps
+
+# Stream logs from a running container
+docker logs -f &lt;container-id&gt;
+
+# Stop a running container
+docker stop &lt;container-id&gt;
+
+# Start all services defined in docker-compose.yml
+docker-compose up
+
+# Rebuild and start services
+docker-compose up --build
+
+# Execute a command inside a running container (e.g. open a shell)
+docker exec -it &lt;container-id&gt; sh</pre>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Docker in the Development Workflow</h2>
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-num">1</div>
+            <div class="step-body"><h3>Local Development Parity</h3><p>Engineers run <code>docker-compose up</code> locally to spin up the full application stack -- app server, database, cache -- in seconds. No "it works on my machine" surprises because everyone runs the same image.</p></div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-num">2</div>
+            <div class="step-body"><h3>CI/CD Pipeline</h3><p>On every pull request, the CI system builds a Docker image and runs tests inside it. If tests pass, the image is pushed to a registry tagged with the commit SHA. The exact image that passed tests is what gets deployed.</p></div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-num">3</div>
+            <div class="step-body"><h3>Staging Environments</h3><p>Staging runs the same Docker image as production, just pointed at a staging database and config. This makes staging a reliable pre-production gate -- if it works in staging, it will work in prod.</p></div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-num">4</div>
+            <div class="step-body"><h3>Production Deployment</h3><p>Orchestrators like Kubernetes pull the approved image from the registry and run it across multiple servers. Rollbacks are as simple as telling the orchestrator to run the previous image tag.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="pm-box">
+        <h2>For PMs: What Docker Enables</h2>
+        <p><strong>Why "works on my machine" is solved:</strong></p>
+        <ul>
+          <li>Before containers, subtle differences between developer laptops, CI servers, and production caused bugs that were hard to reproduce and expensive to fix. Docker packages the entire environment, making every environment identical.</li>
+          <li>This is why you should care: environment inconsistencies inflate engineering estimates and post-launch incidents. Teams with good containerisation have fewer "works in staging, broken in prod" incidents.</li>
+        </ul>
+        <p style="margin-top:1rem"><strong>What Docker enables for deployment speed:</strong></p>
+        <ul>
+          <li><strong>Faster deploys:</strong> Spinning up a new container takes seconds vs. minutes for a VM. This makes frequent small deploys practical.</li>
+          <li><strong>Reliable rollbacks:</strong> Rolling back means redeploying the previous container image -- a deterministic, fast operation rather than a risky manual process.</li>
+          <li><strong>Feature flags + containers:</strong> You can run multiple versions of a service simultaneously by running different container image tags, enabling gradual rollouts and A/B testing at the infrastructure level.</li>
+          <li><strong>Onboarding speed:</strong> New engineers can run the full product locally with a single command. This reduces "first PR" time from days to hours.</li>
+        </ul>
+        <p style="margin-top:1rem"><strong>Questions to ask your team:</strong> Are your environments containerised and consistent? How long does it take to roll back a bad deploy? How long does local setup take for a new hire?</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
