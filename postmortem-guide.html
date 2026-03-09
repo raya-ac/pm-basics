@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Postmortem Guide — ref.guide</title>
+<style>
+:root{--bg:#0f0f13;--surface:#17171d;--surface2:#1e1e27;--border:#2a2a36;--accent:#7c6af7;--acc2:#f06292;--acc3:#4dd0e1;--acc4:#66bb6a;--text:#e8e8f0;--muted:#888899;--radius:10px;--nav-h:56px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6;min-height:100vh}
+nav{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(15,15,19,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px}
+.nav-logo{font-weight:700;font-size:1rem;color:var(--text);text-decoration:none;letter-spacing:-.02em}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:4px;margin-left:auto}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.85rem;padding:6px 12px;border-radius:6px;transition:all .2s}
+.nav-links a:hover{color:var(--text);background:var(--surface2)}
+.nav-links a.active{color:var(--accent);background:rgba(124,106,247,.12)}
+.hero{padding:64px 24px 40px;max-width:860px;margin:0 auto}
+.hero-tag{display:inline-block;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border-radius:20px;padding:4px 12px;margin-bottom:16px}
+.hero h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:12px}
+.hero p{color:var(--muted);font-size:1.05rem;max-width:600px}
+.content{max-width:860px;margin:0 auto;padding:0 24px 80px}
+.section{margin-bottom:48px}
+.section h2{font-size:1.25rem;font-weight:700;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.icon{width:28px;height:28px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:12px;transition:border-color .2s}
+.card:hover{border-color:var(--accent)}
+.card h3{font-size:.95rem;font-weight:600;margin-bottom:6px}
+.card p,.card li{font-size:.875rem;color:var(--muted);line-height:1.6}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.callout{background:rgba(124,106,247,.08);border:1px solid rgba(124,106,247,.25);border-left:3px solid var(--accent);border-radius:var(--radius);padding:16px 20px;margin:16px 0;font-size:.9rem;line-height:1.7}
+.callout strong{color:var(--accent)}
+.callout.pink{background:rgba(240,98,146,.08);border-color:rgba(240,98,146,.25);border-left-color:var(--acc2)}
+.callout.pink strong{color:var(--acc2)}
+.tag{display:inline-block;font-size:.7rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-right:6px;margin-bottom:4px}
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:8px;top:8px;bottom:0;width:2px;background:var(--border)}
+.tl-item{position:relative;margin-bottom:20px}
+.tl-item::before{content:'';position:absolute;left:-24px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+.tl-label{font-size:.75rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.tl-title{font-size:.95rem;font-weight:600;margin-bottom:4px}
+.tl-desc{font-size:.875rem;color:var(--muted)}
+code{font-family:'SF Mono',Monaco,monospace;font-size:.82rem;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 6px}
+pre{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;overflow-x:auto;font-size:.82rem;line-height:1.6;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:.875rem}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.sev-badge{display:inline-block;padding:3px 10px;border-radius:4px;font-size:.78rem;font-weight:700;letter-spacing:.04em}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">ref<span>.</span>guide</a>
+  <div class="nav-links">
+    <a href="engineering-basics.html">Eng</a>
+    <a href="sql-basics.html">Data</a>
+    <a href="writing-for-engineers.html" class="active">Writing</a>
+    <a href="roadmapping.html">Product</a>
+    <a href="devops-basics.html">DevOps</a>
+    <a href="api-design.html">Web</a>
+    <a href="engineering-career.html">Career</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag" style="background:rgba(240,98,146,.15);color:var(--acc2)">Writing</div>
+  <h1>Postmortem Guide</h1>
+  <p>How to run blameless postmortems that actually improve your system — and your team's trust.</p>
+</div>
+
+<div class="content">
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(240,98,146,.15);color:var(--acc2)">&#9881;</span> Why Blameless Postmortems</h2>
+    <div class="callout">
+      <strong>Core principle:</strong> Every failure is a failure of the system, not an individual. People act rationally given the information and tools available to them at the time. Blame silences the truth; blameless postmortems surface it.
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3>What you gain</h3>
+        <ul style="padding-left:16px;margin-top:4px">
+          <li>Honest timelines — people report what actually happened</li>
+          <li>Root causes, not surface symptoms</li>
+          <li>Psychological safety to speak up next incident</li>
+          <li>Institutional memory that outlasts any single engineer</li>
+          <li>Measurable improvement over time via action items</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>What blame costs you</h3>
+        <ul style="padding-left:16px;margin-top:4px">
+          <li>Engineers hide near-misses to avoid punishment</li>
+          <li>Root causes stay buried — problems recur</li>
+          <li>Top performers leave when blamed publicly</li>
+          <li>Incidents take longer to resolve (people hesitant to act)</li>
+          <li>Culture of fear replaces culture of learning</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(240,98,146,.15);color:var(--acc2)">&#9888;</span> Severity Levels</h2>
+    <table>
+      <thead>
+        <tr><th>Severity</th><th>Definition</th><th>Examples</th><th>Response</th><th>Postmortem Required?</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="sev-badge" style="background:rgba(240,98,146,.2);color:var(--acc2)">SEV-1</span></td>
+          <td>Complete outage or critical data loss affecting all users</td>
+          <td>Site down, payment processing broken, data breach</td>
+          <td>All-hands; incident commander assigned immediately</td>
+          <td><strong style="color:var(--acc2)">Always</strong> — due within 5 business days</td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge" style="background:rgba(124,106,247,.2);color:var(--accent)">SEV-2</span></td>
+          <td>Major feature broken or significant user subset impacted</td>
+          <td>Checkout broken for mobile, API latency 10x baseline</td>
+          <td>On-call + owning team engaged within 30 min</td>
+          <td><strong style="color:var(--accent)">Yes</strong> — due within 1 week</td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge" style="background:rgba(77,208,225,.2);color:var(--acc3)">SEV-3</span></td>
+          <td>Minor degradation, workaround exists</td>
+          <td>Slow dashboard, non-critical integration failing</td>
+          <td>On-call triages; fix in next sprint if not urgent</td>
+          <td>Optional — lightweight recap encouraged</td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge" style="background:rgba(102,187,106,.2);color:var(--acc4)">SEV-4</span></td>
+          <td>Cosmetic or low-impact issue</td>
+          <td>UI glitch, stale cache in non-critical report</td>
+          <td>Ticket filed; addressed in normal sprint cycle</td>
+          <td>No — file a bug</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(240,98,146,.15);color:var(--acc2)">&#128337;</span> Writing Timeline</h2>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-label">During incident</div>
+        <div class="tl-title">Live incident document</div>
+        <div class="tl-desc">Keep a running log in a shared doc or incident channel. Timestamp every significant action. Capture hypotheses tested, commands run, alerts fired. This is raw material — accuracy over prose.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-label">Within 24 hours</div>
+        <div class="tl-title">Draft timeline + initial facts</div>
+        <div class="tl-desc">While memory is fresh, produce a factual timeline. Tag who did what. Identify the contributing factors you already know. No conclusions yet — just facts.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-label">Within 48–72 hours</div>
+        <div class="tl-title">Postmortem meeting</div>
+        <div class="tl-desc">30–60 min meeting with all responders. Walk the timeline. Apply 5-Whys or fishbone to root causes. Agree on action items with owners and due dates. A facilitator who was NOT the on-call responder runs the meeting.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-label">Within 1 week</div>
+        <div class="tl-title">Published postmortem</div>
+        <div class="tl-desc">Finalize and share broadly. Send to eng-all, leadership summary optional. The doc lives in your postmortem index permanently.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-label">Within 30 days</div>
+        <div class="tl-title">Action item follow-up</div>
+        <div class="tl-desc">Review completion of all action items in the incident retrospective or sprint review. Blocked items escalate. Don't let action items rot — it signals postmortems don't matter.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(240,98,146,.15);color:var(--acc2)">&#128196;</span> The 7-Section Structure</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3>1. Summary</h3>
+        <p>2–4 sentences. What broke, when, how many users affected, how it was resolved. Written for a non-technical executive. Example: <em>"On 2024-03-15, the checkout service experienced a 47-minute outage affecting ~12,000 users due to an uncaught nil pointer after a config deploy. No data was lost."</em></p>
+      </div>
+      <div class="card">
+        <h3>2. Impact</h3>
+        <p>Quantify everything: duration, % users affected, revenue impact, error rates, SLO burn. Use data from your observability tools. Stakeholders need numbers, not vague descriptions like "many users."</p>
+      </div>
+      <div class="card">
+        <h3>3. Timeline</h3>
+        <p>Chronological log with UTC timestamps. Include: first alert, when responders joined, hypotheses tested, mitigation applied, full resolution. Keep it factual — no editorializing.</p>
+      </div>
+      <div class="card">
+        <h3>4. Root Cause Analysis</h3>
+        <p>The real why, not the proximate trigger. Use 5-Whys or fishbone. A deploy caused a crash, but WHY was there no test? WHY did the test gap exist? Work until you hit a systemic factor.</p>
+      </div>
+      <div class="card">
+        <h3>5. Contributing Factors</h3>
+        <p>List every factor that made the incident worse or harder to detect: missing alerts, confusing runbooks, unclear ownership, lack of feature flags, insufficient load testing.</p>
+      </div>
+      <div class="card">
+        <h3>6. What Went Well</h3>
+        <p>Essential and often skipped. What did the team do right? Fast detection? Good communication? Effective runbook? Reinforce these behaviors explicitly.</p>
+      </div>
+    </div>
+    <div class="card" style="margin-top:4px">
+      <h3>7. Action Items</h3>
+      <p style="margin-bottom:8px">Every action item needs: a clear description, an owner (one person), a due date, and a ticket link. Categorize by type: <span class="tag" style="background:rgba(240,98,146,.15);color:var(--acc2)">Prevent</span> <span class="tag" style="background:rgba(124,106,247,.15);color:var(--accent)">Detect</span> <span class="tag" style="background:rgba(77,208,225,.15);color:var(--acc3)">Mitigate</span> <span class="tag" style="background:rgba(102,187,106,.15);color:var(--acc4)">Process</span></p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(240,98,146,.15);color:var(--acc2)">&#10067;</span> 5-Whys Example</h2>
+    <div class="callout pink">
+      <strong>Incident:</strong> Production database ran out of disk space, causing 2-hour downtime.
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-label">Why #1</div>
+        <div class="tl-title">The database ran out of disk space</div>
+        <div class="tl-desc">&#8594; Because the disk filled up with transaction logs</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-label">Why #2</div>
+        <div class="tl-title">Transaction logs were not being rotated</div>
+        <div class="tl-desc">&#8594; Because the log rotation cron job was disabled</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-label">Why #3</div>
+        <div class="tl-title">The cron job was disabled</div>
+        <div class="tl-desc">&#8594; Because an engineer disabled it during debugging 3 weeks ago and forgot to re-enable it</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-label">Why #4</div>
+        <div class="tl-title">No alert existed for the disabled cron</div>
+        <div class="tl-desc">&#8594; Because cron jobs are not monitored for execution frequency</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-label">Why #5 — Root Cause</div>
+        <div class="tl-title">No standard for monitoring scheduled jobs</div>
+        <div class="tl-desc">&#8594; <strong>Action item:</strong> Add heartbeat monitoring to all production cron jobs. Owner: platform team. Due: 2024-04-01.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(240,98,146,.15);color:var(--acc2)">&#128172;</span> Blameless Language Guide</h2>
+    <table>
+      <thead><tr><th>Avoid (blame-ful)</th><th>Use instead (blameless)</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr><td><span style="color:var(--acc2)">"Alice forgot to test the change"</span></td><td>"The change was deployed without a test covering this code path"</td><td>Points to the system gap, not the person</td></tr>
+        <tr><td><span style="color:var(--acc2)">"Bob made a mistake"</span></td><td>"The configuration value was set incorrectly"</td><td>Passive voice removes personal blame</td></tr>
+        <tr><td><span style="color:var(--acc2)">"The engineer should have known"</span></td><td>"The documentation did not make this behavior clear"</td><td>Focuses on missing information, not competence</td></tr>
+        <tr><td><span style="color:var(--acc2)">"Careless deployment"</span></td><td>"Deployment proceeded without a canary phase"</td><td>Identifies the missing safeguard</td></tr>
+        <tr><td><span style="color:var(--acc2)">"Obvious error"</span></td><td>"The failure mode was not surfaced by existing tooling"</td><td>"Obvious" in hindsight is never obvious in the moment</td></tr>
+        <tr><td><span style="color:var(--acc2)">"Negligence"</span></td><td>"The process did not include a verification step"</td><td>Blame never improves a process</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(240,98,146,.15);color:var(--acc2)">&#9989;</span> Good vs Bad Action Items</h2>
+    <table>
+      <thead><tr><th>Bad action item</th><th>Good action item</th><th>What changed</th></tr></thead>
+      <tbody>
+        <tr><td>"Be more careful with deploys"</td><td>"Add automated rollback trigger when error rate exceeds 1% within 5 min of deploy — owner: @carlos, due: 2024-04-15, ticket: ENG-1204"</td><td>Specific, measurable, owned, time-bound</td></tr>
+        <tr><td>"Fix monitoring"</td><td>"Create alert for disk utilization &gt;80% on prod DB nodes — owner: @infra-team, due: 2024-03-22"</td><td>Concrete threshold, clear owner</td></tr>
+        <tr><td>"Improve communication"</td><td>"Add #incident-comms channel to runbook as mandatory update destination for SEV-1/2 — owner: @eng-ops, due: 2024-03-25"</td><td>Actionable change to a specific artifact</td></tr>
+        <tr><td>"Train the team"</td><td>"Schedule 60-min incident response drill for all on-call engineers by end of Q2 — owner: @eng-manager"</td><td>Specific activity with deadline</td></tr>
+      </tbody>
+    </table>
+    <div class="callout" style="margin-top:16px">
+      <strong>Rule of thumb:</strong> If an action item cannot be verified as "done" or "not done" in 30 days, rewrite it. Vague AIs are abandoned AIs.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
