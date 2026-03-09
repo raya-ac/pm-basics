@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Onboarding Engineers — ref.guide</title>
+<style>
+:root{--bg:#0f0f13;--surface:#17171d;--surface2:#1e1e27;--border:#2a2a36;--accent:#7c6af7;--acc2:#f06292;--acc3:#4dd0e1;--acc4:#66bb6a;--text:#e8e8f0;--muted:#888899;--radius:10px;--nav-h:56px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,sans-serif;line-height:1.6;padding-top:calc(var(--nav-h) + 8px)}
+.progress{position:fixed;top:0;left:0;width:60%;height:4px;background:var(--accent);z-index:1000}
+nav{position:fixed;top:4px;left:0;right:0;height:var(--nav-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;z-index:999;gap:2rem}
+.logo{font-weight:700;font-size:1.1rem;color:var(--accent);text-decoration:none;margin-right:auto}
+nav a{color:var(--muted);text-decoration:none;font-size:0.85rem}nav a:hover{color:var(--text)}
+main{max-width:860px;margin:0 auto;padding:2rem}
+.hero{padding:3rem 0 2rem}
+.hero h1{font-size:2.4rem;font-weight:700;margin-bottom:0.5rem}
+.hero p{color:var(--muted);font-size:1.1rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem}
+.card h2{font-size:1.2rem;font-weight:600;margin-bottom:1rem;color:var(--accent)}
+.card h3{font-size:1rem;font-weight:600;margin:1rem 0 0.5rem}
+p{margin-bottom:0.8rem}
+table{width:100%;border-collapse:collapse;font-size:0.9rem}
+th{background:var(--surface2);color:var(--muted);text-align:left;padding:0.6rem 0.8rem;border-bottom:1px solid var(--border)}
+td{padding:0.6rem 0.8rem;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem}
+.mini-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1rem}
+.mini-card h4{font-size:0.9rem;font-weight:600;margin-bottom:0.4rem}
+.mini-card p{font-size:0.85rem;color:var(--muted);margin:0}
+.warn{border-left:3px solid var(--acc2);padding-left:1rem;color:var(--muted);font-size:0.9rem;margin-bottom:0.8rem}
+.tip{border-left:3px solid var(--acc4);padding-left:1rem;color:var(--muted);font-size:0.9rem;margin-bottom:0.8rem}
+.tags{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1rem}
+.tag{background:var(--surface2);border:1px solid var(--border);color:var(--accent);font-size:0.75rem;padding:0.2rem 0.6rem;border-radius:20px}
+</style>
+</head>
+<body>
+<div class="progress"></div>
+<nav>
+  <a class="logo" href="/code/pm-site/index.html">ref.guide</a>
+  <a href="/code/pm-site/engineering-basics.html">Engineering</a>
+  <a href="/code/pm-site/sql-basics.html">Data</a>
+  <a href="/code/pm-site/writing-for-engineers.html">Writing</a>
+  <a href="/code/pm-site/roadmapping.html">Product</a>
+  <a href="/code/pm-site/devops-basics.html">DevOps</a>
+  <a href="/code/pm-site/seo-basics.html">Web</a>
+  <a href="/code/pm-site/engineering-career.html">Career</a>
+</nav>
+<main>
+  <div class="hero">
+    <h1>Onboarding Engineers</h1>
+    <p>How to ramp up new engineers fast — and set them up to do their best work.</p>
+  </div>
+
+  <div class="card">
+    <h2>Why Onboarding Matters</h2>
+    <p>A poor onboarding experience costs more than people realise. Engineers who struggle in their first 30 days are significantly more likely to disengage or leave within a year. Studies suggest it takes 8–12 weeks for a new engineer to reach full productivity — bad onboarding can double that.</p>
+    <div class="grid">
+      <div class="mini-card"><h4>3x Retention</h4><p>Engineers with structured onboarding are 3x more likely to stay past year one.</p></div>
+      <div class="mini-card"><h4>8-Week Ramp</h4><p>Average time to first meaningful independent contribution with good onboarding.</p></div>
+      <div class="mini-card"><h4>45-Day Window</h4><p>First impressions form quickly. Most engineers decide if they'll stay by day 45.</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>The 30/60/90 Day Framework</h2>
+    <table>
+      <thead><tr><th>Timeframe</th><th>Focus</th><th>Goal</th></tr></thead>
+      <tbody>
+        <tr><td>Days 1–5</td><td>Setup &amp; orientation</td><td>Dev environment running, codebase cloned, met the team, attended first standup</td></tr>
+        <tr><td>Week 2–4</td><td>First contribution</td><td>Merged first PR (small bug fix or doc update), understands deploy process</td></tr>
+        <tr><td>Month 2</td><td>Independent feature work</td><td>Owns a small feature end-to-end, participates in code reviews, asks fewer questions</td></tr>
+        <tr><td>Month 3</td><td>Full team member</td><td>Mentors next new hire, proposes one process improvement, estimates their own work</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Onboarding Checklist</h2>
+    <div class="grid">
+      <div class="mini-card"><h4>Dev Environment</h4><p>Repo cloned, local build works, linter configured, IDE set up, test suite passes.</p></div>
+      <div class="mini-card"><h4>Access &amp; Permissions</h4><p>GitHub, Jira/Linear, Slack, staging env, cloud console read access, password manager.</p></div>
+      <div class="mini-card"><h4>Codebase Orientation</h4><p>Architecture overview, key services, data models, "how we deploy" doc, runbooks.</p></div>
+      <div class="mini-card"><h4>Team Process</h4><p>Sprint cadence, PR review norms, commit message conventions, on-call rotation.</p></div>
+      <div class="mini-card"><h4>Social</h4><p>1:1s scheduled with manager and teammates, joined team Slack channels, attended team lunch/coffee.</p></div>
+      <div class="mini-card"><h4>First Task</h4><p>A pre-picked "good first issue" — small, well-scoped, with clear acceptance criteria.</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Common Onboarding Failures</h2>
+    <div class="warn">No clear owner — everyone assumes someone else is running the onboarding. New hire floats for a week.</div>
+    <div class="warn">No starter task — new hire reads docs for two weeks without writing a single line of code.</div>
+    <div class="warn">Firehose of context — six architecture deep-dives in week one. Nothing sticks.</div>
+    <div class="warn">Ignoring culture — technical ramp succeeds but the engineer never understands team norms, values, or how decisions get made.</div>
+    <div class="warn">No feedback loops — no check-ins at 2 weeks, 30 days, or 60 days to catch problems early.</div>
+  </div>
+
+  <div class="card">
+    <h2>For PMs: How to Help</h2>
+    <div class="tip">Share product context early. New engineers do better work when they understand the "why" — the user, the business model, the strategy.</div>
+    <div class="tip">Don't measure velocity in week one. Give new engineers space to explore without feeling evaluated on output.</div>
+    <div class="tip">Introduce them to key stakeholders. A PM intro to design, data, and customer success pays off for months.</div>
+    <div class="tip">Protect their ramp time. Don't pull a new engineer into a critical fire in week two unless absolutely unavoidable.</div>
+    <div class="tip">Ask for their fresh eyes. "What's confusing about this codebase / process?" — new engineers spot problems long-timers are blind to.</div>
+    <div class="tags">
+      <span class="tag">onboarding</span>
+      <span class="tag">hiring</span>
+      <span class="tag">engineering</span>
+      <span class="tag">culture</span>
+      <span class="tag">team</span>
+    </div>
+  </div>
+</main>
+</body>
+</html>
