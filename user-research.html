@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Research — ref.guide</title>
+<style>
+:root{--bg:#0f0f13;--surface:#17171d;--surface2:#1e1e27;--border:#2a2a36;--accent:#7c6af7;--acc2:#f06292;--acc3:#4dd0e1;--acc4:#66bb6a;--text:#e8e8f0;--muted:#888899;--radius:10px;--nav-h:56px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6;min-height:100vh}
+nav{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(15,15,19,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px}
+.nav-logo{font-weight:700;font-size:1rem;color:var(--text);text-decoration:none;letter-spacing:-.02em}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:4px;margin-left:auto}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.85rem;padding:6px 12px;border-radius:6px;transition:all .2s}
+.nav-links a:hover{color:var(--text);background:var(--surface2)}
+.nav-links a.active{color:var(--accent);background:rgba(124,106,247,.12)}
+.hero{padding:64px 24px 40px;max-width:860px;margin:0 auto}
+.hero-tag{display:inline-block;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border-radius:20px;padding:4px 12px;margin-bottom:16px}
+.hero h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:12px}
+.hero p{color:var(--muted);font-size:1.05rem;max-width:600px}
+.content{max-width:860px;margin:0 auto;padding:0 24px 80px}
+.section{margin-bottom:48px}
+.section h2{font-size:1.25rem;font-weight:700;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.icon{width:28px;height:28px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:12px;transition:border-color .2s}
+.card:hover{border-color:var(--accent)}
+.card h3{font-size:.95rem;font-weight:600;margin-bottom:6px}
+.card p,.card li{font-size:.875rem;color:var(--muted);line-height:1.6}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.callout{background:rgba(124,106,247,.08);border:1px solid rgba(124,106,247,.25);border-left:3px solid var(--accent);border-radius:var(--radius);padding:16px 20px;margin:16px 0;font-size:.9rem;line-height:1.7}
+.callout strong{color:var(--accent)}
+.callout.pink{background:rgba(240,98,146,.08);border-color:rgba(240,98,146,.25);border-left-color:var(--acc2)}
+.callout.pink strong{color:var(--acc2)}
+.tag{display:inline-block;font-size:.7rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-right:6px;margin-bottom:4px}
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:8px;top:8px;bottom:0;width:2px;background:var(--border)}
+.tl-item{position:relative;margin-bottom:20px}
+.tl-item::before{content:'';position:absolute;left:-24px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+.tl-label{font-size:.75rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.tl-title{font-size:.95rem;font-weight:600;margin-bottom:4px}
+.tl-desc{font-size:.875rem;color:var(--muted)}
+code{font-family:'SF Mono',Monaco,monospace;font-size:.82rem;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 6px}
+pre{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;overflow-x:auto;font-size:.82rem;line-height:1.6;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:.875rem}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">ref<span>.</span>guide</a>
+  <div class="nav-links">
+    <a href="engineering-basics.html">Eng</a>
+    <a href="sql-basics.html">Data</a>
+    <a href="writing-for-engineers.html">Writing</a>
+    <a href="roadmapping.html" class="active">Product</a>
+    <a href="devops-basics.html">DevOps</a>
+    <a href="api-design.html">Web</a>
+    <a href="engineering-career.html">Career</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag" style="background:rgba(124,106,247,.15);color:var(--accent)">Product</div>
+  <h1>User Research</h1>
+  <p>Methods, templates, and synthesis techniques for understanding what users actually need — not just what they say they want.</p>
+</div>
+
+<div class="content">
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#128269;</span> Generative vs Evaluative Research</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3>Generative (discovery)</h3>
+        <p>Explores a problem space you don't fully understand yet. Answers "what should we build?" and "what problems exist?"</p>
+        <ul style="padding-left:16px;margin-top:8px">
+          <li>User interviews</li>
+          <li>Contextual inquiry (observe users in their environment)</li>
+          <li>Diary studies</li>
+          <li>Jobs-to-be-Done interviews</li>
+        </ul>
+        <div style="margin-top:10px"><span class="tag" style="background:rgba(124,106,247,.15);color:var(--accent)">Early stage</span><span class="tag" style="background:rgba(124,106,247,.15);color:var(--accent)">Qualitative</span></div>
+      </div>
+      <div class="card">
+        <h3>Evaluative (validation)</h3>
+        <p>Tests a specific solution or hypothesis. Answers "does this work?" and "is our assumption correct?"</p>
+        <ul style="padding-left:16px;margin-top:8px">
+          <li>Usability testing (can users complete the task?)</li>
+          <li>A/B tests (which variant performs better?)</li>
+          <li>Surveys (is our hypothesis widespread?)</li>
+          <li>First-click tests</li>
+        </ul>
+        <div style="margin-top:10px"><span class="tag" style="background:rgba(102,187,106,.15);color:var(--acc4)">Late stage</span><span class="tag" style="background:rgba(102,187,106,.15);color:var(--acc4)">Quant or qual</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#128101;</span> Research Methods at a Glance</h2>
+    <table>
+      <thead><tr><th>Method</th><th>Best for</th><th>Sample size</th><th>Time to run</th><th>Cost</th></tr></thead>
+      <tbody>
+        <tr><td><strong>User interviews</strong></td><td>Deep understanding of motivations, context, pain points</td><td>5–8 per segment</td><td>1–2 weeks</td><td>Low–medium</td></tr>
+        <tr><td><strong>Usability test</strong></td><td>Does the UI work? Where do users get stuck?</td><td>5–8</td><td>3–5 days</td><td>Low</td></tr>
+        <tr><td><strong>Survey</strong></td><td>Quantify how common a problem or preference is</td><td>100–500+</td><td>1 week</td><td>Low</td></tr>
+        <tr><td><strong>Contextual inquiry</strong></td><td>See actual behavior in natural environment</td><td>4–6</td><td>2–3 weeks</td><td>High</td></tr>
+        <tr><td><strong>Card sorting</strong></td><td>Information architecture, navigation design</td><td>15–20</td><td>1 week</td><td>Low</td></tr>
+        <tr><td><strong>Diary study</strong></td><td>Behavior over time, longitudinal patterns</td><td>10–20</td><td>2–4 weeks</td><td>Medium</td></tr>
+        <tr><td><strong>A/B test</strong></td><td>Which variant drives better outcomes?</td><td>1,000+</td><td>2–4 weeks</td><td>Low (eng cost)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#128172;</span> Interview Guide Template</h2>
+    <div class="callout">
+      <strong>Golden rule:</strong> Ask about behavior, not opinions. "Walk me through the last time you..." beats "What features would you like?" People are bad at predicting what they want; they're great at describing what they've done.
+    </div>
+    <pre>## Interview Guide — Checkout Flow Discovery
+Duration: 45 min | Interviewer: [name] | Date: [date]
+
+### Intro (5 min)
+- "This is not a test of you — we're testing our product."
+- "There are no wrong answers. Thinking out loud helps us most."
+- "May I record this session? It stays internal."
+
+### Warm-up (5 min)
+- Tell me a bit about your role and what you use [product] for.
+- How long have you been a customer?
+
+### Core questions (25 min)
+1. Walk me through the last time you made a purchase on [product].
+   - What triggered you to start that session?
+   - What did you do first?
+
+2. Was there a moment where you hesitated or had a question?
+   - What were you uncertain about?
+   - How did you resolve it?
+
+3. Have you ever started a checkout and not completed it?
+   - What happened? What did you do instead?
+
+4. What would have made that experience easier?
+   [Follow-up: "Tell me more" / "Why was that important to you?"]
+
+### Wrap-up (10 min)
+- Is there anything about checkout that we haven't covered?
+- If you could change one thing about this process, what would it be?
+- Who else do you know who has a different experience with this?</pre>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#128204;</span> Synthesis Techniques</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3>Affinity Mapping</h3>
+        <p>Write every observation, quote, and behavior on a sticky note (one per note). Group related notes into clusters. Name the clusters. Patterns that emerge are your themes — not pre-set categories but emergent ones.</p>
+        <p style="margin-top:8px"><strong>Tools:</strong> FigJam, Miro, physical sticky notes. Do it with the team for shared understanding.</p>
+      </div>
+      <div class="card">
+        <h3>Jobs-to-be-Done (JTBD)</h3>
+        <p>Frame user needs as jobs: <em>"When I [situation], I want to [motivation], so I can [expected outcome]."</em></p>
+        <p style="margin-top:8px">Example: "When I'm comparing plans before buying, I want to see total annual cost, so I can justify the purchase to my manager."</p>
+        <p style="margin-top:8px">JTBD reframes your product from features to outcomes. Useful for roadmap prioritization.</p>
+      </div>
+      <div class="card">
+        <h3>Opportunity-Solution Tree</h3>
+        <p>Link your desired outcome → user opportunities (unmet needs) → solutions (features). Forces you to map solutions back to real user problems before committing to build them.</p>
+      </div>
+      <div class="card">
+        <h3>Insight + Evidence format</h3>
+        <p>Structure findings as: <em>Insight (the pattern)</em> + <em>Evidence (the quotes/data that support it)</em> + <em>Implication (what we should do about it)</em>. Separates observation from interpretation.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#9878;</span> Qual vs Quant — When to Use What</h2>
+    <table>
+      <thead><tr><th>Question type</th><th>Use qual</th><th>Use quant</th></tr></thead>
+      <tbody>
+        <tr><td>Why do users drop off at step 3?</td><td>&#10003; Interviews reveal the reason</td><td>Funnel data shows that they drop off — not why</td></tr>
+        <tr><td>How many users have this problem?</td><td>Interviews confirm the problem exists</td><td>&#10003; Survey or analytics gives the count</td></tr>
+        <tr><td>Which variant converts better?</td><td>Usability test explains why one works</td><td>&#10003; A/B test measures which one wins</td></tr>
+        <tr><td>What do users actually do in the app?</td><td>&#10003; Observation catches unexpected behavior</td><td>Analytics shows aggregate patterns</td></tr>
+        <tr><td>Is our new onboarding clearer?</td><td>&#10003; Usability test shows where confusion occurs</td><td>Completion rate shows if it improved overall</td></tr>
+      </tbody>
+    </table>
+    <div class="callout" style="margin-top:16px">
+      <strong>Combine both:</strong> Qual tells you the story; quant tells you the scale. "Users are confused by the pricing page" (qual) + "42% of trial users view pricing 3+ times before converting" (quant) = a compelling case for a redesign.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#129504;</span> Common Research Biases</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3>Confirmation bias</h3>
+        <p>Designing interview questions that lead to the answer you want. Fix: Have someone who disagrees with your hypothesis review the guide. Ask open-ended questions, not leading ones.</p>
+      </div>
+      <div class="card">
+        <h3>Social desirability bias</h3>
+        <p>Participants say what they think you want to hear. Fix: Ask about past behavior, not hypothetical intent. "Would you use this?" ≠ "Tell me about the last time you tried to do this."</p>
+      </div>
+      <div class="card">
+        <h3>Availability bias</h3>
+        <p>Only interviewing the most vocal or accessible users (power users, Twitter complainers). Fix: Recruit across the full user spectrum, including quiet mid-tier users who represent the majority.</p>
+      </div>
+      <div class="card">
+        <h3>Recency bias</h3>
+        <p>Weighting the most recent interview most heavily. Fix: Synthesize after all interviews are complete, not after each one. Let patterns emerge from the full data set.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#128226;</span> Sharing Findings with Engineering</h2>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-label">Format</div><div class="tl-title">One-page research readout</div><div class="tl-desc">Context (why we did this research) → Key findings (3–5 insights, each with supporting quotes) → Implications (what we should consider doing) → Open questions (what we still don't know). Engineers read the implications section; skip the methodology.</div></div>
+      <div class="tl-item"><div class="tl-label">Quotes</div><div class="tl-title">Use verbatim quotes, not paraphrases</div><div class="tl-desc">"I always forget my password here, so I just use Google login" hits differently than "users prefer social login." Direct quotes build empathy faster than summaries.</div></div>
+      <div class="tl-item"><div class="tl-label">Involve engineers early</div><div class="tl-title">Bring engineers to research sessions</div><div class="tl-desc">Even one session changes everything. Hearing a user struggle in real time is worth a dozen research reports. Engineers who've observed users write better code for them.</div></div>
+      <div class="tl-item"><div class="tl-label">Repository</div><div class="tl-title">Maintain a research repository</div><div class="tl-desc">Store all research in one searchable place (Dovetail, Notion, Confluence). Tag by theme, persona, product area. Research compounds — a 2-year-old insight is often still valid.</div></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
