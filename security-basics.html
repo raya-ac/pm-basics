@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Security Basics — ref.guide</title>
+<style>
+:root{--bg:#0f0f13;--surface:#17171d;--surface2:#1e1e27;--border:#2a2a36;--accent:#7c6af7;--acc2:#f06292;--acc3:#4dd0e1;--acc4:#66bb6a;--text:#e8e8f0;--muted:#888899;--radius:10px;--nav-h:56px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,sans-serif;line-height:1.6;padding-top:calc(var(--nav-h) + 8px)}
+.progress{position:fixed;top:0;left:0;width:60%;height:4px;background:var(--accent);z-index:1000}
+nav{position:fixed;top:4px;left:0;right:0;height:var(--nav-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 2rem;z-index:999;gap:2rem}
+.logo{font-weight:700;font-size:1.1rem;color:var(--accent);text-decoration:none;margin-right:auto}
+nav a{color:var(--muted);text-decoration:none;font-size:0.85rem}nav a:hover{color:var(--text)}
+main{max-width:860px;margin:0 auto;padding:2rem}
+.hero{padding:3rem 0 2rem}
+.hero h1{font-size:2.4rem;font-weight:700;margin-bottom:0.5rem}
+.hero p{color:var(--muted);font-size:1.1rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem}
+.card h2{font-size:1.2rem;font-weight:600;margin-bottom:1rem;color:var(--accent)}
+p{margin-bottom:0.8rem}
+table{width:100%;border-collapse:collapse;font-size:0.9rem}
+th{background:var(--surface2);color:var(--muted);text-align:left;padding:0.6rem 0.8rem;border-bottom:1px solid var(--border)}
+td{padding:0.6rem 0.8rem;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem}
+.mini-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1rem}
+.mini-card h4{font-size:0.9rem;font-weight:600;margin-bottom:0.4rem}
+.mini-card p{font-size:0.85rem;color:var(--muted);margin:0}
+.warn{border-left:3px solid var(--acc2);padding-left:1rem;color:var(--muted);font-size:0.9rem;margin-bottom:0.8rem}
+.tip{border-left:3px solid var(--acc4);padding-left:1rem;color:var(--muted);font-size:0.9rem;margin-bottom:0.8rem}
+code{font-family:monospace;background:var(--surface2);color:var(--acc3);padding:0.15rem 0.4rem;border-radius:4px;font-size:0.85rem}
+.tags{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1rem}
+.tag{background:var(--surface2);border:1px solid var(--border);color:var(--accent);font-size:0.75rem;padding:0.2rem 0.6rem;border-radius:20px}
+.owasp-num{display:inline-block;background:var(--accent);color:#fff;font-size:0.75rem;font-weight:700;width:1.5rem;height:1.5rem;border-radius:50%;text-align:center;line-height:1.5rem;margin-right:0.5rem;flex-shrink:0}
+.owasp-item{display:flex;align-items:flex-start;gap:0.5rem;padding:0.6rem 0;border-bottom:1px solid var(--border)}
+.owasp-item:last-child{border-bottom:none}
+.owasp-name{font-weight:600;font-size:0.9rem}
+.owasp-desc{font-size:0.82rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="progress"></div>
+<nav>
+  <a class="logo" href="/code/pm-site/index.html">ref.guide</a>
+  <a href="/code/pm-site/engineering-basics.html">Engineering</a>
+  <a href="/code/pm-site/sql-basics.html">Data</a>
+  <a href="/code/pm-site/writing-for-engineers.html">Writing</a>
+  <a href="/code/pm-site/roadmapping.html">Product</a>
+  <a href="/code/pm-site/devops-basics.html">DevOps</a>
+  <a href="/code/pm-site/seo-basics.html">Web</a>
+  <a href="/code/pm-site/engineering-career.html">Career</a>
+</nav>
+<main>
+  <div class="hero">
+    <h1>Security Basics</h1>
+    <p>What every PM should understand about keeping products and data secure.</p>
+  </div>
+
+  <div class="card">
+    <h2>Why Security Is a PM Concern</h2>
+    <p>Security isn't just an infrastructure problem. Every feature you ship can introduce a vulnerability. PMs who don't think about security ship features that expose user data, open attack surfaces, and erode trust.</p>
+    <div class="grid">
+      <div class="mini-card"><h4>Features Ship Vulnerabilities</h4><p>New file upload? New attack vector. New user input field? Potential injection point. Every feature expands the attack surface.</p></div>
+      <div class="mini-card"><h4>Trust Is a Product Attribute</h4><p>Users don't separate "the product" from "security." A breach doesn't just affect infra — it damages the brand permanently.</p></div>
+      <div class="mini-card"><h4>Compliance Is a Blocker</h4><p>Enterprise sales often require SOC 2, ISO 27001, or HIPAA. Security work is a revenue enabler, not just cost.</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>OWASP Top 10</h2>
+    <p>The OWASP Top 10 is the industry standard list of the most critical web application security risks.</p>
+    <div class="owasp-item"><span class="owasp-num">1</span><div><div class="owasp-name">Injection</div><div class="owasp-desc">SQL, NoSQL, OS injection — untrusted data sent to an interpreter. Use parameterised queries, never string concat.</div></div></div>
+    <div class="owasp-item"><span class="owasp-num">2</span><div><div class="owasp-name">Broken Authentication</div><div class="owasp-desc">Weak passwords, missing MFA, session fixation. Use battle-tested auth libraries (Auth0, Cognito) rather than rolling your own.</div></div></div>
+    <div class="owasp-item"><span class="owasp-num">3</span><div><div class="owasp-name">Sensitive Data Exposure</div><div class="owasp-desc">Storing PII or secrets unencrypted. Encrypt at rest and in transit. Don't log sensitive fields.</div></div></div>
+    <div class="owasp-item"><span class="owasp-num">4</span><div><div class="owasp-name">Broken Access Control</div><div class="owasp-desc">Users accessing resources they shouldn't. Enforce server-side, not just client-side. Test every endpoint with a non-privileged user.</div></div></div>
+    <div class="owasp-item"><span class="owasp-num">5</span><div><div class="owasp-name">Security Misconfiguration</div><div class="owasp-desc">Default credentials, open S3 buckets, debug mode in prod, verbose error messages. Infrastructure as Code helps enforce correct config.</div></div></div>
+    <div class="owasp-item"><span class="owasp-num">6</span><div><div class="owasp-name">Cross-Site Scripting (XSS)</div><div class="owasp-desc">Injecting scripts into pages viewed by other users. Escape all user-generated content. Use Content-Security-Policy headers.</div></div></div>
+    <div class="owasp-item"><span class="owasp-num">7</span><div><div class="owasp-name">Insecure Deserialization</div><div class="owasp-desc">Deserialising untrusted data can lead to remote code execution. Validate and sanitise all incoming data structures.</div></div></div>
+    <div class="owasp-item"><span class="owasp-num">8</span><div><div class="owasp-name">Using Vulnerable Components</div><div class="owasp-desc">Outdated libraries with known CVEs. Use Dependabot, Snyk, or similar to automate dependency updates.</div></div></div>
+    <div class="owasp-item"><span class="owasp-num">9</span><div><div class="owasp-name">Insufficient Logging</div><div class="owasp-desc">No audit trail means breaches go undetected. Log auth events, access to sensitive data, and errors. Set up alerts.</div></div></div>
+    <div class="owasp-item"><span class="owasp-num">10</span><div><div class="owasp-name">Server-Side Request Forgery</div><div class="owasp-desc">Server fetches a URL supplied by an attacker, potentially reaching internal services. Validate and whitelist URLs.</div></div></div>
+  </div>
+
+  <div class="card">
+    <h2>Authentication vs Authorization</h2>
+    <div class="grid">
+      <div class="mini-card"><h4>Authentication (AuthN)</h4><p><em>Who are you?</em> — Verifying identity via passwords, MFA, OAuth, SSO. Most apps use a third-party provider (Auth0, Firebase Auth, Cognito).</p></div>
+      <div class="mini-card"><h4>Authorization (AuthZ)</h4><p><em>What can you do?</em> — Permissions and roles after identity is confirmed. Role-based (RBAC) or attribute-based (ABAC) access control.</p></div>
+    </div>
+    <div class="warn" style="margin-top:1rem">Common mistake: Checking auth only on the frontend. Always enforce authorization server-side on every request.</div>
+  </div>
+
+  <div class="card">
+    <h2>Key Security Concepts</h2>
+    <table>
+      <thead><tr><th>Concept</th><th>What it means</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td>Encryption at rest</td><td>Data stored encrypted on disk</td><td>AES-256 encrypted database, encrypted S3 buckets</td></tr>
+        <tr><td>Encryption in transit</td><td>Data encrypted while moving over network</td><td>HTTPS/TLS 1.3 for all API calls</td></tr>
+        <tr><td>Password hashing</td><td>Passwords stored as one-way hashes, never plaintext</td><td><code>bcrypt</code>, <code>argon2</code> — never MD5 or SHA1</td></tr>
+        <tr><td>Rate limiting</td><td>Limit requests per IP/user to prevent brute force</td><td>Max 5 failed login attempts before lockout</td></tr>
+        <tr><td>CSRF tokens</td><td>Prevent cross-site request forgery by validating request origin</td><td>Hidden token in every form submission</td></tr>
+        <tr><td>CORS</td><td>Browser policy controlling which origins can call your API</td><td>Whitelist your domain, never use <code>*</code> for sensitive APIs</td></tr>
+        <tr><td>Secrets management</td><td>Store API keys and credentials securely, not in code</td><td>AWS Secrets Manager, HashiCorp Vault, env variables</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Secure SDLC</h2>
+    <p>Security integrated into every phase of development — not bolted on at the end.</p>
+    <div class="grid">
+      <div class="mini-card"><h4>Design</h4><p>Threat modeling — "what could go wrong?" before writing code. Define trust boundaries and data flows.</p></div>
+      <div class="mini-card"><h4>Development</h4><p>SAST tools (Snyk, SonarQube) in CI. Peer review with security lens. No hardcoded secrets.</p></div>
+      <div class="mini-card"><h4>Pre-Launch</h4><p>Penetration testing for high-risk features. DAST scanning (OWASP ZAP). Dependency audit.</p></div>
+      <div class="mini-card"><h4>Post-Launch</h4><p>Bug bounty program. Continuous monitoring. Regular security reviews. Incident response plan.</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Compliance Basics</h2>
+    <div class="grid">
+      <div class="mini-card"><h4>GDPR</h4><p>EU data privacy law. Key requirements: lawful basis for processing, right to erasure, data minimisation, breach notification within 72h.</p></div>
+      <div class="mini-card"><h4>SOC 2</h4><p>Security audit framework. Type I = point-in-time, Type II = over 6–12 months. Enterprise customers often require it.</p></div>
+      <div class="mini-card"><h4>PCI-DSS</h4><p>Required if you handle card payments. Use Stripe/Braintree to avoid direct card handling — they're PCI compliant so you don't have to be.</p></div>
+      <div class="mini-card"><h4>HIPAA</h4><p>US health data law. Applies if you handle PHI (Protected Health Information). Requires BAA with all vendors who touch the data.</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>For PMs: Security in Practice</h2>
+    <div class="tip">Write security requirements explicitly. "Users can only access their own data" is an acceptance criterion, not an assumption.</div>
+    <div class="tip">Prioritise security bugs as P0/P1 if they expose user data or allow privilege escalation. Don't let them sit in the backlog.</div>
+    <div class="tip">When communicating incidents: be fast, be specific about what was affected, explain what you've done to fix it and prevent recurrence.</div>
+    <div class="tip">Involve security early in design. A 30-minute threat model session in discovery is cheaper than a pen test finding in production.</div>
+    <div class="tags">
+      <span class="tag">security</span>
+      <span class="tag">appsec</span>
+      <span class="tag">privacy</span>
+      <span class="tag">compliance</span>
+      <span class="tag">gdpr</span>
+    </div>
+  </div>
+</main>
+</body>
+</html>
