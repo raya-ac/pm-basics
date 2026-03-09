@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Data Modeling — ref.guide</title>
+<style>:root{--bg:#0f0f13;--surface:#17171d;--surface2:#1e1e27;--border:#2a2a36;--accent:#7c6af7;--acc2:#f06292;--acc3:#4dd0e1;--acc4:#66bb6a;--text:#e8e8f0;--muted:#888899;--radius:10px;--nav-h:56px}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:17px;line-height:1.7}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}code,pre{font-family:'Fira Code',monospace;font-size:0.88em}pre{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0}code:not(pre code){background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0.15em 0.45em}h1,h2,h3{line-height:1.25;font-weight:700;letter-spacing:-0.3px}h1{font-size:clamp(2rem,5vw,3rem)}h2{font-size:clamp(1.3rem,3vw,1.75rem);margin:3rem 0 1rem;padding-top:1rem;border-top:1px solid var(--border)}h3{font-size:1.15rem;margin:2rem 0 0.75rem}p{margin-bottom:1rem}ul,ol{padding-left:1.5rem;margin-bottom:1rem}li{margin-bottom:0.4rem}#progress-bar{position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,var(--accent),var(--acc2));z-index:1000}.site-nav{position:sticky;top:0;height:var(--nav-h);background:rgba(15,15,19,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);z-index:100;display:flex;align-items:center;gap:1rem;padding:0 2rem}.site-nav .logo{font-weight:700;font-size:1rem;color:var(--accent);white-space:nowrap}.site-nav .logo span{color:var(--text)}.nav-scroll{display:flex;align-items:center;gap:0.25rem;overflow-x:auto;scrollbar-width:none;flex:1}.nav-scroll::-webkit-scrollbar{display:none}.nav-scroll a{white-space:nowrap;font-size:0.82rem;color:var(--muted);padding:0.3rem 0.65rem;border-radius:20px;transition:color 0.15s,background 0.15s}.nav-scroll a:hover,.nav-scroll a.active{color:var(--text);text-decoration:none;background:var(--surface2)}.page-wrap{max-width:780px;margin:0 auto;padding:3rem 1.5rem 6rem}.hero{padding:4rem 0 3rem;border-bottom:1px solid var(--border);margin-bottom:3rem}.eyebrow{display:inline-block;background:var(--surface2);border:1px solid rgba(77,208,225,0.3);color:var(--acc3);font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.3rem 0.85rem;border-radius:20px;margin-bottom:1.25rem}.hero h1 span{background:linear-gradient(135deg,var(--acc3),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.lead{font-size:1.1rem;color:var(--muted);max-width:600px;margin-top:1rem}.callout{border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.75rem 0;border-left:4px solid}.callout-info{background:rgba(124,106,247,0.08);border-color:var(--accent)}.callout-warn{background:rgba(255,183,77,0.08);border-color:#ffb74d}.callout-danger{background:rgba(240,98,146,0.08);border-color:var(--acc2)}.callout strong{display:block;margin-bottom:0.4rem;font-size:0.85rem;letter-spacing:0.05em;text-transform:uppercase}.callout-info strong{color:var(--accent)}.callout-warn strong{color:#ffb74d}.callout-danger strong{color:var(--acc2)}.site-footer{margin-top:6rem;padding:2rem 1.5rem;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:0.85rem}@media(max-width:600px){.page-wrap{padding:2rem 1rem 5rem}.site-nav{padding:0 1rem}}</style>
+</head>
+<body>
+<div id="progress-bar"></div>
+<nav class="site-nav"><a href="index.html" class="logo">ref<span>.guide</span></a><div class="nav-scroll"><a href="index.html">Home</a><a href="engineering-basics.html">Eng Basics</a><a href="git-guide.html">Git</a><a href="code-review.html">Code Review</a><a href="ci-cd.html">CI/CD</a><a href="incident-response.html">Incidents</a><a href="system-design.html">System Design</a><a href="sql-basics.html">SQL</a><a href="data-modeling.html" class="active">Data Modeling</a><a href="analytics-basics.html">Analytics</a><a href="ab-testing.html">A/B Testing</a><a href="writing-for-engineers.html">Writing</a><a href="rfc-guide.html">RFCs</a><a href="postmortem-guide.html">Postmortems</a><a href="technical-docs.html">Tech Docs</a><a href="pm-basics.html">PM Basics</a><a href="roadmapping.html">Roadmapping</a><a href="user-research.html">User Research</a><a href="metrics-guide.html">Metrics</a><a href="prioritisation.html">Prioritisation</a><a href="devops-basics.html">DevOps</a><a href="docker-basics.html">Docker</a><a href="kubernetes-intro.html">Kubernetes</a><a href="observability.html">Observability</a><a href="seo-basics.html">SEO</a><a href="web-performance.html">Web Perf</a><a href="accessibility-basics.html">A11y</a><a href="api-design.html">API Design</a><a href="engineering-career.html">Career</a><a href="agile-basics.html">Agile</a><a href="onboarding-guide.html">Onboarding</a><a href="security-basics.html">Security</a></div></nav>
+<div class="page-wrap">
+<div class="hero"><div class="eyebrow">Data</div><h1><span>Data Modeling</span></h1><p class="lead">Star schemas, normalization, slowly changing dimensions. The decisions you make here shape every analysis your team will ever run — ignore them and your warehouse will drift into chaos.</p></div>
+
+<h2>Why this matters more than most people think</h2>
+<p>Bad data models don't stop working immediately. They accumulate problems slowly — duplicated logic across dozens of queries, metrics that are almost-but-not-quite consistent across dashboards, analysts who won't trust a number until they've manually checked it. By the time you notice, unpicking the mess is a multi-month project.</p>
+<p>Good data modeling is mostly about making the right tradeoffs early, documenting why, and being consistent about a small number of conventions.</p>
+
+<h2>Normalization vs denormalization</h2>
+<p>Normalized data (OLTP style) minimizes redundancy. Each fact lives in one place. You join tables to get the full picture. This is right for transactional systems where data changes frequently — you update a user's name in one row, not five hundred.</p>
+<p>Denormalized data (OLAP/warehouse style) copies data into wide tables optimized for analytical queries. Fewer joins, faster aggregations, easier to understand. This is right for data warehouses. The redundancy is acceptable because analytical data is usually append-only or updates infrequently.</p>
+
+<h2>The star schema</h2>
+<p>The most common warehouse pattern. A central <strong>fact table</strong> contains measurable events (orders, page views, payments) with foreign keys to <strong>dimension tables</strong> that contain descriptive attributes (users, products, dates).</p>
+<pre>-- Fact table: one row per order
+fact_orders:
+  order_id, user_id, product_id, date_id,
+  quantity, revenue, discount_amount
+
+-- Dimension tables
+dim_users:    user_id, name, country, signup_date, plan
+dim_products: product_id, name, category, unit_price
+dim_dates:    date_id, date, week, month, quarter, year, is_weekend</pre>
+<p>Queries on a star schema are predictable: join the fact table to whichever dimensions you need, aggregate. No nested subqueries hunting through a normalized schema.</p>
+
+<h2>Slowly changing dimensions</h2>
+<p>What happens when a user changes their plan, or a product changes category? The dimension value at event time was different from the current value. This is the "slowly changing dimension" problem.</p>
+<ul>
+<li><strong>SCD Type 1</strong> — overwrite. Simple, but you lose history. "What was this user's plan when they made this purchase?" becomes unanswerable.</li>
+<li><strong>SCD Type 2</strong> — add a new row for each change, with valid_from and valid_to dates. You can answer historical questions accurately, but the dimension table grows and joins get more complex.</li>
+<li><strong>SCD Type 3</strong> — add a column for the previous value. Only useful if you care about exactly one version of history.</li>
+</ul>
+<p>Most warehouses that care about attribution accuracy use Type 2 for key dimensions like users and products. It's more work to set up and maintain, but the alternative is analytics that silently give wrong answers.</p>
+
+<h2>The dbt approach</h2>
+<p>dbt (data build tool) has become the standard way to build warehouse models. You write SQL SELECT statements, dbt handles the CREATE TABLE / CREATE VIEW and dependency management. Models reference other models with <code>{{ ref('model_name') }}</code>, which builds a DAG.</p>
+<pre>-- models/marts/orders.sql
+SELECT
+  o.order_id,
+  o.created_at,
+  u.name AS user_name,
+  u.country,
+  o.revenue
+FROM {{ ref('stg_orders') }} o
+LEFT JOIN {{ ref('stg_users') }} u USING (user_id)</pre>
+<p>The layer pattern that works: raw (source data, untouched) → staging (cleaned, renamed, typed) → intermediate (joined, lightly transformed) → marts (business-facing, wide, documented). Jump straight from raw to mart and you'll regret it within six months.</p>
+
+<div class="callout callout-warn"><strong>Common data model mistakes</strong>
+Using production database IDs as warehouse keys without checking for reuse. Storing JSON blobs in a column instead of modeling the nested structure. Fan-out joins that silently multiply rows (always check row counts after a join). Metrics defined in models without documentation of the exact business logic — six months later nobody agrees on what "active user" means.</div>
+</div>
+<footer class="site-footer"><p>ref.guide &mdash; <a href="index.html">back to home</a></p></footer>
+<script>window.addEventListener('scroll',()=>{const e=document.getElementById('progress-bar');if(!e)return;const h=document.documentElement;e.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%'});</script>
+</body></html>
