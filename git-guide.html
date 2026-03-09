@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Git Guide — ref.guide</title>
+<style>
+:root{--bg:#0f0f13;--surface:#17171d;--surface2:#1e1e27;--border:#2a2a36;--accent:#7c6af7;--acc2:#f06292;--acc3:#4dd0e1;--acc4:#66bb6a;--text:#e8e8f0;--muted:#888899;--radius:10px;--nav-h:56px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:17px;line-height:1.7}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+code,pre{font-family:'Fira Code',monospace;font-size:0.88em}
+pre{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0}
+code:not(pre code){background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0.15em 0.45em}
+h1,h2,h3{line-height:1.25;font-weight:700;letter-spacing:-0.3px}
+h1{font-size:clamp(2rem,5vw,3rem)}
+h2{font-size:clamp(1.3rem,3vw,1.75rem);margin:3rem 0 1rem;padding-top:1rem;border-top:1px solid var(--border)}
+h3{font-size:1.15rem;margin:2rem 0 0.75rem}
+p{margin-bottom:1rem}ul,ol{padding-left:1.5rem;margin-bottom:1rem}li{margin-bottom:0.4rem}
+#progress-bar{position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,var(--accent),var(--acc2));z-index:1000}
+.site-nav{position:sticky;top:0;height:var(--nav-h);background:rgba(15,15,19,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);z-index:100;display:flex;align-items:center;gap:1rem;padding:0 2rem}
+.site-nav .logo{font-weight:700;font-size:1rem;color:var(--accent);white-space:nowrap}
+.site-nav .logo span{color:var(--text)}
+.nav-scroll{display:flex;align-items:center;gap:0.25rem;overflow-x:auto;scrollbar-width:none;flex:1}
+.nav-scroll::-webkit-scrollbar{display:none}
+.nav-scroll a{white-space:nowrap;font-size:0.82rem;color:var(--muted);padding:0.3rem 0.65rem;border-radius:20px;transition:color 0.15s,background 0.15s}
+.nav-scroll a:hover,.nav-scroll a.active{color:var(--text);text-decoration:none;background:var(--surface2)}
+.page-wrap{max-width:780px;margin:0 auto;padding:3rem 1.5rem 6rem}
+.hero{padding:4rem 0 3rem;border-bottom:1px solid var(--border);margin-bottom:3rem}
+.eyebrow{display:inline-block;background:var(--surface2);border:1px solid rgba(124,106,247,0.3);color:var(--accent);font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.3rem 0.85rem;border-radius:20px;margin-bottom:1.25rem}
+.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--acc2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.lead{font-size:1.1rem;color:var(--muted);max-width:600px;margin-top:1rem}
+.callout{border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.75rem 0;border-left:4px solid}
+.callout-info{background:rgba(124,106,247,0.08);border-color:var(--accent)}
+.callout-warn{background:rgba(255,183,77,0.08);border-color:#ffb74d}
+.callout-danger{background:rgba(240,98,146,0.08);border-color:var(--acc2)}
+.callout-success{background:rgba(102,187,106,0.08);border-color:var(--acc4)}
+.callout strong{display:block;margin-bottom:0.4rem;font-size:0.85rem;letter-spacing:0.05em;text-transform:uppercase}
+.callout-info strong{color:var(--accent)}.callout-warn strong{color:#ffb74d}.callout-danger strong{color:var(--acc2)}.callout-success strong{color:var(--acc4)}
+.do-dont{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.75rem 0}
+.do-col,.dont-col{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem}
+.do-col{border-top:3px solid var(--acc4)}.dont-col{border-top:3px solid var(--acc2)}
+.do-col h4{color:var(--acc4);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.85rem}
+.dont-col h4{color:var(--acc2);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.85rem}
+.do-col li,.dont-col li{font-size:0.9rem;color:var(--muted)}
+.site-footer{margin-top:6rem;padding:2rem 1.5rem;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:0.85rem}
+@media(max-width:600px){.do-dont{grid-template-columns:1fr}.page-wrap{padding:2rem 1rem 5rem}.site-nav{padding:0 1rem}}
+</style>
+</head>
+<body>
+<div id="progress-bar"></div>
+<nav class="site-nav">
+  <a href="index.html" class="logo">ref<span>.guide</span></a>
+  <div class="nav-scroll">
+    <a href="index.html">Home</a><a href="engineering-basics.html">Eng Basics</a><a href="git-guide.html" class="active">Git</a><a href="code-review.html">Code Review</a><a href="ci-cd.html">CI/CD</a><a href="incident-response.html">Incidents</a><a href="system-design.html">System Design</a><a href="sql-basics.html">SQL</a><a href="data-modeling.html">Data Modeling</a><a href="analytics-basics.html">Analytics</a><a href="ab-testing.html">A/B Testing</a><a href="writing-for-engineers.html">Writing</a><a href="rfc-guide.html">RFCs</a><a href="postmortem-guide.html">Postmortems</a><a href="technical-docs.html">Tech Docs</a><a href="pm-basics.html">PM Basics</a><a href="roadmapping.html">Roadmapping</a><a href="user-research.html">User Research</a><a href="metrics-guide.html">Metrics</a><a href="prioritisation.html">Prioritisation</a><a href="devops-basics.html">DevOps</a><a href="docker-basics.html">Docker</a><a href="kubernetes-intro.html">Kubernetes</a><a href="observability.html">Observability</a><a href="seo-basics.html">SEO</a><a href="web-performance.html">Web Perf</a><a href="accessibility-basics.html">A11y</a><a href="api-design.html">API Design</a><a href="engineering-career.html">Career</a><a href="agile-basics.html">Agile</a><a href="onboarding-guide.html">Onboarding</a><a href="security-basics.html">Security</a>
+  </div>
+</nav>
+<div class="page-wrap">
+  <div class="hero">
+    <div class="eyebrow">Engineering</div>
+    <h1><span>Git</span> Guide</h1>
+    <p class="lead">Branches, rebases, conflicts, and the history decisions that feel irrelevant until six months later when you're trying to bisect a regression.</p>
+  </div>
+
+  <h2>The mental model that actually helps</h2>
+  <p>Git stores snapshots, not diffs. Each commit is a complete picture of your repository at that point in time, with a pointer to its parent. Branches are just named pointers to commits. Once this clicks, a lot of the confusing commands start making sense.</p>
+  <p>The three trees you need to know: the working directory (what's on disk), the index/staging area (what you've <code>git add</code>ed), and HEAD (the last commit). Most commands move data between these three places.</p>
+
+  <h2>Branching strategies</h2>
+  <p>There are a few common patterns, and teams argue about them more than the differences warrant.</p>
+  <h3>Trunk-based development</h3>
+  <p>Everyone commits to <code>main</code> (or a short-lived branch that merges within a day). You ship to production frequently. Feature flags control what users see, not branches. This is what Google, Facebook, and most high-performing teams do. It requires good automated testing and a mature deployment pipeline.</p>
+  <h3>Gitflow</h3>
+  <p>Long-lived <code>develop</code> and <code>release</code> branches, with feature branches off <code>develop</code>. Made sense for software with explicit release cycles (mobile apps, packaged software). For continuous web deployment it tends to create merge hell. A lot of teams adopted it in ~2012 and haven't questioned it since.</p>
+  <h3>GitHub Flow</h3>
+  <p>Feature branches off <code>main</code>, PR, merge, deploy. Simpler than Gitflow, works well for teams deploying frequently. The main risk is a long-lived feature branch that diverges significantly before merging.</p>
+
+  <div class="callout callout-info">
+    <strong>The honest take</strong>
+    Trunk-based development is harder to start with and significantly better in practice. If your team has good test coverage and can deploy safely, the overhead of managing multiple long-lived branches is pure cost with no benefit.
+  </div>
+
+  <h2>Commits worth making</h2>
+  <p>A good commit is a logical unit of change with a message that explains why, not just what. The diff shows what changed; the message needs to explain the reasoning.</p>
+  <p>The format that ages well: a short subject line (under 72 characters), a blank line, then a body explaining the problem this commit solves and any relevant context. Referencing an issue or ticket number in the body is useful when the project has them.</p>
+  <pre>fix: prevent race condition in cart checkout
+
+When two tab sessions submitted the order form simultaneously,
+both would pass the inventory check before either decremented
+the stock count. Added a pessimistic lock on the order creation
+transaction.
+
+Fixes #2847</pre>
+  <p>Commits like <code>wip</code>, <code>asdf</code>, or <code>fix fix fix</code> are fine during active development — just squash them before the PR lands on main.</p>
+
+  <h2>Rebase vs merge</h2>
+  <p>Both integrate changes from one branch into another. They produce different histories.</p>
+  <p><strong>Merge</strong> creates a merge commit that shows two branches converged. The history is accurate but can become noisy on busy repos. <strong>Rebase</strong> replays your commits on top of the target branch as if you'd branched from the latest commit. The history is linear and clean, but you've rewritten commits — which causes problems if others have based work on the original commits.</p>
+  <p>The rule most teams settle on: rebase to clean up your own branch before a PR, never rebase shared branches.</p>
+
+  <div class="callout callout-danger">
+    <strong>Don't do this</strong>
+    <code>git push --force</code> on a branch someone else is working on. Force-pushing rewrites history on the remote, and anyone who has pulled that branch now has a diverged history. Use <code>git push --force-with-lease</code> if you must force-push — it at least checks that nobody else has pushed since your last fetch.
+  </div>
+
+  <h2>Fixing mistakes</h2>
+  <p>The most useful recovery commands, in order of how drastic they are:</p>
+  <ul>
+    <li><code>git commit --amend</code> — fix the last commit message or add a forgotten file</li>
+    <li><code>git revert &lt;hash&gt;</code> — creates a new commit that undoes a previous one. Safe on shared branches.</li>
+    <li><code>git reset --soft HEAD~1</code> — undoes the last commit but keeps the changes staged</li>
+    <li><code>git reset --hard HEAD~1</code> — undoes the last commit and discards the changes. Hard to recover from.</li>
+    <li><code>git reflog</code> — your safety net. Shows every position HEAD has been in for the last 90 days. If you've lost commits, they're probably still here.</li>
+  </ul>
+
+  <h2>Merge conflicts</h2>
+  <p>A merge conflict happens when two branches have modified the same lines of the same file. Git can't decide which version to keep, so it marks the file and asks you to decide.</p>
+  <p>The conflict markers show you three things: your changes (<code>HEAD</code>), the incoming changes, and the separator. Your job is to edit the file to reflect what the combined result should be — which sometimes means picking one side, sometimes means writing something new that incorporates both.</p>
+  <pre>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+const timeout = 3000;
+=======
+const timeout = 5000;
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/increase-timeout</pre>
+  <p>After resolving: <code>git add</code> the file, then <code>git merge --continue</code> or <code>git commit</code>. Don't leave conflict markers in the code. They will end up in production eventually.</p>
+
+  <div class="do-dont">
+    <div class="do-col">
+      <h4>Good git habits</h4>
+      <ul>
+        <li>Short-lived branches (days, not weeks)</li>
+        <li>Descriptive commit messages with context</li>
+        <li>Squash or fixup before PR merge</li>
+        <li>Pull and rebase before pushing</li>
+        <li>Tag releases so you can find them later</li>
+      </ul>
+    </div>
+    <div class="dont-col">
+      <h4>Problems in the making</h4>
+      <ul>
+        <li>Committing secrets or credentials (use git-secrets)</li>
+        <li>Binary files in the repo (use Git LFS or a CDN)</li>
+        <li>Force-pushing to main</li>
+        <li>Branch names like <code>test2-final-v3</code></li>
+        <li>500MB node_modules committed to git</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<footer class="site-footer"><p>ref.guide &mdash; <a href="index.html">back to home</a></p></footer>
+<script>window.addEventListener('scroll',()=>{const e=document.getElementById('progress-bar');if(!e)return;const h=document.documentElement;e.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%'});</script>
+</body></html>
