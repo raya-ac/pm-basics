@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Observability -- ref.guide</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0f0f13; color: #e8e8f0; font-family: system-ui, -apple-system, sans-serif; font-size: 15px; line-height: 1.7; }
+    a { color: #7c6af7; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .progress-bar { position: fixed; top: 0; left: 0; width: 60%; height: 4px; background: #7c6af7; z-index: 1000; }
+    nav { position: fixed; top: 4px; left: 0; right: 0; height: 56px; background: #17171d; border-bottom: 1px solid #2a2a36; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; z-index: 999; }
+    .nav-logo { font-weight: 700; font-size: 1.1rem; color: #e8e8f0; letter-spacing: -0.02em; }
+    .nav-logo span { color: #7c6af7; }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a { color: #888899; font-size: 0.85rem; font-weight: 500; transition: color 0.15s; }
+    .nav-links a:hover { color: #e8e8f0; text-decoration: none; }
+    main { max-width: 860px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .hero { margin-bottom: 3rem; }
+    .hero h1 { font-size: 2.6rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+    .hero p { color: #888899; font-size: 1.1rem; max-width: 580px; }
+    .hero-meta { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1.25rem; }
+    .tag { background: #1e1e27; color: #7c6af7; font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 20px; letter-spacing: 0.02em; }
+    section { margin-bottom: 2rem; }
+    .card { background: #17171d; border: 1px solid #2a2a36; border-radius: 10px; padding: 1.5rem; }
+    h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: #e8e8f0; }
+    h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; color: #e8e8f0; }
+    p { margin-bottom: 0.75rem; color: #c8c8d8; }
+    p:last-child { margin-bottom: 0; }
+    ul, ol { padding-left: 1.25rem; margin-bottom: 0.75rem; color: #c8c8d8; }
+    li { margin-bottom: 0.35rem; }
+    pre { background: #1e1e27; color: #4dd0e1; padding: 1rem 1.25rem; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; line-height: 1.6; margin: 0.75rem 0; font-family: 'Menlo', 'Consolas', monospace; }
+    code { background: #1e1e27; color: #4dd0e1; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85rem; font-family: 'Menlo', 'Consolas', monospace; }
+    .table-wrap { overflow-x: auto; margin-top: 0.75rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th { text-align: left; padding: 0.6rem 0.9rem; background: #1e1e27; color: #888899; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #2a2a36; }
+    td { padding: 0.7rem 0.9rem; border-bottom: 1px solid #2a2a36; color: #c8c8d8; vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #1e1e27; }
+    .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem; }
+    .pillar-card { background: #1e1e27; border: 1px solid #2a2a36; border-radius: 8px; padding: 1.25rem; }
+    .pillar-num { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #7c6af7; margin-bottom: 0.5rem; }
+    .pillar-name { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .pillar-question { font-size: 0.8rem; color: #7c6af7; font-style: italic; margin-bottom: 0.5rem; }
+    .pillar-desc { font-size: 0.82rem; color: #888899; line-height: 1.55; }
+    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .metric-card { background: #1e1e27; border: 1px solid #2a2a36; border-radius: 8px; padding: 1rem; }
+    .metric-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem; }
+    .metric-desc { font-size: 0.82rem; color: #888899; line-height: 1.5; margin-bottom: 0.5rem; }
+    .metric-target { font-size: 0.78rem; background: #0f0f13; border-radius: 4px; padding: 0.25rem 0.5rem; color: #4dd0e1; display: inline-block; }
+    .slo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem; }
+    .slo-card { background: #1e1e27; border: 1px solid #2a2a36; border-radius: 8px; padding: 1rem; }
+    .slo-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #7c6af7; margin-bottom: 0.4rem; }
+    .slo-name { font-weight: 800; font-size: 1rem; margin-bottom: 0.3rem; }
+    .slo-def { font-size: 0.82rem; color: #888899; line-height: 1.5; margin-bottom: 0.5rem; }
+    .slo-example { font-size: 0.8rem; color: #4dd0e1; font-family: 'Menlo', 'Consolas', monospace; }
+    .alert-list { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.75rem; }
+    .alert-item { display: flex; gap: 0.75rem; align-items: flex-start; }
+    .alert-dot { flex-shrink: 0; width: 10px; height: 10px; border-radius: 50%; margin-top: 0.45rem; }
+    .alert-dot.good { background: #4caf82; }
+    .alert-dot.bad { background: #e05a5a; }
+    .alert-text { font-size: 0.88rem; color: #c8c8d8; }
+    .alert-text strong { color: #e8e8f0; }
+    .pm-box { background: #17171d; border: 1px solid #7c6af7; border-radius: 10px; padding: 1.5rem; }
+    .pm-box h2 { color: #7c6af7; }
+    @media (max-width: 600px) { .pillars { grid-template-columns: 1fr; } .slo-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="progress-bar"></div>
+  <nav>
+    <a href="/code/pm-site/index.html" class="nav-logo">ref<span>.</span>guide</a>
+    <div class="nav-links">
+      <a href="#">Engineering</a>
+      <a href="#">Data</a>
+      <a href="#">Writing</a>
+      <a href="#">Product</a>
+      <a href="#">DevOps</a>
+      <a href="#">Web</a>
+      <a href="#">Career</a>
+    </div>
+  </nav>
+  <main>
+    <div class="hero">
+      <h1>Observability</h1>
+      <p>Logs, metrics, and traces -- the three pillars of understanding what your system is doing.</p>
+      <div class="hero-meta">
+        <span class="tag">observability</span>
+        <span class="tag">monitoring</span>
+        <span class="tag">logging</span>
+        <span class="tag">metrics</span>
+        <span class="tag">sre</span>
+      </div>
+    </div>
+
+    <section>
+      <div class="card">
+        <h2>The Three Pillars</h2>
+        <p>Observability is the ability to understand the internal state of a system from its external outputs. A system is observable when you can diagnose any failure from the data it emits -- without having to deploy new code to ask new questions.</p>
+        <p>The three pillars provide complementary views of system behaviour. You need all three to diagnose complex issues in distributed systems:</p>
+        <div class="pillars">
+          <div class="pillar-card">
+            <div class="pillar-num">Pillar 1</div>
+            <div class="pillar-name">Logs</div>
+            <div class="pillar-question">"What happened?"</div>
+            <div class="pillar-desc">Timestamped, structured records of discrete events. An HTTP request, an exception thrown, a user action completed. Logs are the most detailed signal -- ideal for debugging specific incidents once you know where to look.</div>
+          </div>
+          <div class="pillar-card">
+            <div class="pillar-num">Pillar 2</div>
+            <div class="pillar-name">Metrics</div>
+            <div class="pillar-question">"How much / how fast?"</div>
+            <div class="pillar-desc">Numerical measurements aggregated over time: request rate, error count, latency p99, CPU utilisation. Metrics are cheap to store and queryable at any resolution. They power dashboards and alert thresholds.</div>
+          </div>
+          <div class="pillar-card">
+            <div class="pillar-num">Pillar 3</div>
+            <div class="pillar-name">Traces</div>
+            <div class="pillar-question">"Where did the time go?"</div>
+            <div class="pillar-desc">A trace follows a single request as it travels across multiple services. Each hop is a "span" with its own timing. Traces reveal which service or database call is responsible for slow end-to-end latency.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Popular Tools by Pillar</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Pillar</th><th>Open Source</th><th>Commercial / Managed</th><th>Best For</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Logs</strong></td>
+                <td>Loki, ELK Stack (Elasticsearch, Logstash, Kibana)</td>
+                <td>Datadog Log Management, Splunk, Sumo Logic</td>
+                <td>Post-incident debugging, audit trails, error search</td>
+              </tr>
+              <tr>
+                <td><strong>Metrics</strong></td>
+                <td>Prometheus, Grafana</td>
+                <td>Datadog Metrics, CloudWatch, New Relic</td>
+                <td>Dashboards, alerting, capacity planning, SLO tracking</td>
+              </tr>
+              <tr>
+                <td><strong>Traces</strong></td>
+                <td>Jaeger, Zipkin, OpenTelemetry</td>
+                <td>Datadog APM, AWS X-Ray, Honeycomb</td>
+                <td>Diagnosing latency in microservices, finding slow DB queries</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top:1rem">Many teams converge on a single vendor (often Datadog) to get all three pillars in one place with unified querying. Open-source stacks offer more control but require more operational investment to run.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Key Metrics to Care About</h2>
+        <p>The <strong>RED method</strong> (Rate, Errors, Duration) and <strong>USE method</strong> (Utilisation, Saturation, Errors) give teams a practical framework. In practice, focus on these four signals for any user-facing service:</p>
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-name">Latency</div>
+            <div class="metric-desc">How long requests take to complete. Always track percentiles, not averages -- p50, p95, and p99 tell very different stories.</div>
+            <span class="metric-target">p99 &lt; 500ms (typical API)</span>
+          </div>
+          <div class="metric-card">
+            <div class="metric-name">Error Rate</div>
+            <div class="metric-desc">Percentage of requests returning an error (5xx status codes, exceptions thrown). A sudden spike almost always signals a deployment issue or downstream failure.</div>
+            <span class="metric-target">&lt; 0.1% for critical paths</span>
+          </div>
+          <div class="metric-card">
+            <div class="metric-name">Throughput (RPS)</div>
+            <div class="metric-desc">Requests per second processed by the service. Useful for capacity planning and detecting traffic anomalies -- sudden drops can indicate upstream failures.</div>
+            <span class="metric-target">Baseline + alert on -50%</span>
+          </div>
+          <div class="metric-card">
+            <div class="metric-name">Saturation</div>
+            <div class="metric-desc">How "full" the service is -- CPU usage, memory pressure, connection pool exhaustion, queue depth. High saturation predicts imminent degradation or failure.</div>
+            <span class="metric-target">CPU &lt; 70% sustained</span>
+          </div>
+        </div>
+        <p style="margin-top:1rem">Percentile latency matters more than averages. A p99 of 2 seconds means 1 in 100 users experiences a 2-second response -- at 10,000 RPS, that is 100 slow users every second.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>SLIs, SLOs, and SLAs Explained</h2>
+        <p>These three terms form the reliability contract between your engineering team, your product, and your customers. They are often confused -- here is a clear breakdown:</p>
+        <div class="slo-grid">
+          <div class="slo-card">
+            <div class="slo-label">SLI</div>
+            <div class="slo-name">Service Level Indicator</div>
+            <div class="slo-def">The actual measured metric. A quantitative measure of some aspect of the service. You measure it continuously from real traffic.</div>
+            <div class="slo-example">"99.3% of API requests in the last 28 days returned a 2xx within 400ms."</div>
+          </div>
+          <div class="slo-card">
+            <div class="slo-label">SLO</div>
+            <div class="slo-name">Service Level Objective</div>
+            <div class="slo-def">The internal target for your SLI. Set by your engineering and product team. Breaching an SLO means you should stop shipping features and fix reliability.</div>
+            <div class="slo-example">"99.5% of requests should complete successfully within 400ms over any 28-day window."</div>
+          </div>
+          <div class="slo-card">
+            <div class="slo-label">SLA</div>
+            <div class="slo-name">Service Level Agreement</div>
+            <div class="slo-def">The external contract with customers. SLAs typically include financial consequences (credits, refunds) if breached. Should be less strict than your SLO.</div>
+            <div class="slo-example">"We guarantee 99.9% monthly uptime. Customers receive a 10% credit if we breach this threshold."</div>
+          </div>
+        </div>
+        <p style="margin-top:1rem">The gap between your SLO and your SLA is your <strong>error budget</strong> -- the amount of unreliability you can "spend" before hitting your customer commitment. Error budgets give teams a data-driven answer to "should we ship this risky change?"</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>What Makes a Good Alert</h2>
+        <p>Most teams over-alert. Too many alerts leads to alert fatigue, where engineers start ignoring pages because most of them are noise. A good alert should pass all three tests:</p>
+        <div class="alert-list">
+          <div class="alert-item"><div class="alert-dot good"></div><div class="alert-text"><strong>Actionable:</strong> When this alert fires, the on-call engineer knows exactly what to do. There is a runbook. The alert message includes context, not just a metric name.</div></div>
+          <div class="alert-item"><div class="alert-dot good"></div><div class="alert-text"><strong>Represents user impact:</strong> Alert on symptoms (elevated error rate, high p99 latency) rather than causes (CPU at 80%). Causes are useful in dashboards for debugging, not as pages.</div></div>
+          <div class="alert-item"><div class="alert-dot good"></div><div class="alert-text"><strong>Correct severity:</strong> Not everything that goes wrong needs to wake someone up at 3am. Use PagerDuty-style severity levels: P1 (customer-impacting, page now), P2 (degraded, notify during business hours), P3 (informational, log and review).</div></div>
+          <div class="alert-item"><div class="alert-dot bad"></div><div class="alert-text"><strong>Anti-pattern -- flapping:</strong> An alert that fires, resolves, fires, resolves within minutes is misconfigured. It trains engineers to ignore it. Use evaluation windows (e.g. fire only if condition holds for 5 minutes).</div></div>
+          <div class="alert-item"><div class="alert-dot bad"></div><div class="alert-text"><strong>Anti-pattern -- too many alerts:</strong> If your on-call rotation receives more than 5 pages per shift that require action, your alerting is broken. Treat alert volume as a quality metric -- triage and eliminate noise regularly.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="pm-box">
+        <h2>For PMs: Using Observability Data</h2>
+        <p><strong>In incident reviews:</strong></p>
+        <ul>
+          <li>Ask to see the metrics dashboard from the incident window -- latency, error rate, RPS. Understanding the shape of the failure helps you ask better "why" questions and write a more accurate customer-facing summary.</li>
+          <li>Ask: "What was our time-to-detect and time-to-resolve?" These are concrete metrics that drive post-mortem action items.</li>
+          <li>If the team "noticed it from a user report" rather than an alert, that is a gap worth fixing -- prioritise adding proper alerting as a follow-up.</li>
+        </ul>
+        <p style="margin-top:1rem"><strong>In sprint planning:</strong></p>
+        <ul>
+          <li>Review error budgets with your SRE or EM before each planning cycle. If you are close to burning your SLO, reliability work should displace feature work.</li>
+          <li>Ask for p95 and p99 latency for your core user flows. If checkout or search are slow at the 95th percentile, that is a product quality issue -- not just a backend concern.</li>
+          <li>Treat "add observability" as a launch requirement for new features, not an afterthought. If you can't measure a feature's impact on system health, you're flying blind after you ship it.</li>
+          <li>Dashboard reviews in retros are a healthy habit. Having the team look at a week of production metrics together builds shared intuition about what "normal" looks like.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
