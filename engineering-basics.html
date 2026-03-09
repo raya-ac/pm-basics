@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Engineering Basics — ref.guide</title>
+<style>
+:root{--bg:#0f0f13;--surface:#17171d;--surface2:#1e1e27;--border:#2a2a36;--accent:#7c6af7;--acc2:#f06292;--acc3:#4dd0e1;--acc4:#66bb6a;--text:#e8e8f0;--muted:#888899;--radius:10px;--nav-h:56px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.7}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+code,pre{font-family:'Fira Code','Cascadia Code',monospace;font-size:0.88em}
+pre{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0}
+code:not(pre code){background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0.15em 0.45em}
+h1,h2,h3,h4{line-height:1.25;font-weight:700;letter-spacing:-0.3px}
+h1{font-size:clamp(2rem,5vw,3rem)}
+h2{font-size:clamp(1.3rem,3vw,1.75rem);margin:3rem 0 1rem;padding-top:1rem;border-top:1px solid var(--border)}
+h3{font-size:1.15rem;margin:2rem 0 0.75rem}
+p{margin-bottom:1rem}
+ul,ol{padding-left:1.5rem;margin-bottom:1rem}
+li{margin-bottom:0.4rem}
+blockquote{border-left:3px solid var(--accent);padding:0.75rem 1.5rem;margin:1.5rem 0;background:var(--surface);border-radius:0 var(--radius) var(--radius) 0;color:var(--muted);font-style:italic}
+#progress-bar{position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,var(--accent),var(--acc2));z-index:1000;transition:width 0.1s linear}
+.site-nav{position:sticky;top:0;height:var(--nav-h);background:rgba(15,15,19,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);z-index:100;display:flex;align-items:center;gap:1rem;padding:0 2rem}
+.site-nav .logo{font-weight:700;font-size:1rem;color:var(--accent);white-space:nowrap;margin-right:0.5rem}
+.site-nav .logo span{color:var(--text)}
+.nav-scroll{display:flex;align-items:center;gap:0.25rem;overflow-x:auto;scrollbar-width:none;flex:1}
+.nav-scroll::-webkit-scrollbar{display:none}
+.nav-scroll a{white-space:nowrap;font-size:0.82rem;color:var(--muted);padding:0.3rem 0.65rem;border-radius:20px;transition:color 0.15s,background 0.15s}
+.nav-scroll a:hover,.nav-scroll a.active{color:var(--text);text-decoration:none;background:var(--surface2)}
+.page-wrap{max-width:780px;margin:0 auto;padding:3rem 1.5rem 6rem}
+.hero{padding:4rem 0 3rem;border-bottom:1px solid var(--border);margin-bottom:3rem}
+.eyebrow{display:inline-block;background:var(--surface2);border:1px solid rgba(124,106,247,0.3);color:var(--accent);font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.3rem 0.85rem;border-radius:20px;margin-bottom:1.25rem}
+.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--acc2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.lead{font-size:1.1rem;color:var(--muted);max-width:600px;margin-top:1rem}
+.callout{border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.75rem 0;border-left:4px solid}
+.callout-info{background:rgba(124,106,247,0.08);border-color:var(--accent)}
+.callout-warn{background:rgba(255,183,77,0.08);border-color:#ffb74d}
+.callout-success{background:rgba(102,187,106,0.08);border-color:var(--acc4)}
+.callout strong{display:block;margin-bottom:0.4rem;font-size:0.85rem;letter-spacing:0.05em;text-transform:uppercase}
+.callout-info strong{color:var(--accent)}.callout-warn strong{color:#ffb74d}.callout-success strong{color:var(--acc4)}
+.do-dont{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.75rem 0}
+.do-col,.dont-col{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem}
+.do-col{border-top:3px solid var(--acc4)}.dont-col{border-top:3px solid var(--acc2)}
+.do-col h4{color:var(--acc4);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.85rem}
+.dont-col h4{color:var(--acc2);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.85rem}
+.do-col li,.dont-col li{font-size:0.9rem;color:var(--muted)}
+.site-footer{margin-top:6rem;padding:2rem 1.5rem;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:0.85rem}
+@media(max-width:600px){.do-dont{grid-template-columns:1fr}.page-wrap{padding:2rem 1rem 5rem}.site-nav{padding:0 1rem}}
+</style>
+</head>
+<body>
+<div id="progress-bar"></div>
+<nav class="site-nav">
+  <a href="index.html" class="logo">ref<span>.guide</span></a>
+  <div class="nav-scroll">
+    <a href="index.html">Home</a>
+    <a href="engineering-basics.html" class="active">Eng Basics</a>
+    <a href="git-guide.html">Git</a>
+    <a href="code-review.html">Code Review</a>
+    <a href="ci-cd.html">CI/CD</a>
+    <a href="incident-response.html">Incidents</a>
+    <a href="system-design.html">System Design</a>
+    <a href="sql-basics.html">SQL</a>
+    <a href="data-modeling.html">Data Modeling</a>
+    <a href="analytics-basics.html">Analytics</a>
+    <a href="ab-testing.html">A/B Testing</a>
+    <a href="writing-for-engineers.html">Writing</a>
+    <a href="rfc-guide.html">RFCs</a>
+    <a href="postmortem-guide.html">Postmortems</a>
+    <a href="technical-docs.html">Tech Docs</a>
+    <a href="pm-basics.html">PM Basics</a>
+    <a href="roadmapping.html">Roadmapping</a>
+    <a href="user-research.html">User Research</a>
+    <a href="metrics-guide.html">Metrics</a>
+    <a href="prioritisation.html">Prioritisation</a>
+    <a href="devops-basics.html">DevOps</a>
+    <a href="docker-basics.html">Docker</a>
+    <a href="kubernetes-intro.html">Kubernetes</a>
+    <a href="observability.html">Observability</a>
+    <a href="seo-basics.html">SEO</a>
+    <a href="web-performance.html">Web Perf</a>
+    <a href="accessibility-basics.html">A11y</a>
+    <a href="api-design.html">API Design</a>
+    <a href="engineering-career.html">Career</a>
+    <a href="agile-basics.html">Agile</a>
+    <a href="onboarding-guide.html">Onboarding</a>
+    <a href="security-basics.html">Security</a>
+  </div>
+</nav>
+<div class="page-wrap">
+  <div class="hero">
+    <div class="eyebrow">Engineering</div>
+    <h1>Engineering <span>Basics</span></h1>
+    <p class="lead">The stuff that matters when you join a software team — how work actually flows, what the unwritten rules are, and why some teams ship constantly while others don't.</p>
+  </div>
+
+  <h2>How software teams are structured</h2>
+  <p>Most teams are organised around a product area, not a technical layer. A "checkout team" owns the whole checkout flow — frontend, backend, database schema, and the on-call rotation. This is intentional: vertical ownership means one team can ship a feature without coordinating with five others.</p>
+  <p>The alternative is horizontal teams (a frontend team, a backend team, a data team). These exist, and sometimes they make sense, but they tend to create bottlenecks. When every feature needs sign-off from three teams, nothing moves fast.</p>
+  <p>Team size follows a rough heuristic: if you can't feed the whole team with two pizzas, it's too big. In practice, most product squads are 4–8 engineers plus a PM and a designer. Larger than that and communication overhead starts eating into output.</p>
+
+  <h2>The daily rhythm</h2>
+  <p>A typical week has a few recurring touch points. Stand-ups (usually 15 minutes, ideally daily) exist to surface blockers, not to give status updates. If stand-up feels like everyone reciting what they did yesterday, something's wrong.</p>
+  <p>Sprint planning happens every one or two weeks. The team looks at the backlog, estimates work, and commits to a slice of it. The word "commit" is doing a lot of work there — it's more of a shared intention than a contract, and good teams treat it that way.</p>
+  <p>Retrospectives close each sprint. This is genuinely useful if people are honest. It becomes a waste of time when the real blockers are undiscussable and the retro fills up with observations about meeting length.</p>
+
+  <div class="callout callout-info">
+    <strong>Worth knowing</strong>
+    The single best predictor of a healthy team is whether people feel safe raising problems. Retrospectives, postmortems, and code reviews all depend on psychological safety. If people are filtering what they say, the process breaks down regardless of the format.
+  </div>
+
+  <h2>Ownership and responsibility</h2>
+  <p>"You build it, you run it" is the principle behind DevOps-style team ownership. The team that writes the code is also on call when it breaks. This sounds punishing but it's actually a feedback loop: if your on-call rotation is miserable, you're motivated to fix the underlying reliability issues. When a separate ops team handles production, that feedback loop breaks.</p>
+  <p>In practice, ownership is messier. Code gets written and then nobody updates the CODEOWNERS file. A service that started in one team migrates to another. Someone leaves and takes institutional knowledge with them. Keeping ownership clear is active work, not a one-time setup task.</p>
+
+  <h2>On-call basics</h2>
+  <p>On-call means you're the first responder when an alert fires outside business hours. You'll have a pager or phone notification, a runbook to follow for common issues, and an escalation path for things you can't fix alone.</p>
+  <p>Good on-call is characterised by: low alert noise (most alerts are actionable), clear runbooks (someone wrote down what to do), and a reasonable frequency (you're not on call every week forever). Bad on-call is the opposite, and it burns people out quickly.</p>
+  <p>If your first month on a team involves being paged four times a night, that's a signal about the team's reliability culture, not a rite of passage.</p>
+
+  <div class="do-dont">
+    <div class="do-col">
+      <h4>Good team habits</h4>
+      <ul>
+        <li>Async-first communication with clear threading</li>
+        <li>Decisions documented in writing after the meeting</li>
+        <li>Runbooks updated when they're found to be wrong</li>
+        <li>On-call incidents turned into backlog tickets</li>
+        <li>PRs reviewed within one business day</li>
+      </ul>
+    </div>
+    <div class="dont-col">
+      <h4>Warning signs</h4>
+      <ul>
+        <li>Every decision requires a meeting</li>
+        <li>New engineers can't deploy in week one</li>
+        <li>Test suite takes 45 minutes and is mostly skipped</li>
+        <li>"We'll document that later" said with no follow-up</li>
+        <li>Single person who knows how the critical system works</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Technical debt: what it actually means</h2>
+  <p>Technical debt is the accumulated cost of shortcuts taken in the past. The metaphor implies it accrues interest — a small shortcut now becomes a bigger problem later when everything built on top of it has to be re-examined.</p>
+  <p>Not all debt is bad. Deliberately taking on debt to ship faster can be a sensible trade-off. The problem is debt that wasn't conscious — where nobody decided to cut corners, they just never had time to do it properly. That kind is invisible until it bites you.</p>
+  <p>The engineering team that says they have "no technical debt" either has a very young codebase or isn't being honest. Every system accumulates it. The question is whether it's being tracked and gradually paid down, or whether it's compounding quietly in the background.</p>
+
+  <h2>How to get up to speed quickly</h2>
+  <p>When you join a new team, resist the temptation to suggest improvements in the first two weeks. You don't know what you don't know yet. The thing that looks obviously wrong often has a reason behind it — not always a good reason, but asking first is better than proposing a rewrite.</p>
+  <p>The most useful things to do in week one: get the dev environment running, read recent postmortems, and shadow an on-call rotation. These three things will teach you more about the actual state of the system than any amount of architecture documentation.</p>
+
+  <div class="callout callout-warn">
+    <strong>Common mistake</strong>
+    Assuming the documentation is current. Treat all documentation as a hypothesis about how the system worked at time of writing. The code is the truth; everything else is commentary.
+  </div>
+</div>
+<footer class="site-footer">
+  <p>ref.guide &mdash; <a href="index.html">back to home</a></p>
+</footer>
+<script>
+window.addEventListener('scroll',()=>{const e=document.getElementById('progress-bar');if(!e)return;const h=document.documentElement;e.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%'});
+</script>
+</body>
+</html>
