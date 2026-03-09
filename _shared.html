@@ -1,0 +1,325 @@
+<!-- SHARED DESIGN SYSTEM — paste <style> block into <head>, nav+script into <body> -->
+<!-- ============================================================
+     DESIGN TOKENS & BASE CSS
+     ============================================================ -->
+<style id="shared-css">
+:root {
+  --bg: #0f0f13;
+  --surface: #17171d;
+  --surface2: #1e1e27;
+  --border: #2a2a36;
+  --accent: #7c6af7;
+  --acc2: #f06292;
+  --acc3: #4dd0e1;
+  --acc4: #66bb6a;
+  --text: #e8e8f0;
+  --muted: #888899;
+  --radius: 10px;
+  --nav-h: 56px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  font-size:17px;
+  line-height:1.7;
+}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+code,pre{
+  font-family:'Fira Code','Cascadia Code',monospace;
+  font-size:0.88em;
+}
+pre{
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1.25rem 1.5rem;
+  overflow-x:auto;
+  margin:1.5rem 0;
+}
+code:not(pre code){
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:0.15em 0.45em;
+}
+h1,h2,h3,h4{line-height:1.25;font-weight:700;letter-spacing:-0.3px}
+h1{font-size:clamp(2rem,5vw,3.2rem)}
+h2{font-size:clamp(1.4rem,3vw,1.9rem);margin:3rem 0 1rem}
+h3{font-size:1.2rem;margin:2rem 0 0.75rem}
+p{margin-bottom:1rem}
+ul,ol{padding-left:1.5rem;margin-bottom:1rem}
+li{margin-bottom:0.4rem}
+blockquote{
+  border-left:3px solid var(--accent);
+  padding:0.75rem 1.5rem;
+  margin:1.5rem 0;
+  background:var(--surface);
+  border-radius:0 var(--radius) var(--radius) 0;
+  color:var(--muted);
+  font-style:italic;
+}
+
+/* PROGRESS BAR */
+#progress-bar{
+  position:fixed;top:0;left:0;
+  height:3px;width:0%;
+  background:linear-gradient(90deg,var(--accent),var(--acc2));
+  z-index:1000;
+  transition:width 0.1s linear;
+}
+
+/* NAV */
+.site-nav{
+  position:sticky;top:0;
+  height:var(--nav-h);
+  background:rgba(15,15,19,0.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  z-index:100;
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  padding:0 2rem;
+}
+.site-nav .logo{
+  font-weight:700;
+  font-size:1rem;
+  color:var(--accent);
+  white-space:nowrap;
+  margin-right:0.5rem;
+}
+.site-nav .logo span{color:var(--text)}
+.nav-scroll{
+  display:flex;
+  align-items:center;
+  gap:0.25rem;
+  overflow-x:auto;
+  scrollbar-width:none;
+  flex:1;
+}
+.nav-scroll::-webkit-scrollbar{display:none}
+.nav-scroll a{
+  white-space:nowrap;
+  font-size:0.82rem;
+  color:var(--muted);
+  padding:0.3rem 0.65rem;
+  border-radius:20px;
+  transition:color 0.15s,background 0.15s;
+}
+.nav-scroll a:hover{color:var(--text);text-decoration:none;background:var(--surface2)}
+.nav-scroll a.active{color:var(--text);background:var(--surface2)}
+.nav-home{
+  font-size:0.82rem;
+  color:var(--muted);
+  padding:0.3rem 0.65rem;
+  border-radius:20px;
+  white-space:nowrap;
+}
+.nav-home:hover{color:var(--text);background:var(--surface2);text-decoration:none}
+
+/* LAYOUT */
+.page-wrap{max-width:780px;margin:0 auto;padding:3rem 1.5rem 6rem}
+.hero{
+  padding:4rem 0 3rem;
+  border-bottom:1px solid var(--border);
+  margin-bottom:3rem;
+}
+.hero .eyebrow{
+  display:inline-block;
+  background:var(--surface2);
+  border:1px solid rgba(124,106,247,0.3);
+  color:var(--accent);
+  font-size:0.75rem;
+  font-weight:600;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  padding:0.3rem 0.85rem;
+  border-radius:20px;
+  margin-bottom:1.25rem;
+}
+.hero h1 span{
+  background:linear-gradient(135deg,var(--accent),var(--acc2));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero p.lead{
+  font-size:1.15rem;
+  color:var(--muted);
+  max-width:600px;
+  margin-top:1rem;
+}
+
+/* CARDS */
+.card-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:1rem;
+  margin:2rem 0;
+}
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1.5rem;
+  transition:border-color 0.15s,transform 0.15s;
+}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card h3{margin:0 0 0.5rem;font-size:1rem}
+.card p{font-size:0.9rem;color:var(--muted);margin:0}
+.card a.card-link{
+  display:block;
+  text-decoration:none;
+  color:inherit;
+}
+.card .tag{
+  display:inline-block;
+  font-size:0.72rem;
+  font-weight:600;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  padding:0.2rem 0.6rem;
+  border-radius:20px;
+  margin-bottom:0.75rem;
+}
+.tag-eng{background:rgba(124,106,247,0.15);color:var(--accent)}
+.tag-data{background:rgba(77,208,225,0.15);color:var(--acc3)}
+.tag-write{background:rgba(240,98,146,0.15);color:var(--acc2)}
+.tag-product{background:rgba(102,187,106,0.15);color:var(--acc4)}
+.tag-devops{background:rgba(255,183,77,0.15);color:#ffb74d}
+.tag-web{background:rgba(77,208,225,0.12);color:var(--acc3)}
+.tag-career{background:rgba(240,98,146,0.12);color:var(--acc2)}
+
+/* CALLOUTS */
+.callout{
+  border-radius:var(--radius);
+  padding:1.25rem 1.5rem;
+  margin:1.75rem 0;
+  border-left:4px solid;
+}
+.callout-info{background:rgba(124,106,247,0.08);border-color:var(--accent)}
+.callout-warn{background:rgba(255,183,77,0.08);border-color:#ffb74d}
+.callout-danger{background:rgba(240,98,146,0.08);border-color:var(--acc2)}
+.callout-success{background:rgba(102,187,106,0.08);border-color:var(--acc4)}
+.callout strong{display:block;margin-bottom:0.4rem;font-size:0.85rem;letter-spacing:0.05em;text-transform:uppercase}
+.callout-info strong{color:var(--accent)}
+.callout-warn strong{color:#ffb74d}
+.callout-danger strong{color:var(--acc2)}
+.callout-success strong{color:var(--acc4)}
+
+/* DO / DON'T TABLE */
+.do-dont{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1rem;
+  margin:1.75rem 0;
+}
+.do-col,.dont-col{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1.25rem;
+}
+.do-col{border-top:3px solid var(--acc4)}
+.dont-col{border-top:3px solid var(--acc2)}
+.do-col h4{color:var(--acc4);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.85rem}
+.dont-col h4{color:var(--acc2);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.85rem}
+.do-col li,.dont-col li{font-size:0.9rem;color:var(--muted)}
+
+/* SECTION LABEL */
+.section-label{
+  font-size:0.75rem;
+  font-weight:700;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:0.5rem;
+}
+
+/* FOOTER */
+.site-footer{
+  margin-top:6rem;
+  padding:2rem 1.5rem;
+  border-top:1px solid var(--border);
+  text-align:center;
+  color:var(--muted);
+  font-size:0.85rem;
+}
+.site-footer a{color:var(--muted)}
+.site-footer a:hover{color:var(--text)}
+
+@media(max-width:600px){
+  .do-dont{grid-template-columns:1fr}
+  .page-wrap{padding:2rem 1rem 5rem}
+  .site-nav{padding:0 1rem}
+}
+</style>
+
+<!-- NAV HTML — insert right after <body>, update 'active' class for current page -->
+<div id="progress-bar"></div>
+<nav class="site-nav">
+  <a href="index.html" class="logo">ref<span>.guide</span></a>
+  <div class="nav-scroll">
+    <a href="index.html">Home</a>
+    <a href="engineering-basics.html">Eng Basics</a>
+    <a href="git-guide.html">Git</a>
+    <a href="code-review.html">Code Review</a>
+    <a href="ci-cd.html">CI/CD</a>
+    <a href="incident-response.html">Incidents</a>
+    <a href="system-design.html">System Design</a>
+    <a href="sql-basics.html">SQL</a>
+    <a href="data-modeling.html">Data Modeling</a>
+    <a href="analytics-basics.html">Analytics</a>
+    <a href="ab-testing.html">A/B Testing</a>
+    <a href="writing-for-engineers.html">Writing</a>
+    <a href="rfc-guide.html">RFCs</a>
+    <a href="postmortem-guide.html">Postmortems</a>
+    <a href="technical-docs.html">Tech Docs</a>
+    <a href="pm-basics.html">PM Basics</a>
+    <a href="roadmapping.html">Roadmapping</a>
+    <a href="user-research.html">User Research</a>
+    <a href="metrics-guide.html">Metrics</a>
+    <a href="prioritisation.html">Prioritisation</a>
+    <a href="devops-basics.html">DevOps</a>
+    <a href="docker-basics.html">Docker</a>
+    <a href="kubernetes-intro.html">Kubernetes</a>
+    <a href="observability.html">Observability</a>
+    <a href="seo-basics.html">SEO</a>
+    <a href="web-performance.html">Web Perf</a>
+    <a href="accessibility-basics.html">A11y</a>
+    <a href="api-design.html">API Design</a>
+    <a href="engineering-career.html">Career</a>
+    <a href="agile-basics.html">Agile</a>
+    <a href="onboarding-guide.html">Onboarding</a>
+    <a href="security-basics.html">Security</a>
+  </div>
+</nav>
+
+<!-- SHARED JS — paste before </body> -->
+<script id="shared-js">
+// Progress bar
+window.addEventListener('scroll', () => {
+  const el = document.getElementById('progress-bar');
+  if (!el) return;
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  el.style.width = pct + '%';
+});
+// Highlight active nav link
+(function(){
+  const links = document.querySelectorAll('.nav-scroll a');
+  const path = location.pathname.split('/').pop() || 'index.html';
+  links.forEach(a => {
+    if (a.getAttribute('href') === path) a.classList.add('active');
+  });
+})();
+</script>
+
+<!-- FOOTER HTML — paste before </body> -->
+<footer class="site-footer">
+  <p>ref.guide &mdash; a collection of honest reference pages &mdash; <a href="index.html">back to home</a></p>
+</footer>
