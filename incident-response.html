@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Incident Response — ref.guide</title>
+<style>:root{--bg:#0f0f13;--surface:#17171d;--surface2:#1e1e27;--border:#2a2a36;--accent:#7c6af7;--acc2:#f06292;--acc3:#4dd0e1;--acc4:#66bb6a;--text:#e8e8f0;--muted:#888899;--radius:10px;--nav-h:56px}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:17px;line-height:1.7}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}code,pre{font-family:'Fira Code',monospace;font-size:0.88em}pre{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;overflow-x:auto;margin:1.5rem 0}code:not(pre code){background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0.15em 0.45em}h1,h2,h3{line-height:1.25;font-weight:700;letter-spacing:-0.3px}h1{font-size:clamp(2rem,5vw,3rem)}h2{font-size:clamp(1.3rem,3vw,1.75rem);margin:3rem 0 1rem;padding-top:1rem;border-top:1px solid var(--border)}h3{font-size:1.15rem;margin:2rem 0 0.75rem}p{margin-bottom:1rem}ul,ol{padding-left:1.5rem;margin-bottom:1rem}li{margin-bottom:0.4rem}#progress-bar{position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,var(--accent),var(--acc2));z-index:1000}.site-nav{position:sticky;top:0;height:var(--nav-h);background:rgba(15,15,19,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);z-index:100;display:flex;align-items:center;gap:1rem;padding:0 2rem}.site-nav .logo{font-weight:700;font-size:1rem;color:var(--accent);white-space:nowrap}.site-nav .logo span{color:var(--text)}.nav-scroll{display:flex;align-items:center;gap:0.25rem;overflow-x:auto;scrollbar-width:none;flex:1}.nav-scroll::-webkit-scrollbar{display:none}.nav-scroll a{white-space:nowrap;font-size:0.82rem;color:var(--muted);padding:0.3rem 0.65rem;border-radius:20px;transition:color 0.15s,background 0.15s}.nav-scroll a:hover,.nav-scroll a.active{color:var(--text);text-decoration:none;background:var(--surface2)}.page-wrap{max-width:780px;margin:0 auto;padding:3rem 1.5rem 6rem}.hero{padding:4rem 0 3rem;border-bottom:1px solid var(--border);margin-bottom:3rem}.eyebrow{display:inline-block;background:var(--surface2);border:1px solid rgba(124,106,247,0.3);color:var(--accent);font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.3rem 0.85rem;border-radius:20px;margin-bottom:1.25rem}.hero h1 span{background:linear-gradient(135deg,var(--accent),var(--acc2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.lead{font-size:1.1rem;color:var(--muted);max-width:600px;margin-top:1rem}.callout{border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.75rem 0;border-left:4px solid}.callout-info{background:rgba(124,106,247,0.08);border-color:var(--accent)}.callout-warn{background:rgba(255,183,77,0.08);border-color:#ffb74d}.callout-danger{background:rgba(240,98,146,0.08);border-color:var(--acc2)}.callout-success{background:rgba(102,187,106,0.08);border-color:var(--acc4)}.callout strong{display:block;margin-bottom:0.4rem;font-size:0.85rem;letter-spacing:0.05em;text-transform:uppercase}.callout-info strong{color:var(--accent)}.callout-warn strong{color:#ffb74d}.callout-danger strong{color:var(--acc2)}.callout-success strong{color:var(--acc4)}.site-footer{margin-top:6rem;padding:2rem 1.5rem;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:0.85rem}@media(max-width:600px){.page-wrap{padding:2rem 1rem 5rem}.site-nav{padding:0 1rem}}</style>
+</head>
+<body>
+<div id="progress-bar"></div>
+<nav class="site-nav"><a href="index.html" class="logo">ref<span>.guide</span></a><div class="nav-scroll"><a href="index.html">Home</a><a href="engineering-basics.html">Eng Basics</a><a href="git-guide.html">Git</a><a href="code-review.html">Code Review</a><a href="ci-cd.html">CI/CD</a><a href="incident-response.html" class="active">Incidents</a><a href="system-design.html">System Design</a><a href="sql-basics.html">SQL</a><a href="data-modeling.html">Data Modeling</a><a href="analytics-basics.html">Analytics</a><a href="ab-testing.html">A/B Testing</a><a href="writing-for-engineers.html">Writing</a><a href="rfc-guide.html">RFCs</a><a href="postmortem-guide.html">Postmortems</a><a href="technical-docs.html">Tech Docs</a><a href="pm-basics.html">PM Basics</a><a href="roadmapping.html">Roadmapping</a><a href="user-research.html">User Research</a><a href="metrics-guide.html">Metrics</a><a href="prioritisation.html">Prioritisation</a><a href="devops-basics.html">DevOps</a><a href="docker-basics.html">Docker</a><a href="kubernetes-intro.html">Kubernetes</a><a href="observability.html">Observability</a><a href="seo-basics.html">SEO</a><a href="web-performance.html">Web Perf</a><a href="accessibility-basics.html">A11y</a><a href="api-design.html">API Design</a><a href="engineering-career.html">Career</a><a href="agile-basics.html">Agile</a><a href="onboarding-guide.html">Onboarding</a><a href="security-basics.html">Security</a></div></nav>
+<div class="page-wrap">
+<div class="hero"><div class="eyebrow">Engineering</div><h1><span>Incident Response</span></h1><p class="lead">What to do when things break in production. Roles, communication, the postmortem, and how to build a team that handles incidents without burning out.</p></div>
+
+<h2>The mindset first</h2>
+<p>Incidents are not failures of individuals. They're failures of systems — including the social systems, the tooling, the processes, and the monitoring that let something get bad enough to page someone. Treating them as personal failures makes everything worse: people hide problems, avoid being on-call, and write postmortems designed to assign blame rather than understand causation.</p>
+<p>The goal during an incident is to restore service, not to understand exactly what happened. Understanding comes later, during the postmortem. In the moment, move fast, communicate clearly, and don't let perfect be the enemy of working.</p>
+
+<h2>Severity levels</h2>
+<p>Most teams use a tiered system. The specifics vary but the principle is the same: different severities get different responses.</p>
+<ul>
+<li><strong>SEV1 / P1</strong> — Critical. Production is down or severely degraded for all or most users. All hands, immediate response, escalate to management.</li>
+<li><strong>SEV2 / P2</strong> — Major. Significant feature broken, significant user impact. Dedicated response, fix within hours.</li>
+<li><strong>SEV3 / P3</strong> — Minor. Limited impact, workaround exists. Fix within days, no emergency response needed.</li>
+</ul>
+<p>Calibrating severity matters. Over-declaring SEV1 burns people out. Under-declaring lets serious problems fester. If your team treats everything as SEV1, the label has lost meaning.</p>
+
+<h2>Roles during an incident</h2>
+<h3>Incident commander (IC)</h3>
+<p>Owns the response. Delegates tasks, tracks what's been tried, decides when to escalate, writes the status updates. The IC does not necessarily fix the problem — their job is coordination. A bad IC tries to debug and coordinate simultaneously and does both poorly.</p>
+<h3>Technical lead</h3>
+<p>Owns the investigation and fix. Reports findings to the IC. Asks for help when needed rather than spending 30 minutes stuck on a hunch.</p>
+<h3>Comms lead</h3>
+<p>Writes external status page updates and internal stakeholder messages. Takes this off the IC's plate so they can focus on the response.</p>
+
+<div class="callout callout-warn"><strong>Common mistake</strong>
+Everyone in the incident call trying to debug simultaneously, talking over each other, and nobody tracking the overall state. One person coordinates; everyone else works their assigned thread and reports back.</div>
+
+<h2>The first 10 minutes</h2>
+<ol>
+<li>Acknowledge the alert — someone owns this, others stand down unless asked</li>
+<li>Declare severity and open the incident channel</li>
+<li>Assess: is this a real incident or a monitoring false positive?</li>
+<li>Assign IC if not already assigned</li>
+<li>Post first status update internally ("We're investigating elevated error rates on checkout, ETA unknown")</li>
+<li>Start the incident doc — paste your runbook link, start noting what you've checked</li>
+</ol>
+
+<h2>During the incident</h2>
+<p>Update the incident doc continuously. This is not bureaucracy — it's your memory during a stressful situation, and it becomes the raw material for the postmortem. Note every hypothesis you checked, every action you took, and the time.</p>
+<p>Post status updates externally every 20–30 minutes even if you have nothing new to say. "We're still investigating" is better than silence. Users and stakeholders filling the void with their own speculation is worse than an honest "we don't know yet."</p>
+<p>Mitigation and root cause are separate problems. If you can reduce user impact by rolling back, do it — even if you don't know what caused the regression. Understanding the cause is a postmortem problem.</p>
+
+<h2>After the incident</h2>
+<p>Write the postmortem within 24–48 hours while memory is fresh. See the <a href="postmortem-guide.html">postmortem guide</a> for how to do this well.</p>
+<p>The most important outcome of a postmortem is action items with owners and dates. A postmortem that concludes with "we should improve our monitoring" and no specific ticket assigned to a specific person is a postmortem that will not result in any change.</p>
+
+<div class="callout callout-success"><strong>Signs of a healthy incident culture</strong>
+People report near-misses voluntarily. On-call rotations are shared broadly, not held by one heroic person. Postmortems are published and read. Monitoring improves after incidents. The same incident doesn't happen twice.</div>
+</div>
+<footer class="site-footer"><p>ref.guide &mdash; <a href="index.html">back to home</a></p></footer>
+<script>window.addEventListener('scroll',()=>{const e=document.getElementById('progress-bar');if(!e)return;const h=document.documentElement;e.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%'});</script>
+</body></html>
