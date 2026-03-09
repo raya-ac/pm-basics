@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Design — ref.guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0f0f13;
+    --surface: #17171d;
+    --surface2: #1e1e27;
+    --border: #2a2a36;
+    --accent: #7c6af7;
+    --text: #e8e8f0;
+    --muted: #888899;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; font-size: 15px; line-height: 1.7; }
+
+  .progress-bar { position: fixed; top: 0; left: 0; width: 60%; height: 4px; background: var(--accent); z-index: 1000; }
+
+  nav { position: fixed; top: 4px; left: 0; right: 0; height: 56px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; z-index: 999; }
+  .nav-logo { font-weight: 700; font-size: 1.1rem; color: var(--accent); text-decoration: none; letter-spacing: -0.02em; }
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+
+  main { max-width: 860px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+
+  .hero { margin-bottom: 3rem; }
+  .hero h1 { font-size: 2.6rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+  .hero p { font-size: 1.15rem; color: var(--muted); max-width: 600px; }
+
+  section { margin-bottom: 2.5rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
+  h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--text); }
+  h3 { font-size: 1rem; font-weight: 600; color: var(--accent); margin: 1.2rem 0 0.4rem; }
+  p { margin-bottom: 0.75rem; }
+  p:last-child { margin-bottom: 0; }
+  ul, ol { padding-left: 1.4rem; margin-bottom: 0.75rem; }
+  li { margin-bottom: 0.3rem; }
+
+  pre { background: var(--surface2); border-radius: 8px; padding: 1rem; overflow-x: auto; margin: 1rem 0; }
+  code { font-family: 'Fira Mono', 'Cascadia Code', monospace; font-size: 0.88rem; color: #4dd0e1; }
+  p code, li code { background: var(--surface2); padding: 0.1em 0.4em; border-radius: 4px; font-size: 0.85em; }
+
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+  th { background: var(--surface2); color: var(--muted); font-weight: 600; text-align: left; padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--border); }
+  td { padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(124,106,247,0.04); }
+
+  /* HTTP verb badges */
+  .verb { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-family: monospace; font-size: 0.8rem; font-weight: 700; }
+  .get { background: rgba(74,222,128,0.15); color: #4ade80; }
+  .post { background: rgba(124,106,247,0.2); color: #a78bfa; }
+  .put { background: rgba(251,191,36,0.15); color: #fbbf24; }
+  .patch { background: rgba(251,191,36,0.1); color: #fbbf24; }
+  .delete { background: rgba(248,113,113,0.15); color: #f87171; }
+
+  /* Status code colours */
+  .s2xx { color: #4ade80; font-weight: 600; }
+  .s4xx { color: #fbbf24; font-weight: 600; }
+  .s5xx { color: #f87171; font-weight: 600; }
+
+  .callout { background: rgba(124,106,247,0.08); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin: 1rem 0; }
+  .callout strong { color: var(--accent); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  .mini-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+  .mini-card h4 { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+  .mini-card ul { font-size: 0.85rem; color: var(--muted); }
+  .mini-card li { margin-bottom: 0.25rem; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+  .tag { background: var(--surface2); color: var(--accent); border: 1px solid var(--border); border-radius: 20px; padding: 0.2rem 0.75rem; font-size: 0.78rem; font-weight: 500; }
+
+  @media (max-width: 600px) {
+    .two-col { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 1.9rem; }
+    nav { padding: 0 1rem; }
+    .nav-links { gap: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+<div class="progress-bar"></div>
+
+<nav>
+  <a href="/code/pm-site/index.html" class="nav-logo">ref.guide</a>
+  <ul class="nav-links">
+    <li><a href="#">Engineering</a></li>
+    <li><a href="#">Data</a></li>
+    <li><a href="#">Writing</a></li>
+    <li><a href="#">Product</a></li>
+    <li><a href="#">DevOps</a></li>
+    <li><a href="#">Web</a></li>
+    <li><a href="#">Career</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="hero">
+    <h1>API Design</h1>
+    <p>REST, GraphQL, and the principles behind APIs that don't make engineers cry.</p>
+  </div>
+
+  <!-- What is an API -->
+  <section>
+    <div class="card">
+      <h2>What Is an API?</h2>
+      <p>An <strong>API (Application Programming Interface)</strong> is a defined contract that lets one piece of software talk to another. It specifies what requests can be made, in what format, and what responses to expect — without exposing the underlying implementation.</p>
+      <p>In web development, APIs almost always mean <strong>HTTP APIs</strong>: one service sends an HTTP request to another (or to a server) and gets a structured response back, typically as JSON. Your mobile app calls an API to fetch user data. Your checkout page calls an API to process a payment. Your analytics dashboard calls an API to query events.</p>
+      <div class="callout">
+        <strong>Think of an API as a menu.</strong> You don't need to know how the kitchen works — you just need to know what you can order, how to order it, and what you'll get back.
+      </div>
+    </div>
+  </section>
+
+  <!-- REST principles -->
+  <section>
+    <div class="card">
+      <h2>REST Principles</h2>
+      <p><strong>REST (Representational State Transfer)</strong> is an architectural style for designing networked APIs. It's not a protocol — it's a set of constraints that, when followed, produce APIs that are predictable, scalable, and easy to work with.</p>
+      <ul>
+        <li><strong>Stateless:</strong> every request contains all the information needed to process it. The server holds no session state between requests.</li>
+        <li><strong>Uniform interface:</strong> consistent conventions for resources, verbs, and responses — regardless of what the resource is.</li>
+        <li><strong>Client-server separation:</strong> the client and server evolve independently as long as the interface contract is upheld.</li>
+        <li><strong>Cacheable:</strong> responses should indicate whether they can be cached, enabling performance optimisations.</li>
+      </ul>
+
+      <h3>HTTP Verbs</h3>
+      <table>
+        <thead>
+          <tr><th>Verb</th><th>Purpose</th><th>Idempotent?</th><th>Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="verb get">GET</span></td><td>Read a resource</td><td>Yes</td><td><code>GET /users/123</code></td></tr>
+          <tr><td><span class="verb post">POST</span></td><td>Create a new resource</td><td>No</td><td><code>POST /users</code></td></tr>
+          <tr><td><span class="verb put">PUT</span></td><td>Replace a resource entirely</td><td>Yes</td><td><code>PUT /users/123</code></td></tr>
+          <tr><td><span class="verb patch">PATCH</span></td><td>Partially update a resource</td><td>No (usually)</td><td><code>PATCH /users/123</code></td></tr>
+          <tr><td><span class="verb delete">DELETE</span></td><td>Delete a resource</td><td>Yes</td><td><code>DELETE /users/123</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3>HTTP Status Codes</h3>
+      <table>
+        <thead>
+          <tr><th>Code</th><th>Meaning</th><th>When to use</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="s2xx">200 OK</span></td><td>Success</td><td>Successful GET, PATCH, or DELETE</td></tr>
+          <tr><td><span class="s2xx">201 Created</span></td><td>Resource created</td><td>Successful POST that created something new</td></tr>
+          <tr><td><span class="s2xx">204 No Content</span></td><td>Success, no body</td><td>DELETE where no response body is needed</td></tr>
+          <tr><td><span class="s4xx">400 Bad Request</span></td><td>Invalid input</td><td>Malformed JSON, missing required fields, invalid values</td></tr>
+          <tr><td><span class="s4xx">401 Unauthorized</span></td><td>Not authenticated</td><td>No token or invalid token provided</td></tr>
+          <tr><td><span class="s4xx">403 Forbidden</span></td><td>Not authorised</td><td>Authenticated but no permission for this action</td></tr>
+          <tr><td><span class="s4xx">404 Not Found</span></td><td>Resource missing</td><td>ID doesn't exist, or route is wrong</td></tr>
+          <tr><td><span class="s4xx">409 Conflict</span></td><td>State conflict</td><td>Duplicate creation, version mismatch, or edit conflict</td></tr>
+          <tr><td><span class="s5xx">500 Internal Server Error</span></td><td>Server-side failure</td><td>Unhandled exception; something went wrong on the backend</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- URL conventions -->
+  <section>
+    <div class="card">
+      <h2>REST URL Conventions</h2>
+      <ul>
+        <li><strong>Use nouns, not verbs.</strong> <code>/users</code> not <code>/getUsers</code>. The HTTP verb provides the action.</li>
+        <li><strong>Use plural resource names.</strong> <code>/orders</code> not <code>/order</code>.</li>
+        <li><strong>Nest related resources.</strong> <code>/users/123/orders</code> for orders belonging to user 123.</li>
+        <li><strong>Keep nesting shallow.</strong> More than two levels deep (<code>/a/1/b/2/c</code>) becomes hard to maintain.</li>
+        <li><strong>Use kebab-case for multi-word paths.</strong> <code>/user-profiles</code> not <code>/userProfiles</code>.</li>
+        <li><strong>Version your API in the path.</strong> <code>/api/v1/users</code> — makes breaking changes safe to ship.</li>
+      </ul>
+
+      <h3>Example: User + Orders API</h3>
+      <pre><code>GET    /api/v1/users           # list all users
+POST   /api/v1/users           # create a user
+GET    /api/v1/users/123       # get user 123
+PATCH  /api/v1/users/123       # update user 123
+DELETE /api/v1/users/123       # delete user 123
+
+GET    /api/v1/users/123/orders      # list orders for user 123
+POST   /api/v1/users/123/orders      # create order for user 123
+GET    /api/v1/users/123/orders/456  # get order 456 of user 123</code></pre>
+
+      <h3>Example Response</h3>
+      <pre><code>// GET /api/v1/users/123
+// HTTP 200 OK
+{
+  "id": "123",
+  "email": "ada@example.com",
+  "name": "Ada Lovelace",
+  "role": "admin",
+  "created_at": "2024-01-15T09:23:00Z",
+  "_links": {
+    "self": "/api/v1/users/123",
+    "orders": "/api/v1/users/123/orders"
+  }
+}</code></pre>
+    </div>
+  </section>
+
+  <!-- GraphQL vs REST -->
+  <section>
+    <div class="card">
+      <h2>GraphQL vs REST</h2>
+      <p>GraphQL is an alternative query language for APIs, developed by Facebook (Meta). Instead of multiple fixed endpoints, there's a single endpoint where clients specify exactly what data they need.</p>
+      <table>
+        <thead>
+          <tr><th>Dimension</th><th>REST</th><th>GraphQL</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Data fetching</td><td>Fixed response shape per endpoint</td><td>Client specifies exact fields needed</td></tr>
+          <tr><td>Over-fetching</td><td>Common — endpoints return full objects</td><td>Eliminated — get only what you ask for</td></tr>
+          <tr><td>Under-fetching</td><td>Common — multiple requests to assemble data</td><td>Eliminated — fetch related data in one query</td></tr>
+          <tr><td>Caching</td><td>Simple — HTTP caching works naturally</td><td>Complex — requires specialised caching (persisted queries)</td></tr>
+          <tr><td>Learning curve</td><td>Low — widely understood, great tooling</td><td>Higher — schema design, resolvers, N+1 problems</td></tr>
+          <tr><td>Best for</td><td>Public APIs, simple CRUD, microservices</td><td>Complex product APIs, mobile apps, many different clients</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">
+        <strong>Rule of thumb:</strong> Start with REST. Move to GraphQL if your clients have highly variable data needs (e.g., a mobile app and a web app needing very different shapes of data from the same backend).
+      </div>
+    </div>
+  </section>
+
+  <!-- Versioning -->
+  <section>
+    <div class="card">
+      <h2>API Versioning</h2>
+      <p>Once an API is public (used by external clients, mobile apps, or partners), changes that break the contract are extremely costly. Versioning lets you evolve the API without breaking existing consumers.</p>
+      <div class="two-col">
+        <div class="mini-card">
+          <h4>URL Versioning (recommended)</h4>
+          <ul>
+            <li><code>/api/v1/users</code></li>
+            <li>Explicit and visible</li>
+            <li>Easy to test and cache</li>
+            <li>Most common in practice</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Header Versioning</h4>
+          <ul>
+            <li><code>Accept: application/vnd.api+json;version=2</code></li>
+            <li>Keeps URLs clean</li>
+            <li>Harder to test manually</li>
+            <li>Used by GitHub, Stripe</li>
+          </ul>
+        </div>
+      </div>
+      <p><strong>Backward-compatible changes</strong> (adding new fields, new endpoints, new optional parameters) don't need a version bump. <strong>Breaking changes</strong> (removing fields, changing types, changing behaviour) require a new version.</p>
+      <p>Maintain at least one previous major version with a sunset date. Give consumers 6–12 months to migrate.</p>
+    </div>
+  </section>
+
+  <!-- Authentication -->
+  <section>
+    <div class="card">
+      <h2>API Authentication</h2>
+      <table>
+        <thead>
+          <tr><th>Method</th><th>How It Works</th><th>Best For</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>API Keys</strong></td>
+            <td>A static secret token sent in headers (<code>Authorization: Bearer sk_live_...</code> or <code>X-API-Key: ...</code>)</td>
+            <td>Server-to-server integrations, simple public API access. Easy to implement; rotate if leaked.</td>
+          </tr>
+          <tr>
+            <td><strong>OAuth 2.0</strong></td>
+            <td>Delegated authorisation protocol. User grants an app permission to act on their behalf without sharing their password. Issues short-lived access tokens + refresh tokens.</td>
+            <td>User-facing apps needing access to third-party resources ("Login with Google", Stripe Connect). Industry standard.</td>
+          </tr>
+          <tr>
+            <td><strong>JWT</strong></td>
+            <td>JSON Web Tokens — signed, self-contained tokens encoding user identity and claims. Verified without a database lookup.</td>
+            <td>Stateless auth in microservices, mobile apps. Common output of OAuth flows. Verify the signature; don't trust unverified JWTs.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- For PMs -->
+  <section>
+    <div class="card">
+      <h2>For PMs: Speccing API Work</h2>
+      <h3>What to Include in API Requirements</h3>
+      <ul>
+        <li><strong>Consumer context:</strong> who calls this endpoint — mobile app, web frontend, partner integration? Their needs should shape the response shape.</li>
+        <li><strong>Resource model:</strong> what data is being created, read, updated, or deleted? What fields are required vs optional?</li>
+        <li><strong>Error cases:</strong> what should happen when inputs are invalid, the resource doesn't exist, or the user lacks permission? Enumerate the expected error codes and messages.</li>
+        <li><strong>Rate limits and pagination:</strong> for list endpoints, how many records? What's the pagination strategy (cursor, offset)?</li>
+        <li><strong>Backward compatibility commitment:</strong> is this a public API? Who else might depend on it?</li>
+      </ul>
+      <h3>Backward Compatibility</h3>
+      <p>Changing an API field name, removing a field, or changing a field type is a <strong>breaking change</strong>. If mobile apps consume this API, a breaking change could break old app versions that users haven't updated. Always ask: "Who else depends on this, and what will break for them?"</p>
+      <h3>API Contracts as a Communication Tool</h3>
+      <p>Agreeing on the API contract (request/response schema) upfront lets frontend and backend teams work in parallel. Tools like <strong>OpenAPI / Swagger</strong> let you define the contract as a spec, auto-generate docs, and mock the API so the frontend team doesn't have to wait for backend implementation.</p>
+    </div>
+  </section>
+
+  <div class="tags">
+    <span class="tag">api</span>
+    <span class="tag">rest</span>
+    <span class="tag">graphql</span>
+    <span class="tag">backend</span>
+    <span class="tag">design</span>
+    <span class="tag">http</span>
+    <span class="tag">authentication</span>
+  </div>
+</main>
+</body>
+</html>
