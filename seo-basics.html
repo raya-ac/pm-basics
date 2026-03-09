@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SEO Basics -- ref.guide</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0f0f13; color: #e8e8f0; font-family: system-ui, -apple-system, sans-serif; font-size: 15px; line-height: 1.7; }
+    a { color: #7c6af7; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .progress-bar { position: fixed; top: 0; left: 0; width: 60%; height: 4px; background: #7c6af7; z-index: 1000; }
+    nav { position: fixed; top: 4px; left: 0; right: 0; height: 56px; background: #17171d; border-bottom: 1px solid #2a2a36; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; z-index: 999; }
+    .nav-logo { font-weight: 700; font-size: 1.1rem; color: #e8e8f0; letter-spacing: -0.02em; }
+    .nav-logo span { color: #7c6af7; }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a { color: #888899; font-size: 0.85rem; font-weight: 500; transition: color 0.15s; }
+    .nav-links a:hover { color: #e8e8f0; text-decoration: none; }
+    main { max-width: 860px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+    .hero { margin-bottom: 3rem; }
+    .hero h1 { font-size: 2.6rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+    .hero p { color: #888899; font-size: 1.1rem; max-width: 580px; }
+    .hero-meta { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1.25rem; }
+    .tag { background: #1e1e27; color: #7c6af7; font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.65rem; border-radius: 20px; letter-spacing: 0.02em; }
+    section { margin-bottom: 2rem; }
+    .card { background: #17171d; border: 1px solid #2a2a36; border-radius: 10px; padding: 1.5rem; }
+    h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: #e8e8f0; }
+    h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; color: #e8e8f0; }
+    p { margin-bottom: 0.75rem; color: #c8c8d8; }
+    p:last-child { margin-bottom: 0; }
+    ul, ol { padding-left: 1.25rem; margin-bottom: 0.75rem; color: #c8c8d8; }
+    li { margin-bottom: 0.35rem; }
+    pre { background: #1e1e27; color: #4dd0e1; padding: 1rem 1.25rem; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; line-height: 1.6; margin: 0.75rem 0; font-family: 'Menlo', 'Consolas', monospace; }
+    code { background: #1e1e27; color: #4dd0e1; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85rem; font-family: 'Menlo', 'Consolas', monospace; }
+    .table-wrap { overflow-x: auto; margin-top: 0.75rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th { text-align: left; padding: 0.6rem 0.9rem; background: #1e1e27; color: #888899; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #2a2a36; }
+    td { padding: 0.7rem 0.9rem; border-bottom: 1px solid #2a2a36; color: #c8c8d8; vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #1e1e27; }
+    .crawl-flow { display: flex; align-items: center; gap: 0; margin: 1.25rem 0; flex-wrap: wrap; }
+    .crawl-step { background: #1e1e27; border: 1px solid #2a2a36; border-radius: 8px; padding: 1rem 1.25rem; flex: 1; min-width: 160px; }
+    .crawl-step-num { font-size: 0.72rem; font-weight: 700; color: #7c6af7; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
+    .crawl-step-name { font-weight: 700; font-size: 1rem; margin-bottom: 0.3rem; }
+    .crawl-step-desc { font-size: 0.8rem; color: #888899; line-height: 1.5; }
+    .crawl-arrow { color: #2a2a36; font-size: 1.5rem; padding: 0 0.5rem; flex-shrink: 0; }
+    .onpage-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .onpage-item { background: #1e1e27; border: 1px solid #2a2a36; border-radius: 8px; padding: 1rem; }
+    .onpage-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.3rem; color: #e8e8f0; }
+    .onpage-desc { font-size: 0.82rem; color: #888899; line-height: 1.5; }
+    .onpage-example { margin-top: 0.4rem; font-size: 0.78rem; color: #4dd0e1; font-family: 'Menlo', 'Consolas', monospace; }
+    .cwv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem; }
+    .cwv-card { background: #1e1e27; border: 1px solid #2a2a36; border-radius: 8px; padding: 1rem; }
+    .cwv-abbr { font-size: 1.4rem; font-weight: 800; color: #7c6af7; margin-bottom: 0.2rem; }
+    .cwv-name { font-weight: 700; font-size: 0.88rem; margin-bottom: 0.25rem; }
+    .cwv-measures { font-size: 0.8rem; color: #888899; margin-bottom: 0.5rem; line-height: 1.5; }
+    .cwv-target { font-size: 0.78rem; }
+    .cwv-target .good { color: #4caf82; font-weight: 600; }
+    .cwv-target .needs { color: #f0a04d; font-weight: 600; }
+    .cwv-target .poor { color: #e05a5a; font-weight: 600; }
+    .vs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+    .vs-card { background: #1e1e27; border: 1px solid #2a2a36; border-radius: 8px; padding: 1.1rem; }
+    .vs-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
+    .vs-label.organic { color: #4caf82; }
+    .vs-label.paid { color: #f0a04d; }
+    .vs-card ul { font-size: 0.85rem; }
+    .conflict-list { display: flex; flex-direction: column; gap: 0.85rem; margin-top: 0.75rem; }
+    .conflict-item { background: #1e1e27; border-left: 3px solid #e05a5a; border-radius: 0 8px 8px 0; padding: 0.85rem 1rem; }
+    .conflict-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.2rem; }
+    .conflict-desc { font-size: 0.83rem; color: #888899; }
+    .pm-box { background: #17171d; border: 1px solid #7c6af7; border-radius: 10px; padding: 1.5rem; }
+    .pm-box h2 { color: #7c6af7; }
+    @media (max-width: 600px) { .cwv-grid { grid-template-columns: 1fr; } .vs-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="progress-bar"></div>
+  <nav>
+    <a href="/code/pm-site/index.html" class="nav-logo">ref<span>.</span>guide</a>
+    <div class="nav-links">
+      <a href="#">Engineering</a>
+      <a href="#">Data</a>
+      <a href="#">Writing</a>
+      <a href="#">Product</a>
+      <a href="#">DevOps</a>
+      <a href="#">Web</a>
+      <a href="#">Career</a>
+    </div>
+  </nav>
+  <main>
+    <div class="hero">
+      <h1>SEO Basics</h1>
+      <p>How search engines work and what actually moves the needle on organic traffic.</p>
+      <div class="hero-meta">
+        <span class="tag">seo</span>
+        <span class="tag">web</span>
+        <span class="tag">growth</span>
+        <span class="tag">performance</span>
+      </div>
+    </div>
+
+    <section>
+      <div class="card">
+        <h2>How Search Works: Crawl, Index, Rank</h2>
+        <p>Before your page can rank, Google (and other search engines) need to discover it, understand it, and decide where it belongs in results. This happens in three stages:</p>
+        <div class="crawl-flow">
+          <div class="crawl-step">
+            <div class="crawl-step-num">Stage 1</div>
+            <div class="crawl-step-name">Crawl</div>
+            <div class="crawl-step-desc">Googlebot discovers pages by following links across the web. It downloads the HTML of each page it finds and queues new links for future crawling. If a page has no inbound links, it may never be crawled.</div>
+          </div>
+          <div class="crawl-arrow">&#8594;</div>
+          <div class="crawl-step">
+            <div class="crawl-step-num">Stage 2</div>
+            <div class="crawl-step-name">Index</div>
+            <div class="crawl-step-desc">Crawled pages are processed and stored in Google's index -- a giant catalogue of content keyed to the words and concepts on each page. Pages blocked by robots.txt, noindex tags, or slow load times may not get indexed.</div>
+          </div>
+          <div class="crawl-arrow">&#8594;</div>
+          <div class="crawl-step">
+            <div class="crawl-step-num">Stage 3</div>
+            <div class="crawl-step-name">Rank</div>
+            <div class="crawl-step-desc">When someone searches, Google scores every indexed page for that query across hundreds of signals -- relevance, authority, page experience -- and returns the top results. Ranking is dynamic and personalised.</div>
+          </div>
+        </div>
+        <p>The practical implication: you can have brilliant content that never ranks because it can't be crawled, isn't indexed, or lacks the authority signals to compete. Technical SEO fixes the first two; content and links fix the third.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>On-Page SEO</h2>
+        <p>On-page SEO is everything you control on the page itself. It signals to search engines what the page is about and who should see it:</p>
+        <div class="onpage-grid">
+          <div class="onpage-item">
+            <div class="onpage-name">Title Tag</div>
+            <div class="onpage-desc">The most important on-page signal. Appears in the browser tab and as the blue headline in search results. Should include the primary keyword near the front. Keep under 60 characters.</div>
+            <div class="onpage-example">&lt;title&gt;Docker Basics for PMs -- ref.guide&lt;/title&gt;</div>
+          </div>
+          <div class="onpage-item">
+            <div class="onpage-name">Meta Description</div>
+            <div class="onpage-desc">A summary snippet shown under the title in results. Does not directly affect ranking, but a compelling description improves click-through rate. Keep under 160 characters.</div>
+            <div class="onpage-example">&lt;meta name="description" content="..."&gt;</div>
+          </div>
+          <div class="onpage-item">
+            <div class="onpage-name">Heading Hierarchy</div>
+            <div class="onpage-desc">One H1 per page (matches the topic), logical H2s for sections, H3s for sub-sections. Search engines use headings to understand structure. Users scan them to navigate -- both matter.</div>
+            <div class="onpage-example">H1 &gt; H2 &gt; H3 (never skip levels)</div>
+          </div>
+          <div class="onpage-item">
+            <div class="onpage-name">URL Structure</div>
+            <div class="onpage-desc">Clean, descriptive, keyword-rich URLs. Use hyphens between words, not underscores. Keep them short. Avoid query strings and dynamic parameters in crawlable content URLs.</div>
+            <div class="onpage-example">/seo/on-page-basics (good)
+/page?id=2847 (bad)</div>
+          </div>
+          <div class="onpage-item">
+            <div class="onpage-name">Image Alt Text</div>
+            <div class="onpage-desc">Describes images to search engines (which can't see them) and screen readers. Include the keyword naturally where relevant. Don't keyword-stuff alt text -- describe the image accurately.</div>
+            <div class="onpage-example">alt="Docker container architecture diagram"</div>
+          </div>
+          <div class="onpage-item">
+            <div class="onpage-name">Internal Linking</div>
+            <div class="onpage-desc">Links between your own pages pass authority and help crawlers discover content. Use descriptive anchor text that reflects the target page's topic rather than generic "click here" phrases.</div>
+            <div class="onpage-example">"see our guide to Kubernetes" (not "click here")</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Technical SEO</h2>
+        <p>Technical SEO ensures search engines can efficiently crawl, index, and understand your site. Many technical issues silently tank rankings without any obvious user-facing symptom:</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Technical Factor</th><th>What It Does</th><th>Common Issues</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Page Speed</strong></td><td>Fast pages rank higher and convert better. Google uses Core Web Vitals as a ranking signal.</td><td>Unoptimised images, render-blocking JS, no CDN, large bundles.</td></tr>
+              <tr><td><strong>Mobile-Friendly</strong></td><td>Google uses mobile-first indexing -- it crawls your mobile version, not desktop. Non-responsive sites are penalised.</td><td>Fixed-width layouts, tiny tap targets, content wider than viewport.</td></tr>
+              <tr><td><strong>HTTPS</strong></td><td>A confirmed (minor) ranking signal. Also required for browser trust indicators and modern web APIs.</td><td>Mixed content warnings, expired certificates, HTTP-only pages.</td></tr>
+              <tr><td><strong>sitemap.xml</strong></td><td>A machine-readable list of all your URLs. Helps Google discover and prioritise pages to crawl, especially for large or deep sites.</td><td>Outdated URLs, missing important pages, not submitted to Search Console.</td></tr>
+              <tr><td><strong>robots.txt</strong></td><td>Tells crawlers which parts of your site not to crawl. Accidentally blocking important pages here is a common and catastrophic mistake.</td><td>Blocking /api/, /checkout/, or entire product directories unintentionally.</td></tr>
+              <tr><td><strong>Canonical Tags</strong></td><td>Tells Google which URL is the "official" version when the same content exists at multiple URLs. Prevents duplicate content diluting your rankings.</td><td>Missing canonicals on paginated pages, filter URLs, or print versions.</td></tr>
+              <tr><td><strong>Structured Data</strong></td><td>Schema.org markup that gives Google rich information (product prices, review stars, FAQs) to display in rich snippets in results.</td><td>Invalid JSON-LD, markup not matching visible page content.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Off-Page SEO</h2>
+        <p>Off-page SEO covers signals that originate outside your website -- primarily the quality and quantity of external sites that link to you. Google interprets links as votes of authority.</p>
+        <ul>
+          <li><strong>Backlinks:</strong> Links from other domains to your pages. A link from a high-authority site (major news outlet, well-known industry blog) carries far more weight than dozens of low-quality links. Quality beats quantity.</li>
+          <li><strong>Domain Authority:</strong> A third-party metric (Moz, Ahrefs, Semrush each have their own version) that estimates how strong your overall domain is based on its backlink profile. Not a Google metric, but a useful proxy.</li>
+          <li><strong>Brand Signals:</strong> Unlinked brand mentions, social shares, and branded searches all send indirect signals. A strong brand that people actively search for is harder for Google to ignore.</li>
+          <li><strong>Link building strategies:</strong> Creating genuinely useful content that earns links ("link-worthy" content), digital PR, guest posts on relevant publications, partnerships, and fixing broken links on other sites that once pointed to you.</li>
+        </ul>
+        <p>Avoid low-quality link schemes (paid links, link farms, private blog networks). Google's spam systems detect and penalise these. One strong editorial link is worth more than hundreds of spammy ones.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Core Web Vitals</h2>
+        <p>Core Web Vitals are Google's specific set of page experience metrics that are used as a ranking signal. They measure real-world user experience -- load speed, interactivity, and visual stability:</p>
+        <div class="cwv-grid">
+          <div class="cwv-card">
+            <div class="cwv-abbr">LCP</div>
+            <div class="cwv-name">Largest Contentful Paint</div>
+            <div class="cwv-measures">Measures loading performance. The time until the largest visible content element (image or text block) is rendered on screen.</div>
+            <div class="cwv-target"><span class="good">Good: &lt; 2.5s</span> &nbsp; <span class="needs">Needs work: 2.5-4s</span> &nbsp; <span class="poor">Poor: &gt; 4s</span></div>
+          </div>
+          <div class="cwv-card">
+            <div class="cwv-abbr">INP</div>
+            <div class="cwv-name">Interaction to Next Paint</div>
+            <div class="cwv-measures">Measures interactivity (replaced FID in 2024). The latency from any user interaction (click, tap, keypress) to the next frame painted on screen.</div>
+            <div class="cwv-target"><span class="good">Good: &lt; 200ms</span> &nbsp; <span class="needs">Needs work: 200-500ms</span> &nbsp; <span class="poor">Poor: &gt; 500ms</span></div>
+          </div>
+          <div class="cwv-card">
+            <div class="cwv-abbr">CLS</div>
+            <div class="cwv-name">Cumulative Layout Shift</div>
+            <div class="cwv-measures">Measures visual stability. A score of unexpected layout shifts -- ads loading late, images without dimensions, fonts swapping. A high CLS means the page jumps around as it loads.</div>
+            <div class="cwv-target"><span class="good">Good: &lt; 0.1</span> &nbsp; <span class="needs">Needs work: 0.1-0.25</span> &nbsp; <span class="poor">Poor: &gt; 0.25</span></div>
+          </div>
+        </div>
+        <p style="margin-top:1rem">Measure your CWVs in <strong>Google Search Console</strong> (real user data) and <strong>PageSpeed Insights</strong> (lab data). Field data from real users is what Google uses for ranking -- lab scores are useful for debugging.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>SEO vs SEM: Organic vs Paid</h2>
+        <div class="vs-grid">
+          <div class="vs-card">
+            <div class="vs-label organic">SEO -- Organic Search</div>
+            <ul>
+              <li>No cost per click</li>
+              <li>Compounding returns over time</li>
+              <li>Takes months to see results</li>
+              <li>Hard to turn on and off</li>
+              <li>High trust from users</li>
+              <li>Best for: content, informational queries, long-term growth</li>
+            </ul>
+          </div>
+          <div class="vs-card">
+            <div class="vs-label paid">SEM -- Paid Search (Google Ads)</div>
+            <ul>
+              <li>Pay per click (CPC bidding)</li>
+              <li>Instant traffic from day one</li>
+              <li>Stops immediately when budget stops</li>
+              <li>Full control over timing and targeting</li>
+              <li>Labelled "Sponsored" -- lower trust</li>
+              <li>Best for: launches, commercial queries, testing messaging</li>
+            </ul>
+          </div>
+        </div>
+        <p style="margin-top:1rem">The two are complementary, not competitive. Use paid search to validate that a keyword converts before investing months of SEO effort into it. Use SEO to reduce long-term customer acquisition cost for queries you've validated.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="pm-box">
+        <h2>For PMs: SEO Priorities and Dev Conflicts</h2>
+        <p><strong>How to prioritise SEO work:</strong></p>
+        <ul>
+          <li>Focus first on technical foundations -- if pages can't be crawled and indexed, no amount of content helps. Run a site audit (Screaming Frog, Semrush) and fix crawl errors, noindex tags, and redirect chains before investing in content.</li>
+          <li>Prioritise high-traffic, high-intent pages first. A 20% improvement in organic traffic to your top 10 pages will dwarf a 100% improvement to your bottom 200.</li>
+          <li>Core Web Vitals improvements have dual value: they improve search rankings and conversion rates simultaneously. Make the business case on both dimensions.</li>
+          <li>Track SEO as a channel metric in your product reviews: organic sessions, keyword rankings for target terms, click-through rates from Search Console.</li>
+        </ul>
+        <p style="margin-top:1rem"><strong>Common dev/SEO conflicts to navigate:</strong></p>
+        <div class="conflict-list">
+          <div class="conflict-item">
+            <div class="conflict-title">Single-Page Apps (SPAs) and client-side rendering</div>
+            <div class="conflict-desc">React, Vue, and Angular SPAs that render content in the browser (client-side) can be invisible to search engines. Googlebot does execute JavaScript, but it can be slow and unreliable. Push for server-side rendering (SSR) or static generation (SSG) for SEO-critical pages. Next.js and Nuxt are common solutions.</div>
+          </div>
+          <div class="conflict-item">
+            <div class="conflict-title">Pagination and infinite scroll</div>
+            <div class="conflict-desc">Infinite scroll is great UX but terrible for SEO -- the content below the fold never gets indexed because Googlebot doesn't scroll. Use paginated URLs (/products?page=2) for category pages, or implement "load more" with a crawlable fallback pagination. Blog and product listing pages are especially affected.</div>
+          </div>
+          <div class="conflict-item">
+            <div class="conflict-title">Redirects and URL changes</div>
+            <div class="conflict-desc">Changing a URL without a 301 redirect is link equity suicide -- all the authority built up at the old URL is lost. Any URL change (restructuring the nav, rebranding a product line) needs a permanent redirect from old to new. Temporary 302 redirects do not pass authority. Always audit redirects before major site migrations.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
