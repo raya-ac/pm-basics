@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metrics Guide — ref.guide</title>
+<style>
+:root{--bg:#0f0f13;--surface:#17171d;--surface2:#1e1e27;--border:#2a2a36;--accent:#7c6af7;--acc2:#f06292;--acc3:#4dd0e1;--acc4:#66bb6a;--text:#e8e8f0;--muted:#888899;--radius:10px;--nav-h:56px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6;min-height:100vh}
+nav{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(15,15,19,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px}
+.nav-logo{font-weight:700;font-size:1rem;color:var(--text);text-decoration:none;letter-spacing:-.02em}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:4px;margin-left:auto}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.85rem;padding:6px 12px;border-radius:6px;transition:all .2s}
+.nav-links a:hover{color:var(--text);background:var(--surface2)}
+.nav-links a.active{color:var(--accent);background:rgba(124,106,247,.12)}
+.hero{padding:64px 24px 40px;max-width:860px;margin:0 auto}
+.hero-tag{display:inline-block;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border-radius:20px;padding:4px 12px;margin-bottom:16px}
+.hero h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:12px}
+.hero p{color:var(--muted);font-size:1.05rem;max-width:600px}
+.content{max-width:860px;margin:0 auto;padding:0 24px 80px}
+.section{margin-bottom:48px}
+.section h2{font-size:1.25rem;font-weight:700;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.icon{width:28px;height:28px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:12px;transition:border-color .2s}
+.card:hover{border-color:var(--accent)}
+.card h3{font-size:.95rem;font-weight:600;margin-bottom:6px}
+.card p,.card li{font-size:.875rem;color:var(--muted);line-height:1.6}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.callout{background:rgba(124,106,247,.08);border:1px solid rgba(124,106,247,.25);border-left:3px solid var(--accent);border-radius:var(--radius);padding:16px 20px;margin:16px 0;font-size:.9rem;line-height:1.7}
+.callout strong{color:var(--accent)}
+.callout.pink{background:rgba(240,98,146,.08);border-color:rgba(240,98,146,.25);border-left-color:var(--acc2)}
+.callout.pink strong{color:var(--acc2)}
+.tag{display:inline-block;font-size:.7rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-right:6px;margin-bottom:4px}
+table{width:100%;border-collapse:collapse;font-size:.875rem}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.metric-big{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center}
+.metric-big .val{font-size:2rem;font-weight:800;color:var(--accent)}
+.metric-big .label{font-size:.8rem;color:var(--muted);margin-top:4px}
+.framework-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.fw-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px}
+.fw-card .fw-letter{font-size:1.6rem;font-weight:800;color:var(--accent);margin-bottom:4px}
+.fw-card .fw-name{font-size:.85rem;font-weight:600;margin-bottom:4px}
+.fw-card .fw-desc{font-size:.8rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">ref<span>.</span>guide</a>
+  <div class="nav-links">
+    <a href="engineering-basics.html">Eng</a>
+    <a href="sql-basics.html">Data</a>
+    <a href="writing-for-engineers.html">Writing</a>
+    <a href="roadmapping.html" class="active">Product</a>
+    <a href="devops-basics.html">DevOps</a>
+    <a href="api-design.html">Web</a>
+    <a href="engineering-career.html">Career</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag" style="background:rgba(124,106,247,.15);color:var(--accent)">Product</div>
+  <h1>Metrics Guide</h1>
+  <p>How to pick the right metrics, avoid vanity traps, and connect numbers to decisions that actually matter.</p>
+</div>
+
+<div class="content">
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#11088;</span> North Star Metric</h2>
+    <div class="callout">
+      <strong>Definition:</strong> The single metric that best captures the core value your product delivers to users. It aligns the entire company on what "success" means. Everything else is either a leading indicator of it or a guardrail protecting it.
+    </div>
+    <div class="grid3">
+      <div class="metric-big"><div class="val">Weekly active editors</div><div class="label">Figma's North Star</div></div>
+      <div class="metric-big"><div class="val" style="font-size:1.4rem">Nights booked</div><div class="label">Airbnb's North Star</div></div>
+      <div class="metric-big"><div class="val" style="font-size:1.4rem">Messages sent per day</div><div class="label">Slack's North Star</div></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>How to define yours</h3>
+      <p>Ask: "What action, when a user does it repeatedly, most reliably predicts long-term retention and revenue?" It should be: specific (not "engagement"), measurable (not "happiness"), and action-based (a thing users do, not a thing you feel).</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#128200;</span> Input vs Output Metrics</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3>Output metrics (lag)</h3>
+        <p>Measure the result. Hard to influence directly in the short term. Tell you if you succeeded — after the fact.</p>
+        <ul style="padding-left:16px;margin-top:8px">
+          <li>Monthly recurring revenue (MRR)</li>
+          <li>Net Promoter Score (NPS)</li>
+          <li>Churn rate</li>
+          <li>Daily active users (DAU)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Input metrics (lead)</h3>
+        <p>Measure the behaviors that drive the output. Actionable and faster-moving. Ship work that moves these; output will follow.</p>
+        <ul style="padding-left:16px;margin-top:8px">
+          <li>Onboarding completion rate</li>
+          <li>Feature adoption rate</li>
+          <li>Time to first value</li>
+          <li>Support ticket volume</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout">
+      <strong>PM tip:</strong> Manage to input metrics, report on output metrics. Your team can directly move inputs; outputs are the lagged result of many inputs across many teams.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#128154;</span> HEART Framework (Google)</h2>
+    <p style="color:var(--muted);font-size:.9rem;margin-bottom:16px">A structured way to define user-centered metrics for any product or feature. For each dimension, define Goal → Signal → Metric.</p>
+    <div class="framework-grid">
+      <div class="fw-card"><div class="fw-letter">H</div><div class="fw-name">Happiness</div><div class="fw-desc">User satisfaction and sentiment. NPS, CSAT, app store rating.</div></div>
+      <div class="fw-card"><div class="fw-letter">E</div><div class="fw-name">Engagement</div><div class="fw-desc">Depth and frequency of use. Sessions/week, features used per session.</div></div>
+      <div class="fw-card"><div class="fw-letter">A</div><div class="fw-name">Adoption</div><div class="fw-desc">New users reaching key actions. % of new signups completing setup.</div></div>
+      <div class="fw-card"><div class="fw-letter">R</div><div class="fw-name">Retention</div><div class="fw-desc">Users returning over time. Day-7 retention, monthly active rate.</div></div>
+      <div class="fw-card"><div class="fw-letter">T</div><div class="fw-name">Task Success</div><div class="fw-desc">Efficiency and completion of specific tasks. Time on task, error rate, completion rate.</div></div>
+    </div>
+    <div class="callout" style="margin-top:16px">
+      <strong>Usage:</strong> Pick 1–2 HEART dimensions most relevant to the feature you're measuring. Defining all 5 for every feature creates metric overload.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#9875;</span> AARRR Pirate Metrics</h2>
+    <table>
+      <thead><tr><th>Stage</th><th>Question</th><th>Example metrics</th><th>Owner</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag" style="background:rgba(77,208,225,.15);color:var(--acc3)">Acquisition</span></td><td>How do users find us?</td><td>Traffic by channel, CAC, signup rate</td><td>Marketing, Growth</td></tr>
+        <tr><td><span class="tag" style="background:rgba(124,106,247,.15);color:var(--accent)">Activation</span></td><td>Do users reach their first value?</td><td>Onboarding completion, time-to-value, aha moment rate</td><td>Product, Growth</td></tr>
+        <tr><td><span class="tag" style="background:rgba(102,187,106,.15);color:var(--acc4)">Retention</span></td><td>Do users come back?</td><td>D1/D7/D30 retention, churn rate, cohort curves</td><td>Product</td></tr>
+        <tr><td><span class="tag" style="background:rgba(240,98,146,.15);color:var(--acc2)">Revenue</span></td><td>Do users pay?</td><td>MRR, ARPU, LTV, conversion rate (free → paid)</td><td>Product, Finance</td></tr>
+        <tr><td><span class="tag" style="background:rgba(77,208,225,.15);color:var(--acc3)">Referral</span></td><td>Do users tell others?</td><td>Viral coefficient, NPS, referral rate</td><td>Growth, Marketing</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#127919;</span> Setting Good Feature Success Metrics</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3>The success metric formula</h3>
+        <p>A good feature metric is: <em>specific</em> (one number, not "engagement"), <em>time-bound</em> (measured at 30 days post-launch), <em>directional</em> (higher is better), and <em>connected to the North Star</em>.</p>
+        <p style="margin-top:8px"><strong>Template:</strong> "[metric name] will increase from [baseline] to [target] within [timeframe] of launch, as measured by [data source]."</p>
+      </div>
+      <div class="card">
+        <h3>Always define a guardrail metric</h3>
+        <p>The metric you're not willing to hurt in order to move the primary metric. Example: increasing checkout conversion rate should not increase payment fraud rate. Guardrails prevent local optimization that damages the broader system.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#128683;</span> Vanity Metrics to Avoid</h2>
+    <table>
+      <thead><tr><th>Vanity metric</th><th>Why it's misleading</th><th>Better alternative</th></tr></thead>
+      <tbody>
+        <tr><td>Total registered users</td><td>Includes churned, never-activated, and zombie accounts</td><td>Monthly active users (MAU) or weekly actives</td></tr>
+        <tr><td>Page views</td><td>A confused user visits more pages than a satisfied one</td><td>Task completion rate, time to value</td></tr>
+        <tr><td>App downloads</td><td>Most apps are used once then abandoned</td><td>D7 retention rate</td></tr>
+        <tr><td>Emails sent</td><td>Volume says nothing about value delivered</td><td>Email open + click rate, actions taken post-email</td></tr>
+        <tr><td>Features shipped</td><td>Output metric; shipping bad features still counts</td><td>Adoption rate of features shipped, impact on North Star</td></tr>
+        <tr><td>Press mentions</td><td>PR ≠ users or revenue</td><td>Referral traffic from coverage, signups attributed to PR</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#128295;</span> Instrumentation Checklist</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3>Before you build</h3>
+        <ul style="padding-left:16px">
+          <li>Define success metric and baseline</li>
+          <li>Identify what events need to be tracked</li>
+          <li>Agree on event naming convention with eng</li>
+          <li>Confirm tracking is in the acceptance criteria</li>
+          <li>Verify analytics pipeline can handle the volume</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>At launch</h3>
+        <ul style="padding-left:16px">
+          <li>Verify events are firing in staging before prod</li>
+          <li>Check event schema matches what was planned</li>
+          <li>Confirm dashboard is populated with real data</li>
+          <li>Set up alerts for anomalous metric movement</li>
+          <li>Document event definitions in the data dictionary</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
