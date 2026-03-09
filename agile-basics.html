@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agile Basics — ref.guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0f0f13;
+    --surface: #17171d;
+    --surface2: #1e1e27;
+    --border: #2a2a36;
+    --accent: #7c6af7;
+    --text: #e8e8f0;
+    --muted: #888899;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; font-size: 15px; line-height: 1.7; }
+
+  .progress-bar { position: fixed; top: 0; left: 0; width: 60%; height: 4px; background: var(--accent); z-index: 1000; }
+
+  nav { position: fixed; top: 4px; left: 0; right: 0; height: 56px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; z-index: 999; }
+  .nav-logo { font-weight: 700; font-size: 1.1rem; color: var(--accent); text-decoration: none; letter-spacing: -0.02em; }
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+
+  main { max-width: 860px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+
+  .hero { margin-bottom: 3rem; }
+  .hero h1 { font-size: 2.6rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+  .hero p { font-size: 1.15rem; color: var(--muted); max-width: 580px; }
+
+  section { margin-bottom: 2.5rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
+  h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--text); }
+  h3 { font-size: 1rem; font-weight: 600; color: var(--accent); margin: 1.2rem 0 0.4rem; }
+  p { margin-bottom: 0.75rem; }
+  p:last-child { margin-bottom: 0; }
+  ul, ol { padding-left: 1.4rem; margin-bottom: 0.75rem; }
+  li { margin-bottom: 0.35rem; }
+
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+  th { background: var(--surface2); color: var(--muted); font-weight: 600; text-align: left; padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--border); }
+  td { padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(124,106,247,0.04); }
+
+  /* Manifesto values grid */
+  .values-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1rem 0; }
+  .value-pair { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem 1rem; }
+  .value-pair .preferred { font-weight: 700; color: var(--text); font-size: 0.95rem; }
+  .value-pair .over { font-size: 0.78rem; color: var(--muted); margin: 0.2rem 0; }
+  .value-pair .secondary { color: var(--muted); font-size: 0.88rem; text-decoration: line-through; }
+
+  /* Ceremony cards */
+  .ceremony-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin: 1rem 0; }
+  .ceremony-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+  .ceremony-card h4 { font-size: 0.9rem; font-weight: 700; color: var(--accent); margin-bottom: 0.4rem; }
+  .ceremony-card p { font-size: 0.85rem; color: var(--muted); margin: 0; }
+
+  /* Anti-pattern list */
+  .antipattern { background: rgba(248,113,113,0.06); border: 1px solid rgba(248,113,113,0.2); border-radius: 8px; padding: 1rem 1.1rem; margin: 0.6rem 0; }
+  .antipattern .ap-name { font-weight: 700; color: #f87171; margin-bottom: 0.2rem; }
+  .antipattern .ap-desc { font-size: 0.88rem; color: var(--muted); }
+
+  .callout { background: rgba(124,106,247,0.08); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin: 1rem 0; }
+  .callout strong { color: var(--accent); }
+
+  /* Estimation comparison */
+  .est-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin: 1rem 0; }
+  .est-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+  .est-card h4 { font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
+  .est-card p { font-size: 0.82rem; color: var(--muted); margin: 0; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+  .tag { background: var(--surface2); color: var(--accent); border: 1px solid var(--border); border-radius: 20px; padding: 0.2rem 0.75rem; font-size: 0.78rem; font-weight: 500; }
+
+  @media (max-width: 600px) {
+    .values-grid, .ceremony-grid, .est-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 1.9rem; }
+    nav { padding: 0 1rem; }
+    .nav-links { gap: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+<div class="progress-bar"></div>
+
+<nav>
+  <a href="/code/pm-site/index.html" class="nav-logo">ref.guide</a>
+  <ul class="nav-links">
+    <li><a href="#">Engineering</a></li>
+    <li><a href="#">Data</a></li>
+    <li><a href="#">Writing</a></li>
+    <li><a href="#">Product</a></li>
+    <li><a href="#">DevOps</a></li>
+    <li><a href="#">Web</a></li>
+    <li><a href="#">Career</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="hero">
+    <h1>Agile Basics</h1>
+    <p>What Agile actually means — beyond the buzzwords and the bad meetings.</p>
+  </div>
+
+  <!-- Agile Manifesto -->
+  <section>
+    <div class="card">
+      <h2>The Agile Manifesto</h2>
+      <p>Written in 2001 by 17 software practitioners who were fed up with heavyweight, documentation-heavy processes. The Manifesto is short and deliberately values-based, not prescriptive.</p>
+      <p style="font-style: italic; color: var(--muted); font-size: 0.9rem;">"We are uncovering better ways of developing software by doing it and helping others do it. Through this work we have come to value..."</p>
+      <div class="values-grid">
+        <div class="value-pair">
+          <div class="preferred">Individuals and interactions</div>
+          <div class="over">over</div>
+          <div class="secondary">processes and tools</div>
+        </div>
+        <div class="value-pair">
+          <div class="preferred">Working software</div>
+          <div class="over">over</div>
+          <div class="secondary">comprehensive documentation</div>
+        </div>
+        <div class="value-pair">
+          <div class="preferred">Customer collaboration</div>
+          <div class="over">over</div>
+          <div class="secondary">contract negotiation</div>
+        </div>
+        <div class="value-pair">
+          <div class="preferred">Responding to change</div>
+          <div class="over">over</div>
+          <div class="secondary">following a plan</div>
+        </div>
+      </div>
+      <p style="font-size:0.88rem; color: var(--muted);">"That is, while there is value in the items on the right, we value the items on the left more."</p>
+
+      <h3>Key Principles (from the 12)</h3>
+      <ul>
+        <li>Deliver working software frequently — weeks rather than months.</li>
+        <li>Welcome changing requirements, even late in development.</li>
+        <li>Business people and developers must work together daily.</li>
+        <li>Build projects around motivated individuals. Give them the environment and trust they need.</li>
+        <li>Working software is the primary measure of progress.</li>
+        <li>Sustainable pace — Agile processes promote sustainable development indefinitely, not crunch cycles.</li>
+        <li>Simplicity — the art of maximising the amount of work <em>not</em> done — is essential.</li>
+        <li>The best architectures, requirements, and designs emerge from self-organising teams.</li>
+      </ul>
+      <div class="callout">
+        <strong>The manifesto doesn't mention sprints, story points, or standups.</strong> Those are practices from specific frameworks (Scrum, SAFe) layered on top. Confusing the framework with the philosophy is a core source of Agile dysfunction.
+      </div>
+    </div>
+  </section>
+
+  <!-- Scrum -->
+  <section>
+    <div class="card">
+      <h2>Scrum</h2>
+      <p>Scrum is the most widely-used Agile framework. It structures work into fixed-length iterations called <strong>sprints</strong> (usually 1–2 weeks), with defined roles, ceremonies, and artifacts.</p>
+
+      <h3>Roles</h3>
+      <table>
+        <thead>
+          <tr><th>Role</th><th>Responsibility</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Product Owner (PO)</strong></td>
+            <td>Owns the product backlog. Defines and prioritises what the team builds. Represents stakeholder and customer needs. Accountable for product value.</td>
+          </tr>
+          <tr>
+            <td><strong>Scrum Master</strong></td>
+            <td>Facilitates Scrum ceremonies. Removes impediments. Coaches the team on Agile practices. Is <em>not</em> a project manager or team lead.</td>
+          </tr>
+          <tr>
+            <td><strong>Development Team</strong></td>
+            <td>Cross-functional group (engineers, designers, QA) who deliver the work. Self-organising — they decide <em>how</em> to accomplish sprint goals.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Ceremonies</h3>
+      <div class="ceremony-grid">
+        <div class="ceremony-card">
+          <h4>Sprint Planning</h4>
+          <p>Team selects backlog items for the sprint and breaks them into tasks. Produces a sprint goal — a single sentence describing what the sprint is meant to achieve.</p>
+        </div>
+        <div class="ceremony-card">
+          <h4>Daily Standup</h4>
+          <p>15-minute sync. What did I do yesterday? What am I doing today? What's blocking me? Designed to surface blockers, not report status to a manager.</p>
+        </div>
+        <div class="ceremony-card">
+          <h4>Sprint Review</h4>
+          <p>Team demos completed work to stakeholders. Stakeholders give feedback. Backlog is updated based on what was learned. Not a formal sign-off ceremony.</p>
+        </div>
+        <div class="ceremony-card">
+          <h4>Retrospective</h4>
+          <p>Team reflects on the process: what went well, what didn't, what to change. Outputs are concrete action items, not just discussion. The most undervalued ceremony.</p>
+        </div>
+      </div>
+
+      <h3>Artifacts</h3>
+      <ul>
+        <li><strong>Product Backlog:</strong> Ordered list of everything the product might need. Owned by the Product Owner. Continuously refined.</li>
+        <li><strong>Sprint Backlog:</strong> The subset of the product backlog selected for the current sprint, plus the plan for delivering it.</li>
+        <li><strong>Increment:</strong> The sum of all completed backlog items at the end of a sprint. Must be usable and meet the Definition of Done.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Kanban -->
+  <section>
+    <div class="card">
+      <h2>Kanban</h2>
+      <p>Kanban is a flow-based system originating from Toyota's manufacturing process. Unlike Scrum, there are no sprints, no fixed iterations, and no prescribed roles. Work flows continuously from to-do → in progress → done.</p>
+      <h3>Core Principles</h3>
+      <ul>
+        <li><strong>Visualise the workflow:</strong> every piece of work is a card on a board (physical or digital). Everyone can see what's in flight.</li>
+        <li><strong>Limit Work in Progress (WIP):</strong> each column has a maximum number of concurrent items. When a column is full, the team must finish existing work before pulling more in. This prevents context-switching and uncovers bottlenecks.</li>
+        <li><strong>Focus on flow:</strong> the metric that matters is <em>cycle time</em> — how long it takes a work item to go from start to done. Optimise to make that shorter and more consistent.</li>
+        <li><strong>Make policies explicit:</strong> everyone agrees on what "in progress" or "done" actually means for your team.</li>
+      </ul>
+      <h3>Kanban vs Scrum: When to Use Which</h3>
+      <table>
+        <thead>
+          <tr><th>Situation</th><th>Better Fit</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>New product, building features in batches, need predictable delivery</td><td>Scrum</td></tr>
+          <tr><td>Support/ops team, unpredictable inflow, continuous deployment</td><td>Kanban</td></tr>
+          <tr><td>Team wants ceremonies and structured rhythm</td><td>Scrum</td></tr>
+          <tr><td>Team needs flexibility, dislikes fixed sprints</td><td>Kanban</td></tr>
+          <tr><td>Stakeholders want regular demo cadence</td><td>Scrum</td></tr>
+          <tr><td>Work items vary wildly in size and urgency</td><td>Kanban</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Anti-patterns -->
+  <section>
+    <div class="card">
+      <h2>Common Agile Anti-Patterns</h2>
+      <div class="antipattern">
+        <div class="ap-name">Zombie Standups</div>
+        <div class="ap-desc">The team recites status updates to the Scrum Master while staring at a screen. Nobody mentions blockers because it feels like admitting failure. Standups should be a team conversation, not a report-up ritual.</div>
+      </div>
+      <div class="antipattern">
+        <div class="ap-name">Story Point Obsession</div>
+        <div class="ap-desc">Teams spend 45 minutes arguing whether a ticket is a 3 or a 5. Points become a performance metric — engineers inflate estimates to look safe. Velocity is a planning tool, not a productivity KPI.</div>
+      </div>
+      <div class="antipattern">
+        <div class="ap-name">Sprint as Deadline</div>
+        <div class="ap-desc">"It's in the sprint, so it must ship Friday." Sprints are a planning cadence, not a commitment to external stakeholders. Treating them as hard deadlines creates pressure that degrades quality and trust.</div>
+      </div>
+      <div class="antipattern">
+        <div class="ap-name">Ignored Retro Actions</div>
+        <div class="ap-desc">The team identifies the same three problems every sprint and nothing changes. Retros without follow-through teach the team that the process is performative. Always assign owners and review actions from the last retro before generating new ones.</div>
+      </div>
+      <div class="antipattern">
+        <div class="ap-name">Backlog as Dumping Ground</div>
+        <div class="ap-desc">The backlog grows to 400 items, most of which are 18 months old and irrelevant. An ungroomed backlog creates noise and erodes the team's trust in the planning process. Ruthlessly archive stale items.</div>
+      </div>
+      <div class="antipattern">
+        <div class="ap-name">Fake Agile ("ScrumFall")</div>
+        <div class="ap-desc">Sprints exist, but the full scope is locked upfront, estimates are used as commitments, and change is treated as failure. This is Waterfall in Agile clothing. The ceremonies create overhead without delivering any of the benefits.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Estimation -->
+  <section>
+    <div class="card">
+      <h2>Estimation Approaches</h2>
+      <div class="est-grid">
+        <div class="est-card">
+          <h4>Story Points</h4>
+          <p>Relative complexity using Fibonacci sequence (1, 2, 3, 5, 8, 13). Abstracts away hours. Team-specific — a 5 at company A means nothing at company B. Helps track velocity over time.</p>
+        </div>
+        <div class="est-card">
+          <h4>T-Shirt Sizing</h4>
+          <p>XS / S / M / L / XL. Lower precision but faster. Good for backlog grooming and roadmap conversations. Converts to story points later if needed.</p>
+        </div>
+        <div class="est-card">
+          <h4>#NoEstimates</h4>
+          <p>A movement arguing that estimation effort is waste. Instead: break work into similarly-sized chunks and count throughput. Focus on reducing batch size rather than predicting it.</p>
+        </div>
+      </div>
+      <div class="callout">
+        <strong>Estimates are not commitments.</strong> An estimate is a probability distribution, not a promise. The further out the work, the wider the distribution. A roadmap estimate from 3 months away that turns out to be wrong is not a failure — it's expected variance.
+      </div>
+    </div>
+  </section>
+
+  <!-- For PMs -->
+  <section>
+    <div class="card">
+      <h2>For PMs: Getting the Most from Agile</h2>
+
+      <h3>How to Run a Good Retrospective</h3>
+      <ul>
+        <li>Create psychological safety first. If engineers don't feel safe raising real problems, you'll get sanitised feedback. Set the tone by sharing something that didn't go well from your own side.</li>
+        <li>Use a structured format: <em>Start / Stop / Continue</em> or <em>What went well / What could be improved / Action items</em>.</li>
+        <li>Time-box idea generation before discussion to avoid groupthink — write on sticky notes before sharing.</li>
+        <li>Pick 1–3 action items maximum. More than that and nothing gets done. Assign an owner and a due date.</li>
+        <li>Open the <em>next</em> retro by reviewing actions from the last one.</li>
+      </ul>
+
+      <h3>How to Protect Team Velocity</h3>
+      <ul>
+        <li>Shield the team from interrupt-driven requests mid-sprint. Stakeholders should enter work via the backlog, not via Slack DMs to engineers.</li>
+        <li>Reduce meeting load. Engineers need uninterrupted blocks for deep work. Every hour of meetings is an hour not building.</li>
+        <li>Don't pull engineers into "quick calls" to explain tickets — write clear acceptance criteria instead.</li>
+        <li>Leave capacity buffer (10–20%) for unplanned work, bug fixes, and tech debt. Fully loaded sprints always slip.</li>
+      </ul>
+
+      <h3>How to Say No Using the Backlog</h3>
+      <p>The backlog is a PM's most powerful prioritisation tool — and a diplomatic shield. When a stakeholder asks for something urgent, the answer isn't "no" — it's "show me what comes out to make room for it." This makes trade-offs explicit and puts the decision with the stakeholder who has the most context.</p>
+      <p>Maintain a visible, groomed, prioritised backlog. When stakeholders can see the full queue, conversations shift from "why isn't my thing done yet" to "help me understand how to prioritise this relative to what's already in flight."</p>
+    </div>
+  </section>
+
+  <div class="tags">
+    <span class="tag">agile</span>
+    <span class="tag">scrum</span>
+    <span class="tag">kanban</span>
+    <span class="tag">process</span>
+    <span class="tag">sprints</span>
+    <span class="tag">retrospective</span>
+    <span class="tag">estimation</span>
+  </div>
+</main>
+</body>
+</html>
