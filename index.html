@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Management Basics</title>
+  <style>
+    :root {
+      --bg: #0f0f13;
+      --surface: #17171d;
+      --surface2: #1e1e27;
+      --border: #2a2a36;
+      --accent: #7c6af7;
+      --acc2: #f06292;
+      --acc3: #4dd0e1;
+      --text: #e8e8f0;
+      --muted: #888899;
+      --warn-bg: rgba(255,213,79,0.07);
+      --warn-border: rgba(255,213,79,0.35);
+      --warn-text: #ffd54f;
+      --danger-bg: rgba(239,83,80,0.07);
+      --danger-border: rgba(239,83,80,0.35);
+      --danger-text: #ef5350;
+      --info-bg: rgba(77,208,225,0.07);
+      --info-border: rgba(77,208,225,0.3);
+      --info-text: #4dd0e1;
+      --ok-bg: rgba(102,187,106,0.07);
+      --ok-border: rgba(102,187,106,0.3);
+      --ok-text: #66bb6a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 17px;
+      line-height: 1.78;
+    }
+
+    /* PROGRESS BAR */
+    #progress {
+      position: fixed;
+      top: 60px; left: 0;
+      height: 2px;
+      width: 0%;
+      background: var(--accent);
+      z-index: 99;
+      transition: width 0.1s linear;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: 60px;
+      background: rgba(15,15,19,0.93);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--accent);
+      letter-spacing: -0.4px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.82rem;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--text); }
+
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      background: radial-gradient(ellipse 80% 55% at 50% -5%, rgba(124,106,247,0.17) 0%, transparent 68%);
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(124,106,247,0.13);
+      border: 1px solid rgba(124,106,247,0.3);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.9rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 6vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent), var(--acc2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto 2rem;
+      line-height: 1.7;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.7rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: #6a58e8; }
+
+    .btn-ghost {
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--text); }
+
+    /* SECTIONS */
+    section {
+      padding: 6rem 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    section:nth-child(even) .container {
+      /* subtle alternation handled via background on section */
+    }
+
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    h2 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+    }
+
+    .lead {
+      font-size: 1.1rem;
+      color: var(--muted);
+      margin-bottom: 1.75rem;
+      line-height: 1.7;
+    }
+
+    p { margin-bottom: 1.25rem; }
+    p:last-child { margin-bottom: 0; }
+
+    /* CALLOUTS */
+    .callout {
+      border-left: 3px solid;
+      border-radius: 0 10px 10px 0;
+      padding: 1.1rem 1.4rem;
+      margin: 2rem 0;
+    }
+    .callout-warn  { background: var(--warn-bg);   border-color: var(--warn-text);   }
+    .callout-danger { background: var(--danger-bg); border-color: var(--danger-text); }
+    .callout-info  { background: var(--info-bg);   border-color: var(--info-text);   }
+    .callout-ok    { background: var(--ok-bg);     border-color: var(--ok-text);     }
+
+    .callout-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .callout-warn   .callout-title { color: var(--warn-text);   }
+    .callout-danger .callout-title { color: var(--danger-text); }
+    .callout-info   .callout-title { color: var(--info-text);   }
+    .callout-ok     .callout-title { color: var(--ok-text);     }
+
+    .callout p { margin: 0; font-size: 0.95rem; color: var(--muted); }
+
+    /* BLOCKQUOTE */
+    blockquote {
+      border-left: 3px solid var(--accent);
+      padding: 1rem 1.5rem;
+      margin: 2rem 0;
+      color: var(--muted);
+      font-style: italic;
+      font-size: 1.05rem;
+    }
+    blockquote cite {
+      display: block;
+      margin-top: 0.6rem;
+      font-size: 0.82rem;
+      font-style: normal;
+      color: #555566;
+    }
+
+    /* CARDS */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.4rem;
+      transition: border-color 0.15s;
+    }
+    .card:hover { border-color: var(--accent); }
+
+    .card-icon { font-size: 1.5rem; display: block; margin-bottom: 0.75rem; }
+
+    .card h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    /* STEPS */
+    .step-list { margin: 2rem 0; display: flex; flex-direction: column; gap: 1.25rem; }
+
+    .step {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(124,106,247,0.15);
+      border: 1px solid rgba(124,106,247,0.3);
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 3px;
+    }
+
+    .step-body h4 {
+      font-size: 0.97rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+
+    .step-body p { font-size: 0.92rem; color: var(--muted); margin: 0; }
+
+    /* DO / DON'T TABLE */
+    .do-dont {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    @media (max-width: 560px) { .do-dont { grid-template-columns: 1fr; } }
+
+    .do-col, .dont-col {
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .do-col   { background: var(--ok-bg);     border: 1px solid var(--ok-border);     }
+    .dont-col { background: var(--danger-bg); border: 1px solid var(--danger-border); }
+
+    .do-col h4   { color: var(--ok-text);     font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.9rem; }
+    .dont-col h4 { color: var(--danger-text); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.9rem; }
+
+    .do-col ul, .dont-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .do-col li, .dont-col li {
+      font-size: 0.88rem;
+      color: var(--muted);
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .do-col li::before   { content: '+'; position: absolute; left: 0; color: var(--ok-text);     font-weight: 700; }
+    .dont-col li::before { content: 'x'; position: absolute; left: 0; color: var(--danger-text); font-weight: 700; }
+
+    /* TAGS */
+    .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.5rem 0; }
+    .tag {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.78rem;
+      padding: 0.2rem 0.7rem;
+      color: var(--muted);
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* HIGHLIGHT TEXT */
+    .hl { color: var(--text); font-weight: 600; }
+    .hl-accent { color: var(--accent); font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav>
+  <span class="nav-logo">PM Basics</span>
+  <ul class="nav-links">
+    <li><a href="#what">What is PM</a></li>
+    <li><a href="#discovery">Discovery</a></li>
+    <li><a href="#prioritisation">Prioritisation</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#metrics">Metrics</a></li>
+    <li><a href="#ai">AI &amp; You</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <span class="hero-tag">No fluff. No buzzwords.</span>
+  <h1>Product Management,<br><span>actually explained</span></h1>
+  <p class="hero-sub">What PMs do, how they do it, and a whole section on using AI without making a mess of things.</p>
+  <div class="hero-cta">
+    <a href="#what" class="btn btn-primary">Start reading</a>
+    <a href="#ai" class="btn btn-ghost">Jump to AI section</a>
+  </div>
+</div>
+
+
+<!-- CHAPTER 1: WHAT IS PM -->
+<section id="what">
+  <div class="container">
+    <div class="section-label">Chapter 1</div>
+    <h2>So what does a PM actually do?</h2>
+    <p class="lead">Not "the CEO of the product." That phrase is everywhere and explains nothing.</p>
+
+    <p>A product manager sits between three things that often want different things: users, the business, and engineering. Users want the product to do more. The business wants it to make money. Engineering wants enough time to do the work properly. Your job is to keep those three from pulling in completely different directions. Most days, that's it.</p>
+
+    <p>You don't write the code. You probably don't design the screens. You don't own the budget. What you do own is <span class="hl">clarity</span> &mdash; who we're building for, what problem we're solving, why this matters now. When the team doesn't have that, everything slows down. Debates happen that shouldn't need to happen. People build the right features for the wrong reasons. That's what bad PM work looks like from the inside.</p>
+
+    <blockquote>
+      "The best PMs I've worked with ask 'why are we doing this?' more than anyone else in the room. Not to be difficult. Because they actually need the answer to be good."
+      <cite>&mdash; A senior engineer who has seen a lot of both kinds</cite>
+    </blockquote>
+
+    <p>The role looks different depending on where you are. At a startup, you might write a spec in the morning, run a customer call at lunch, and update the roadmap before dinner. At a larger company, you might spend three days just getting five teams to agree on terminology. Both are real PM work. Neither is more legitimate than the other, though people in each camp tend to feel otherwise.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <span class="card-icon">&#x1F50D;</span>
+        <h3>Discovery</h3>
+        <p>Working out what problem is worth solving. This is where most PMs underinvest, usually because it doesn't feel like output.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#x2696;</span>
+        <h3>Prioritisation</h3>
+        <p>Deciding what gets built next. And being honest about what isn't going to happen this quarter.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#x1F5FA;</span>
+        <h3>Roadmap</h3>
+        <p>A sequence of bets, not a list of promises. The difference matters more than most stakeholders will admit.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#x1F4AC;</span>
+        <h3>Communication</h3>
+        <p>Keeping people informed without flooding them. Writing specs clearly enough that engineers don't have to guess.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#x1F4CA;</span>
+        <h3>Metrics</h3>
+        <p>Knowing which numbers actually tell you something, versus which ones just feel good to look at.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#x1F91D;</span>
+        <h3>Stakeholder management</h3>
+        <p>The unglamorous bit. Keeping everyone aligned without becoming a full-time meeting coordinator.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CHAPTER 2: DISCOVERY -->
+<section id="discovery">
+  <div class="container">
+    <div class="section-label">Chapter 2</div>
+    <h2>Discovery: the part most people skip</h2>
+    <p class="lead">The graveyard of failed products is full of things that were built well. The execution wasn't the problem. Nobody checked if anyone wanted the thing.</p>
+
+    <p>Discovery is the work you do before you commit to building. Talking to users. Reading support tickets. Watching session recordings. Digging into data. All with one purpose: understanding the problem well enough that your solution has a real chance.</p>
+
+    <p>There's a trap here. You run a few user interviews, hear something that fits what you already believed, and call it discovery. It isn't. That's just confirmation. Real discovery means being genuinely open to the possibility that you've got the problem wrong. Most people aren't, honestly, because being wrong about the problem means starting over.</p>
+
+    <div class="callout callout-warn">
+      <div class="callout-title">Watch out for this</div>
+      <p>Users will tell you what they think they want. Your job is to understand what they actually need. These are different things more often than you'd expect. Someone asking for a faster horse might just need to get somewhere quicker.</p>
+    </div>
+
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Go in with specific questions</h4>
+          <p>"Tell me about your workflow" works fine for early exploration. When you're trying to validate a direction, be precise about what would change your mind. If you can't name that, you're not doing research &mdash; you're collecting anecdotes.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Talk to the right people</h4>
+          <p>Your power users love your product, which makes them the worst people to ask about what's broken. Find the people who churned. The people who almost signed up and didn't. The ones using your product in ways you didn't expect.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Separate signals from stories</h4>
+          <p>One user saying something is interesting. Three users saying the same thing is a pattern. Don't let one compelling story drive a whole quarter's roadmap. This happens more than it should.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Write down what surprised you</h4>
+          <p>The surprising findings are almost always the most valuable. If everything confirmed what you already thought going in, you probably didn't learn much.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CHAPTER 3: PRIORITISATION -->
+<section id="prioritisation">
+  <div class="container">
+    <div class="section-label">Chapter 3</div>
+    <h2>Prioritisation: saying no without making enemies</h2>
+    <p class="lead">Every PM has more requests than capacity. The job isn't to get through all of them &mdash; it's to do the right ones in the right order. Which sounds simple until everyone in the room is convinced their thing is most important.</p>
+
+    <p>Frameworks help give the conversation structure. RICE, MoSCoW, opportunity scoring &mdash; all useful. But a spreadsheet that ranks your priorities is only as good as the numbers you put in. You can make RICE say almost anything if you're creative with your estimates. The framework gives you a reason to have the conversation; it doesn't replace judgment.</p>
+
+    <p>Here's what I've noticed: most prioritisation debates aren't really about which feature ranks higher. They're about whose interests are being served. Someone from Sales wants the enterprise feature because their deals depend on it. Someone from Marketing wants the shareable thing because it drives signups. Understanding that subtext makes the actual conversation much shorter.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <span class="card-icon">&#x1F4C9;</span>
+        <h3>RICE</h3>
+        <p><strong>Reach x Impact x Confidence / Effort.</strong> Good for comparing similar things. Gets awkward when you're comparing a bug fix against a new feature category.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#x1F3AF;</span>
+        <h3>MoSCoW</h3>
+        <p><strong>Must / Should / Could / Won't.</strong> Useful for scoping a release. The problem is everyone argues that their item is a Must.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#x1F4A1;</span>
+        <h3>Opportunity scoring</h3>
+        <p><strong>Importance minus satisfaction.</strong> If something matters a lot to users and current solutions aren't working, that gap is worth investigating.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      <div class="callout-title">The real skill</div>
+      <p>Making a call when the data is unclear, communicating it plainly, and holding the line when people push back. The frameworks help you get there. They don't do it for you.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- CHAPTER 4: ROADMAP -->
+<section id="roadmap">
+  <div class="container">
+    <div class="section-label">Chapter 4</div>
+    <h2>Roadmaps: bets, not promises</h2>
+    <p class="lead">A roadmap is a current best guess about what you'll build and when. The moment you treat it as a contract, you've made your team's life harder for no reason.</p>
+
+    <p>The problem with most roadmaps is they're made to satisfy stakeholders, not to guide teams. You put things on a timeline because someone in a QBR asked "when will X be done?" and you needed an answer. That's understandable. But those dates stick around, get put in a deck, get shown to customers, and suddenly you're managing expectations against a plan that was never really a plan.</p>
+
+    <p>The better frame: a roadmap shows where you're pointing and roughly how long each bet is expected to take. Things will shift. New information will arrive. Something will go wrong at exactly the wrong time. A roadmap that can't absorb that isn't a plan &mdash; it's just optimism formatted as a Gantt chart.</p>
+
+    <div class="do-dont">
+      <div class="do-col">
+        <h4>Do</h4>
+        <ul>
+          <li>Share the reasoning behind each item</li>
+          <li>Flag what's uncertain and why</li>
+          <li>Update it when things change (that's the point)</li>
+          <li>Use quarters or half-years, not specific dates</li>
+          <li>Tie items back to outcomes, not just features</li>
+        </ul>
+      </div>
+      <div class="dont-col">
+        <h4>Don't</h4>
+        <ul>
+          <li>Treat it as a commitment to customers</li>
+          <li>Put things on it to keep people quiet</li>
+          <li>Stop updating it because "the quarter's almost over"</li>
+          <li>Put 40 items on a 3-month roadmap</li>
+          <li>Confuse activity with progress</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout callout-ok">
+      <div class="callout-title">Something worth remembering</div>
+      <p>The best roadmap conversation you can have is one where the team understands <em>why</em> each item is there. If you can't explain that, the item probably shouldn't be there yet.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- CHAPTER 5: METRICS -->
+<section id="metrics">
+  <div class="container">
+    <div class="section-label">Chapter 5</div>
+    <h2>Metrics: know what you're actually measuring</h2>
+    <p class="lead">There's a version of product work where you check a dashboard every morning, see the numbers going up, and feel good. That version is dangerous.</p>
+
+    <p>Vanity metrics are measurements that look meaningful but don't connect to anything you actually care about. Page views. App downloads. "Active users" where active means opened the app once in 30 days. These numbers grow, they get celebrated, they go in the board deck &mdash; and the product quietly gets worse at the thing it's supposed to do.</p>
+
+    <p>Goodhart's Law is worth knowing: when a measure becomes a target, it stops being a good measure. The team optimises for the number. The number improves. The underlying behaviour it was supposed to represent does not. This happens all the time, especially with engagement metrics.</p>
+
+    <div class="callout callout-warn">
+      <div class="callout-title">A useful test</div>
+      <p>For any metric you're tracking: what would a bad product do to improve this number? If there's an easy answer, you're measuring the wrong thing. Or at least not measuring enough things.</p>
+    </div>
+
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Pick a north star metric</h4>
+          <p>One number that, if it goes up in the right way, means the product is genuinely working. For Spotify it might be time spent listening. For Airbnb it's nights booked. It takes real work to agree on this. That work is worth doing.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Add counter-metrics</h4>
+          <p>Metrics that would catch you gaming your north star. If your retention rate goes up but your NPS tanks, something is wrong. Counter-metrics keep you honest.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Separate leading from lagging indicators</h4>
+          <p>Revenue is a lagging indicator &mdash; it tells you what already happened. Feature adoption, support ticket volume, time-to-value: these are leading. Build your tracking around both.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Be honest when the numbers are telling you something uncomfortable</h4>
+          <p>This is harder than it sounds. When you've spent three months on something, looking at data that suggests it isn't working is genuinely unpleasant. Do it anyway.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CHAPTER 6: AI -->
+<section id="ai">
+  <div class="container">
+    <div class="section-label">Chapter 6</div>
+    <h2>AI and your work as a PM</h2>
+    <p class="lead">AI tools can genuinely help with product work. They can also create a false sense of productivity and quietly erode the skills that make PMs good at their jobs. Both are true at once.</p>
+
+    <p>Using AI well as a PM is less about knowing which tools to use and more about being clear on where it helps versus where it creates problems. There's a tendency right now to over-apply these tools &mdash; to reach for an AI-generated PRD when what you actually need is thirty minutes of clear thinking. Being able to tell those two situations apart is becoming a real skill.</p>
+
+
+    <!-- BACKING UP -->
+    <h3 style="font-size: 1.35rem; font-weight: 700; margin: 2.5rem 0 0.75rem; letter-spacing: -0.4px;">Backing up your AI-assisted work</h3>
+    <p>A lot of AI-generated output lives in a chat window. No version history. No easy way to find it later. No way to know what changed between your first draft and the thing you shipped. That's a problem worth solving before it bites you.</p>
+
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Export and save, not just copy-paste</h4>
+          <p>When you generate something useful &mdash; a spec, a user story, a research summary &mdash; save it somewhere with a version and a date. Not just pasted into a doc with no context. Future you will want to know when it was written and what it was based on.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Keep the source data, not just the output</h4>
+          <p>If you fed an AI tool your interview notes and it produced a summary, keep the original notes. The summary is a convenience layer. The notes are the actual artefact. If the summary turns out to be wrong or incomplete, you need the source to go back to.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Track what the AI generated vs what you changed</h4>
+          <p>This sounds tedious, but it matters when someone asks "why did we decide this?" If the decision was shaped by AI-generated analysis, that's worth noting. It affects how confident you should be and how you'd go about checking it.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Treat AI outputs like a first draft from a junior colleague</h4>
+          <p>Useful starting point. Needs review. Not ready to send anywhere without you reading it properly. That framing keeps you in the right relationship with the tool &mdash; it's helping you, not doing the job for you.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      <div class="callout-title">Worth considering</div>
+      <p>If your AI tool goes down, changes its pricing, or deletes your history, what do you have left? Good practice is to assume the tool might not be there tomorrow. Your process should still work without it.</p>
+    </div>
+
+
+    <!-- WHAT NOT TO DO -->
+    <h3 style="font-size: 1.35rem; font-weight: 700; margin: 3rem 0 0.75rem; letter-spacing: -0.4px;">What not to do with AI</h3>
+    <p>There are patterns that seem efficient on the surface and quietly make product work worse. These show up a lot. Worth naming them directly.</p>
+
+    <div class="do-dont">
+      <div class="do-col">
+        <h4>Good use</h4>
+        <ul>
+          <li>Drafting a spec to react to and improve</li>
+          <li>Summarising long documents you need to digest quickly</li>
+          <li>Generating multiple framings of a problem</li>
+          <li>Spotting gaps in your logic</li>
+          <li>Turning rough notes into structured output</li>
+          <li>Writing the first version of something tedious</li>
+        </ul>
+      </div>
+      <div class="dont-col">
+        <h4>Risky use</h4>
+        <ul>
+          <li>Generating user insights from no real user data</li>
+          <li>Letting it write your strategy from scratch</li>
+          <li>Shipping AI-written comms without reading them properly</li>
+          <li>Using it to avoid a hard conversation or decision</li>
+          <li>Trusting a confident-sounding output without checking it</li>
+          <li>Replacing discovery with "what does AI think users want"</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout callout-danger">
+      <div class="callout-title">On confidence</div>
+      <p>AI tools are calibrated to sound sure of themselves. That's a design choice, not a reliability signal. A very confident summary of your user research can be subtly wrong in ways that are hard to spot without going back to the source. The confidence is not evidence.</p>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-title">Skill atrophy is real</div>
+      <p>If you use AI to write every PRD, you'll get slower at writing clearly under pressure. If you use it to structure every problem, you'll get worse at structuring problems yourself. This matters because the situations where you most need those skills are usually the ones where there's no time to use a tool. Keep doing the hard things manually sometimes. Not out of nostalgia &mdash; because you'll need to be able to do them when it counts.</p>
+    </div>
+
+  </div>
+</section>
+
+
+<footer>
+  <p>A practical guide to product management. No framework worship. No career advice dressed up as product advice.</p>
+</footer>
+
+
+<script>
+  // Scroll progress bar
+  const bar = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    bar.style.width = pct + '%';
+  });
+
+  // Active nav link
+  const sections = document.querySelectorAll('section[id]');
+  const links = document.querySelectorAll('.nav-links a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
