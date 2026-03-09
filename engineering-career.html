@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engineering Career Ladder — ref.guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0f0f13;
+    --surface: #17171d;
+    --surface2: #1e1e27;
+    --border: #2a2a36;
+    --accent: #7c6af7;
+    --text: #e8e8f0;
+    --muted: #888899;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; font-size: 15px; line-height: 1.7; }
+
+  .progress-bar { position: fixed; top: 0; left: 0; width: 60%; height: 4px; background: var(--accent); z-index: 1000; }
+
+  nav { position: fixed; top: 4px; left: 0; right: 0; height: 56px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; z-index: 999; }
+  .nav-logo { font-weight: 700; font-size: 1.1rem; color: var(--accent); text-decoration: none; letter-spacing: -0.02em; }
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+
+  main { max-width: 860px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+
+  .hero { margin-bottom: 3rem; }
+  .hero h1 { font-size: 2.6rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+  .hero p { font-size: 1.15rem; color: var(--muted); max-width: 600px; }
+
+  section { margin-bottom: 2.5rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
+  h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--text); }
+  h3 { font-size: 1rem; font-weight: 600; color: var(--accent); margin: 1.2rem 0 0.4rem; }
+  p { margin-bottom: 0.75rem; }
+  p:last-child { margin-bottom: 0; }
+  ul, ol { padding-left: 1.4rem; margin-bottom: 0.75rem; }
+  li { margin-bottom: 0.3rem; }
+
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+  th { background: var(--surface2); color: var(--muted); font-weight: 600; text-align: left; padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--border); }
+  td { padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(124,106,247,0.04); }
+
+  /* Level ladder visual */
+  .ladder { display: flex; flex-direction: column; gap: 0.6rem; margin: 1rem 0; }
+  .rung { display: grid; grid-template-columns: 80px 130px 1fr; align-items: start; gap: 1rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem 1rem; }
+  .rung-level { font-size: 0.78rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+  .rung-title { font-weight: 700; color: var(--text); }
+  .rung-focus { font-size: 0.88rem; color: var(--muted); }
+  .rung.senior .rung-title { color: var(--accent); }
+  .rung.staff .rung-title { color: #a78bfa; }
+  .rung.principal .rung-title { color: #c4b5fd; }
+  .rung.distinguished .rung-title { color: #e9d5ff; }
+
+  /* IC vs EM split */
+  .track-split { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  .track-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem; }
+  .track-card h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .track-card.ic h4 { color: var(--accent); }
+  .track-card.em h4 { color: #4ade80; }
+  .track-card ul { font-size: 0.87rem; color: var(--muted); padding-left: 1.2rem; }
+  .track-card li { margin-bottom: 0.3rem; }
+
+  .callout { background: rgba(124,106,247,0.08); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin: 1rem 0; }
+  .callout strong { color: var(--accent); }
+
+  .warning { background: rgba(248,113,113,0.07); border-left: 3px solid #f87171; border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin: 1rem 0; }
+  .warning strong { color: #f87171; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+  .tag { background: var(--surface2); color: var(--accent); border: 1px solid var(--border); border-radius: 20px; padding: 0.2rem 0.75rem; font-size: 0.78rem; font-weight: 500; }
+
+  @media (max-width: 600px) {
+    .track-split { grid-template-columns: 1fr; }
+    .rung { grid-template-columns: 1fr; gap: 0.2rem; }
+    .hero h1 { font-size: 1.9rem; }
+    nav { padding: 0 1rem; }
+    .nav-links { gap: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+<div class="progress-bar"></div>
+
+<nav>
+  <a href="/code/pm-site/index.html" class="nav-logo">ref.guide</a>
+  <ul class="nav-links">
+    <li><a href="#">Engineering</a></li>
+    <li><a href="#">Data</a></li>
+    <li><a href="#">Writing</a></li>
+    <li><a href="#">Product</a></li>
+    <li><a href="#">DevOps</a></li>
+    <li><a href="#">Web</a></li>
+    <li><a href="#">Career</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="hero">
+    <h1>Engineering Career Ladder</h1>
+    <p>How engineers grow — levels, expectations, and what PMs need to understand.</p>
+  </div>
+
+  <!-- Typical levels -->
+  <section>
+    <div class="card">
+      <h2>Typical IC Levels</h2>
+      <p>Most tech companies use a levelling system loosely modelled on this structure. Names and exact scope vary (Google uses L3–L10, Amazon uses SDE I–III + Principal, Meta uses E3–E9), but the progression is remarkably consistent.</p>
+      <div class="ladder">
+        <div class="rung">
+          <span class="rung-level">L1</span>
+          <span class="rung-title">Junior Engineer</span>
+          <span class="rung-focus">Executes well-defined tasks. Needs guidance on approach. Learning codebase, tools, and team norms. Output is reviewed closely.</span>
+        </div>
+        <div class="rung">
+          <span class="rung-level">L2</span>
+          <span class="rung-title">Mid-level Engineer</span>
+          <span class="rung-focus">Independently owns features end-to-end. Makes reasonable technical decisions without hand-holding. Onboards new teammates. PR reviews becoming substantive.</span>
+        </div>
+        <div class="rung senior">
+          <span class="rung-level">L3</span>
+          <span class="rung-title">Senior Engineer</span>
+          <span class="rung-focus">Owns complex systems and multi-sprint projects. Unblocks others. Influences technical direction. Navigates ambiguous requirements. The backbone of most engineering teams.</span>
+        </div>
+        <div class="rung staff">
+          <span class="rung-level">L4</span>
+          <span class="rung-title">Staff Engineer</span>
+          <span class="rung-focus">Scope spans multiple teams or a whole domain. Drives architectural decisions. Sets technical strategy. Sponsors senior engineers. Operates with very high autonomy.</span>
+        </div>
+        <div class="rung principal">
+          <span class="rung-level">L5</span>
+          <span class="rung-title">Principal Engineer</span>
+          <span class="rung-focus">Organisation-wide impact. Shapes long-term technical roadmap. Evaluates build vs buy decisions. Works directly with VPs and CTOs on strategic bets.</span>
+        </div>
+        <div class="rung distinguished">
+          <span class="rung-level">L6</span>
+          <span class="rung-title">Distinguished / Fellow</span>
+          <span class="rung-focus">Industry-level impact. Often defines the company's technical identity. Extremely rare. Equivalent in seniority to a VP or SVP on the management track.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What changes at each level -->
+  <section>
+    <div class="card">
+      <h2>What Changes at Each Level</h2>
+      <table>
+        <thead>
+          <tr><th>Dimension</th><th>Junior–Mid (L1–L2)</th><th>Senior (L3)</th><th>Staff+ (L4+)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Scope</strong></td>
+            <td>Single task or small feature</td>
+            <td>Full feature, component, or service</td>
+            <td>System, team, or cross-team domain</td>
+          </tr>
+          <tr>
+            <td><strong>Autonomy</strong></td>
+            <td>Given direction, executes</td>
+            <td>Clarifies requirements, proposes approach</td>
+            <td>Sets the direction for others</td>
+          </tr>
+          <tr>
+            <td><strong>Mentorship</strong></td>
+            <td>Receives mentorship</td>
+            <td>Mentors juniors, raises team bar</td>
+            <td>Grows senior engineers, shapes culture</td>
+          </tr>
+          <tr>
+            <td><strong>Ambiguity</strong></td>
+            <td>Needs clear specs to proceed</td>
+            <td>Works from fuzzy requirements, fills gaps</td>
+            <td>Thrives in high ambiguity; defines the problem</td>
+          </tr>
+          <tr>
+            <td><strong>Communication</strong></td>
+            <td>Within team</td>
+            <td>Cross-functional (PM, design, data)</td>
+            <td>Executives, partners, external stakeholders</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout">
+        <strong>The senior plateau:</strong> Most engineers spend the longest time at L3/Senior. The jump to Staff requires demonstrating impact beyond your immediate team — which is qualitatively different from getting better at writing code.
+      </div>
+    </div>
+  </section>
+
+  <!-- IC vs Management -->
+  <section>
+    <div class="card">
+      <h2>IC Track vs Management Track</h2>
+      <p>At Senior level, engineers can choose between two parallel career paths. Neither is a promotion over the other — they're different jobs with different skill sets.</p>
+      <div class="track-split">
+        <div class="track-card ic">
+          <h4>Staff Engineer (IC Track)</h4>
+          <ul>
+            <li>Technical authority and depth</li>
+            <li>Drives architectural decisions</li>
+            <li>Influence through code, design docs, and technical vision</li>
+            <li>Still writes code (but less over time at higher levels)</li>
+            <li>Measured by technical impact and system quality</li>
+            <li>Works best for engineers who love the craft</li>
+          </ul>
+        </div>
+        <div class="track-card em">
+          <h4>Engineering Manager (EM Track)</h4>
+          <ul>
+            <li>People leadership and team delivery</li>
+            <li>Hiring, firing, performance reviews, 1:1s</li>
+            <li>Influence through people, process, and priorities</li>
+            <li>Rarely writes production code</li>
+            <li>Measured by team output, retention, and culture</li>
+            <li>Works best for engineers who love growing people</li>
+          </ul>
+        </div>
+      </div>
+      <p>A common mistake is treating the management track as the only path for advancement. Great companies maintain strong IC ladders so technical experts don't have to become managers to earn senior compensation.</p>
+    </div>
+  </section>
+
+  <!-- Performance reviews -->
+  <section>
+    <div class="card">
+      <h2>Performance Reviews</h2>
+      <p>Most companies run formal reviews 1–2 times per year. The process typically involves self-assessment, peer feedback, and manager assessment, followed by a <strong>calibration meeting</strong> where managers stack-rank and normalise ratings across their teams.</p>
+      <h3>Common Evaluation Frameworks</h3>
+      <ul>
+        <li><strong>Impact:</strong> What outcomes did you drive? Did the work you shipped matter to users and the business? Did you fix something that was slowing the team down?</li>
+        <li><strong>Scope:</strong> How large was the surface area of your work? Did you operate at or above your level? Staff-level engineers are expected to show team-level impact, not just feature-level impact.</li>
+        <li><strong>Complexity:</strong> How hard were the problems you tackled? Did you handle novel technical challenges, or did you execute well-trodden paths?</li>
+      </ul>
+      <h3>Calibration</h3>
+      <p>Calibration is when managers compare their engineers' ratings with peers from other teams to ensure consistency. What counts as "exceeds expectations" in team A should mean the same as in team B. Managers advocate for their reports in this session — understanding how calibration works helps you understand why your manager's language and framing of your contributions matters enormously.</p>
+    </div>
+  </section>
+
+  <!-- For PMs -->
+  <section>
+    <div class="card">
+      <h2>For PMs: Working Effectively Across Levels</h2>
+
+      <h3>Giving Feedback to Engineers</h3>
+      <p>Engineers value specific, technically-grounded feedback. Avoid vague praise ("great job"). Instead: "The way you refactored the auth module made the new OAuth integration much simpler — that saved us at least a sprint of work." Specificity shows you understand and value their craft.</p>
+      <p>If you have a concern about quality, timing, or scope, raise it directly and early. Engineers dislike surprises at launch time far more than honest mid-sprint feedback.</p>
+
+      <h3>Sponsoring Engineer Growth</h3>
+      <ul>
+        <li>Give engineers visibility with stakeholders by attributing their work publicly in reviews and all-hands.</li>
+        <li>Create opportunities for senior engineers to lead cross-functional discussions — this builds the "above-level" impact they need for promotion.</li>
+        <li>Share product context proactively so engineers can make good architectural decisions. Context deprivation produces technically correct but strategically wrong systems.</li>
+      </ul>
+
+      <h3>Why L4+ Engineers Need Strategy, Not Tasks</h3>
+      <p>A Staff or Principal engineer needs to understand <em>why</em> you're building something, what bets the company is making, and what the constraints are. They use that context to make architectural decisions that will affect the product for years. Giving a Staff engineer a Jira ticket is a waste — give them a problem statement and trust them to define the technical approach.</p>
+
+      <div class="warning">
+        <strong>Common PM mistakes when working with engineers:</strong>
+        <ul style="margin-top:0.5rem;">
+          <li><strong>Treating seniors like implementers:</strong> "Just build what's in the spec" ignores their design expertise and leads to resentment.</li>
+          <li><strong>Withholding context:</strong> Engineers who don't know the "why" can't make good trade-off decisions. Over-communicate context.</li>
+          <li><strong>Last-minute scope changes:</strong> Mid-sprint scope additions destroy the trust and predictability engineers need to do deep work.</li>
+          <li><strong>Confusing busyness with progress:</strong> A senior engineer spending a week on a design doc instead of writing code is working — probably preventing months of rework.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="tags">
+    <span class="tag">career</span>
+    <span class="tag">engineering</span>
+    <span class="tag">management</span>
+    <span class="tag">growth</span>
+    <span class="tag">leveling</span>
+    <span class="tag">ic-track</span>
+    <span class="tag">staff-eng</span>
+  </div>
+</main>
+</body>
+</html>
