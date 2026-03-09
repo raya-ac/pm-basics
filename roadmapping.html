@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roadmapping — ref.guide</title>
+<style>
+:root{--bg:#0f0f13;--surface:#17171d;--surface2:#1e1e27;--border:#2a2a36;--accent:#7c6af7;--acc2:#f06292;--acc3:#4dd0e1;--acc4:#66bb6a;--text:#e8e8f0;--muted:#888899;--radius:10px;--nav-h:56px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6;min-height:100vh}
+nav{position:sticky;top:0;z-index:100;height:var(--nav-h);background:rgba(15,15,19,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px}
+.nav-logo{font-weight:700;font-size:1rem;color:var(--text);text-decoration:none;letter-spacing:-.02em}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:4px;margin-left:auto}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.85rem;padding:6px 12px;border-radius:6px;transition:all .2s}
+.nav-links a:hover{color:var(--text);background:var(--surface2)}
+.nav-links a.active{color:var(--accent);background:rgba(124,106,247,.12)}
+.hero{padding:64px 24px 40px;max-width:860px;margin:0 auto}
+.hero-tag{display:inline-block;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border-radius:20px;padding:4px 12px;margin-bottom:16px}
+.hero h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:12px}
+.hero p{color:var(--muted);font-size:1.05rem;max-width:600px}
+.content{max-width:860px;margin:0 auto;padding:0 24px 80px}
+.section{margin-bottom:48px}
+.section h2{font-size:1.25rem;font-weight:700;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.icon{width:28px;height:28px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:12px;transition:border-color .2s}
+.card:hover{border-color:var(--accent)}
+.card h3{font-size:.95rem;font-weight:600;margin-bottom:6px}
+.card p,.card li{font-size:.875rem;color:var(--muted);line-height:1.6}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.callout{background:rgba(124,106,247,.08);border:1px solid rgba(124,106,247,.25);border-left:3px solid var(--accent);border-radius:var(--radius);padding:16px 20px;margin:16px 0;font-size:.9rem;line-height:1.7}
+.callout strong{color:var(--accent)}
+.callout.pink{background:rgba(240,98,146,.08);border-color:rgba(240,98,146,.25);border-left-color:var(--acc2)}
+.callout.pink strong{color:var(--acc2)}
+.tag{display:inline-block;font-size:.7rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-right:6px;margin-bottom:4px}
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:8px;top:8px;bottom:0;width:2px;background:var(--border)}
+.tl-item{position:relative;margin-bottom:20px}
+.tl-item::before{content:'';position:absolute;left:-24px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+.tl-label{font-size:.75rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.tl-title{font-size:.95rem;font-weight:600;margin-bottom:4px}
+.tl-desc{font-size:.875rem;color:var(--muted)}
+code{font-family:'SF Mono',Monaco,monospace;font-size:.82rem;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 6px}
+pre{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;overflow-x:auto;font-size:.82rem;line-height:1.6;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:.875rem}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.nnl-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.nnl-col{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.nnl-col h3{font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+.nnl-item{background:var(--surface2);border-radius:6px;padding:10px 12px;margin-bottom:8px;font-size:.85rem}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">ref<span>.</span>guide</a>
+  <div class="nav-links">
+    <a href="engineering-basics.html">Eng</a>
+    <a href="sql-basics.html">Data</a>
+    <a href="writing-for-engineers.html">Writing</a>
+    <a href="roadmapping.html" class="active">Product</a>
+    <a href="devops-basics.html">DevOps</a>
+    <a href="api-design.html">Web</a>
+    <a href="engineering-career.html">Career</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag" style="background:rgba(124,106,247,.15);color:var(--accent)">Product</div>
+  <h1>Roadmapping</h1>
+  <p>How to build roadmaps that communicate strategy, earn stakeholder trust, and survive contact with reality.</p>
+</div>
+
+<div class="content">
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#128506;</span> Outcome vs Output Roadmaps</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3>Output roadmap (feature roadmap)</h3>
+        <p>Lists features and delivery dates. Easy to understand but dangerous: commits to solutions before problems are validated. Creates the illusion of certainty. Engineers hate it because scope always changes but the date never moves.</p>
+        <div style="margin-top:10px">
+          <div style="font-size:.82rem;color:var(--muted);margin-bottom:4px">Example row:</div>
+          <code>Q2 | Dark mode | Mobile team | June 30</code>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Outcome roadmap (strategy roadmap)</h3>
+        <p>States the problem to solve and the metric to move. Teams decide how to solve it. Flexible on solution, committed on outcome. Works better for alignment because "why" doesn't change as often as "what."</p>
+        <div style="margin-top:10px">
+          <div style="font-size:.82rem;color:var(--muted);margin-bottom:4px">Example row:</div>
+          <code>Q2 | Reduce checkout abandonment by 15% | Growth team</code>
+        </div>
+      </div>
+    </div>
+    <div class="callout">
+      <strong>Best practice:</strong> Use outcome roadmaps internally. Produce a feature view for external stakeholders (sales, customers) who need specifics — but clearly label it as directional, not a commitment.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#128336;</span> Now / Next / Later Format</h2>
+    <p style="color:var(--muted);font-size:.9rem;margin-bottom:16px">The simplest roadmap format. Avoids false date precision while communicating priority clearly.</p>
+    <div class="nnl-grid">
+      <div class="nnl-col">
+        <h3 style="color:var(--acc4)">Now</h3>
+        <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px">In progress or starting this sprint/month. High confidence.</p>
+        <div class="nnl-item">Reduce checkout abandonment (Growth)</div>
+        <div class="nnl-item">SSO login support (Platform)</div>
+        <div class="nnl-item">API rate limiting (Infra)</div>
+      </div>
+      <div class="nnl-col">
+        <h3 style="color:var(--accent)">Next</h3>
+        <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px">Planned for this quarter. Scope still being refined.</p>
+        <div class="nnl-item">Mobile push notifications (Mobile)</div>
+        <div class="nnl-item">Bulk export feature (Data)</div>
+        <div class="nnl-item">Onboarding redesign (Growth)</div>
+      </div>
+      <div class="nnl-col">
+        <h3 style="color:var(--muted)">Later</h3>
+        <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px">On the radar. Not committed. Subject to change.</p>
+        <div class="nnl-item">Marketplace integrations</div>
+        <div class="nnl-item">AI-powered recommendations</div>
+        <div class="nnl-item">Offline mode</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#127919;</span> Prioritisation Frameworks</h2>
+    <div class="card">
+      <h3>RICE Scoring</h3>
+      <p style="margin-bottom:8px">Score = (Reach × Impact × Confidence) ÷ Effort</p>
+      <table>
+        <thead><tr><th>Factor</th><th>What to estimate</th><th>Scale</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Reach</strong></td><td>Users affected per quarter</td><td>Raw number (e.g., 5,000)</td></tr>
+          <tr><td><strong>Impact</strong></td><td>Effect per user if they encounter the feature</td><td>0.25 / 0.5 / 1 / 2 / 3</td></tr>
+          <tr><td><strong>Confidence</strong></td><td>How sure are you of Reach + Impact estimates?</td><td>50% / 80% / 100%</td></tr>
+          <tr><td><strong>Effort</strong></td><td>Person-months to build</td><td>Raw number (e.g., 2)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="grid2" style="margin-top:4px">
+      <div class="card">
+        <h3>ICE Scoring</h3>
+        <p>Simpler than RICE. Score = Impact × Confidence × Ease (1–10 each). Good for quick gut-check prioritisation in early discovery. Less rigorous but faster to run across many ideas.</p>
+      </div>
+      <div class="card">
+        <h3>MoSCoW</h3>
+        <p><strong>Must have</strong> — required for launch<br>
+        <strong>Should have</strong> — high value but not blocking<br>
+        <strong>Could have</strong> — nice to have<br>
+        <strong>Won't have</strong> — explicit no for this cycle<br><br>
+        Best used for scoping a specific release, not a full roadmap.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#129309;</span> Stakeholder Alignment</h2>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-label">Step 1</div>
+        <div class="tl-title">Gather inputs before you plan</div>
+        <div class="tl-desc">1:1s with sales, customer success, engineering leads, and executives. What problems are they hearing most? What's blocking revenue? What tech debt is slowing the team? Input first, roadmap second.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-label">Step 2</div>
+        <div class="tl-title">Share a draft, not a final plan</div>
+        <div class="tl-desc">Send the draft roadmap with explicit "open questions" and "what we left out." This signals you want input, not a rubber stamp. It also surfaces conflicts early.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-label">Step 3</div>
+        <div class="tl-title">Run a roadmap review meeting</div>
+        <div class="tl-desc">Walk through strategy first, then specifics. Start with "here's the outcome we're optimizing for this quarter" before showing any feature list. Stakeholders argue less about features when they agree on the goal.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-label">Step 4</div>
+        <div class="tl-title">Document what was rejected and why</div>
+        <div class="tl-desc">Maintain a "what's not on the roadmap" section. "We evaluated bulk export but deprioritized it because checkout abandonment has 5x more revenue impact." This pre-empts the same request coming back next week.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#10060;</span> Saying No Gracefully</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3>"Not now" instead of "no"</h3>
+        <p>"That's on our radar for H2 — we're focused on checkout this quarter because it impacts 3x more users." Gives a reason, acknowledges the request, provides a timeline.</p>
+      </div>
+      <div class="card">
+        <h3>Show the trade-off</h3>
+        <p>"We can add that to Q2 if we move mobile push to Q3. Here's the impact of each — which would you prioritize?" Forces stakeholders to own the trade-off instead of just adding to a wish list.</p>
+      </div>
+      <div class="card">
+        <h3>Tie to strategy</h3>
+        <p>"Our North Star this half is activation rate. This request helps retention, which is next half's focus. Let's revisit it in the Q3 planning cycle."</p>
+      </div>
+      <div class="card">
+        <h3>Capture it publicly</h3>
+        <p>Add rejected items to a public backlog or "considering" list. People push less when they know their idea is recorded and will be reviewed — versus feeling ignored.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#128683;</span> Roadmap Anti-Patterns</h2>
+    <table>
+      <thead><tr><th>Anti-pattern</th><th>Symptom</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr><td>The Gantt chart roadmap</td><td>Every item has a start date, end date, and dependency arrow. Looks rigorous; becomes wrong within 2 weeks.</td><td>Use quarters or Now/Next/Later. Dates belong in sprint plans, not roadmaps.</td></tr>
+        <tr><td>The wish list</td><td>Roadmap has 60 items, no priorities, no capacity reality check. Everything is "Q2."</td><td>Apply capacity constraints. If the team can ship 4 meaningful things a quarter, your roadmap has 4 items.</td></tr>
+        <tr><td>The sales roadmap</td><td>Roadmap is built around what sales promised customers, not what users need.</td><td>Separate "committed" from "planned." Sales commits should be rare and explicitly surfaced.</td></tr>
+        <tr><td>Never updated</td><td>Roadmap is 6 months stale. Nobody trusts it.</td><td>Review and publish updates monthly. Even "no change" is an update worth making.</td></tr>
+        <tr><td>No "why"</td><td>Items on roadmap with no context about what problem they solve.</td><td>Every roadmap item has a one-line problem statement and a success metric.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2><span class="icon" style="background:rgba(124,106,247,.15);color:var(--accent)">&#128197;</span> Quarterly Planning Cadence</h2>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-label">Week -4</div><div class="tl-title">Input gathering</div><div class="tl-desc">Customer interviews, sales feedback, NPS analysis, tech debt review with engineering, data review of current quarter OKRs.</div></div>
+      <div class="tl-item"><div class="tl-label">Week -3</div><div class="tl-title">Prioritisation workshop</div><div class="tl-desc">PM + engineering lead + design lead. RICE score top candidates. Agree on top 3-5 bets for the quarter. Identify dependencies and risks.</div></div>
+      <div class="tl-item"><div class="tl-label">Week -2</div><div class="tl-title">Draft roadmap review</div><div class="tl-desc">Share with extended stakeholders. Collect feedback. Resolve conflicts. Update "not this quarter" list with explanations.</div></div>
+      <div class="tl-item"><div class="tl-label">Week -1</div><div class="tl-title">Finalize + publish</div><div class="tl-desc">Lock the roadmap. Communicate to engineering so sprint planning can start. Share with company all-hands or product newsletter.</div></div>
+      <div class="tl-item"><div class="tl-label">Monthly</div><div class="tl-title">Checkpoint updates</div><div class="tl-desc">Review progress, surface blockers, adjust if a bet isn't working. Roadmaps are living documents — monthly updates signal health, not failure.</div></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
