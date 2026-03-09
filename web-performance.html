@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Performance — ref.guide</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0f0f13;
+    --surface: #17171d;
+    --surface2: #1e1e27;
+    --border: #2a2a36;
+    --accent: #7c6af7;
+    --text: #e8e8f0;
+    --muted: #888899;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; font-size: 15px; line-height: 1.7; }
+
+  /* Progress bar */
+  .progress-bar { position: fixed; top: 0; left: 0; width: 60%; height: 4px; background: var(--accent); z-index: 1000; }
+
+  /* Nav */
+  nav { position: fixed; top: 4px; left: 0; right: 0; height: 56px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; z-index: 999; }
+  .nav-logo { font-weight: 700; font-size: 1.1rem; color: var(--accent); text-decoration: none; letter-spacing: -0.02em; }
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+
+  /* Layout */
+  main { max-width: 860px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+
+  /* Hero */
+  .hero { margin-bottom: 3rem; }
+  .hero h1 { font-size: 2.6rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+  .hero p { font-size: 1.15rem; color: var(--muted); max-width: 580px; }
+
+  /* Sections */
+  section { margin-bottom: 2.5rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
+  .card + .card { margin-top: 1rem; }
+  h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--text); }
+  h3 { font-size: 1rem; font-weight: 600; color: var(--accent); margin: 1.2rem 0 0.4rem; }
+  p { margin-bottom: 0.75rem; color: var(--text); }
+  p:last-child { margin-bottom: 0; }
+  ul, ol { padding-left: 1.4rem; margin-bottom: 0.75rem; }
+  li { margin-bottom: 0.3rem; }
+  li:last-child { margin-bottom: 0; }
+
+  /* Code blocks */
+  pre { background: var(--surface2); border-radius: 8px; padding: 1rem; overflow-x: auto; margin: 1rem 0; }
+  code { font-family: 'Fira Mono', 'Cascadia Code', monospace; font-size: 0.88rem; color: #4dd0e1; }
+  p code, li code { background: var(--surface2); padding: 0.1em 0.4em; border-radius: 4px; font-size: 0.85em; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+  th { background: var(--surface2); color: var(--muted); font-weight: 600; text-align: left; padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--border); }
+  td { padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(124,106,247,0.04); }
+
+  /* Metric cards */
+  .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0; }
+  .metric-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem; }
+  .metric-card .label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
+  .metric-card .value { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+  .metric-card .desc { font-size: 0.82rem; color: var(--muted); margin-top: 0.3rem; }
+  .good { color: #4ade80 !important; }
+  .warn { color: #facc15 !important; }
+  .bad { color: #f87171 !important; }
+
+  /* Tags */
+  .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+  .tag { background: var(--surface2); color: var(--accent); border: 1px solid var(--border); border-radius: 20px; padding: 0.2rem 0.75rem; font-size: 0.78rem; font-weight: 500; }
+
+  /* Callout */
+  .callout { background: rgba(124,106,247,0.08); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin: 1rem 0; }
+  .callout strong { color: var(--accent); }
+
+  @media (max-width: 600px) {
+    .metric-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 1.9rem; }
+    nav { padding: 0 1rem; }
+    .nav-links { gap: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+<div class="progress-bar"></div>
+
+<nav>
+  <a href="/code/pm-site/index.html" class="nav-logo">ref.guide</a>
+  <ul class="nav-links">
+    <li><a href="#">Engineering</a></li>
+    <li><a href="#">Data</a></li>
+    <li><a href="#">Writing</a></li>
+    <li><a href="#">Product</a></li>
+    <li><a href="#">DevOps</a></li>
+    <li><a href="#">Web</a></li>
+    <li><a href="#">Career</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="hero">
+    <h1>Web Performance</h1>
+    <p>Why speed matters, how to measure it, and how to fix it.</p>
+  </div>
+
+  <!-- Why it matters -->
+  <section>
+    <div class="card">
+      <h2>Why Performance Matters</h2>
+      <p>Performance is a product feature. Slow pages cost money, lose users, and hurt rankings. The data is unambiguous:</p>
+      <ul>
+        <li>Amazon found every <strong>100ms of latency</strong> cost them 1% in sales.</li>
+        <li>Google reports that a 1-second delay in mobile load times can reduce conversions by <strong>up to 20%</strong>.</li>
+        <li>53% of mobile users abandon a site that takes <strong>longer than 3 seconds</strong> to load (Google/SOASTA research).</li>
+        <li>Walmart saw a <strong>2% increase in conversions</strong> for every 1 second of improvement in load time.</li>
+      </ul>
+      <h3>SEO Impact</h3>
+      <p>Google uses Core Web Vitals as a direct ranking signal since 2021. A slow site doesn't just lose users — it also appears lower in search results, compounding the traffic loss.</p>
+      <h3>User Perception</h3>
+      <p>Users perceive responses under <strong>100ms</strong> as instant. At <strong>1s</strong>, flow is interrupted. At <strong>10s</strong>, users abandon. Performance directly shapes whether users feel your product is trustworthy and professional.</p>
+    </div>
+  </section>
+
+  <!-- Core Web Vitals -->
+  <section>
+    <div class="card">
+      <h2>Core Web Vitals</h2>
+      <p>Google's Core Web Vitals are three user-centric metrics that measure real-world page experience. They're tracked in Google Search Console and used as ranking signals.</p>
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="label">LCP</div>
+          <div class="value good">&lt; 2.5s</div>
+          <div class="desc">Largest Contentful Paint — how fast the main content loads. Usually the hero image or h1.</div>
+        </div>
+        <div class="metric-card">
+          <div class="label">INP</div>
+          <div class="value good">&lt; 200ms</div>
+          <div class="desc">Interaction to Next Paint — responsiveness to user input like clicks and key presses. Replaced FID in 2024.</div>
+        </div>
+        <div class="metric-card">
+          <div class="label">CLS</div>
+          <div class="value good">&lt; 0.1</div>
+          <div class="desc">Cumulative Layout Shift — visual stability. How much the layout jumps around as the page loads.</div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Metric</th><th>Good</th><th>Needs Work</th><th>Poor</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>LCP</td><td class="good">≤ 2.5s</td><td class="warn">2.5s – 4.0s</td><td class="bad">&gt; 4.0s</td></tr>
+          <tr><td>INP</td><td class="good">≤ 200ms</td><td class="warn">200ms – 500ms</td><td class="bad">&gt; 500ms</td></tr>
+          <tr><td>CLS</td><td class="good">≤ 0.1</td><td class="warn">0.1 – 0.25</td><td class="bad">&gt; 0.25</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- How to measure -->
+  <section>
+    <div class="card">
+      <h2>How to Measure Performance</h2>
+      <table>
+        <thead>
+          <tr><th>Tool</th><th>Type</th><th>Best For</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Lighthouse</strong></td><td>Synthetic (lab)</td><td>Quick audits in Chrome DevTools or CI pipelines. Scores 0–100 across Performance, A11y, SEO.</td></tr>
+          <tr><td><strong>PageSpeed Insights</strong></td><td>Lab + Field</td><td>Google's free tool. Shows lab data alongside real-user CWV data from the Chrome UX Report (CrUX).</td></tr>
+          <tr><td><strong>WebPageTest</strong></td><td>Synthetic</td><td>Advanced waterfall analysis, filmstrips, multi-region testing. Shows exactly what loads when.</td></tr>
+          <tr><td><strong>Chrome DevTools</strong></td><td>Lab</td><td>Network tab, Performance tab, Coverage tab — for deep debugging of specific pages.</td></tr>
+          <tr><td><strong>RUM (Real User Monitoring)</strong></td><td>Field</td><td>Tools like Datadog, Sentry, or web-vitals.js — captures real user experience across all devices.</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">
+        <strong>Lab vs Field data:</strong> Lab data (Lighthouse) is reproducible but artificial. Field data (RUM/CrUX) reflects what real users experience. Use both — lab for debugging, field for tracking trends.
+      </div>
+    </div>
+  </section>
+
+  <!-- Common fixes -->
+  <section>
+    <div class="card">
+      <h2>Common Performance Fixes</h2>
+
+      <h3>Image Optimisation</h3>
+      <ul>
+        <li>Use <strong>WebP or AVIF</strong> format — typically 25–50% smaller than JPEG/PNG at equivalent quality.</li>
+        <li>Add <code>loading="lazy"</code> to images below the fold so they don't block initial load.</li>
+        <li>Always specify <code>width</code> and <code>height</code> attributes to prevent layout shift (CLS).</li>
+        <li>Use responsive images with <code>srcset</code> so mobile devices don't download desktop-sized images.</li>
+      </ul>
+      <pre><code>&lt;img src="hero.webp" width="800" height="450"
+     loading="lazy" alt="Dashboard screenshot"
+     srcset="hero-400.webp 400w, hero-800.webp 800w"
+     sizes="(max-width: 600px) 400px, 800px"&gt;</code></pre>
+
+      <h3>JavaScript Bundle Size</h3>
+      <ul>
+        <li><strong>Code splitting:</strong> load only the JS needed for the current route, not the whole app.</li>
+        <li><strong>Tree shaking:</strong> remove unused exports at build time (Webpack, Rollup, esbuild do this automatically).</li>
+        <li><strong>Dynamic imports:</strong> defer loading of non-critical modules with <code>import()</code>.</li>
+        <li>Audit with the Chrome Coverage tab — often 40–60% of JS is never executed on a given page.</li>
+      </ul>
+
+      <h3>Caching</h3>
+      <ul>
+        <li>Set long <code>Cache-Control: max-age</code> headers for versioned static assets (CSS, JS, images).</li>
+        <li>Use a <strong>CDN</strong> (Cloudflare, Fastly, CloudFront) to serve assets from edge nodes close to users.</li>
+        <li>Use <code>ETag</code> or <code>Last-Modified</code> headers so browsers can validate stale cache entries cheaply.</li>
+      </ul>
+
+      <h3>Render-Blocking Resources</h3>
+      <ul>
+        <li>Move non-critical CSS to load asynchronously. Inline critical CSS directly in the <code>&lt;head&gt;</code>.</li>
+        <li>Add <code>defer</code> or <code>async</code> to script tags that don't need to run before page render.</li>
+        <li>Use <code>&lt;link rel="preload"&gt;</code> to tell the browser to fetch critical fonts or images early.</li>
+      </ul>
+
+      <h3>Server Response Time (TTFB)</h3>
+      <ul>
+        <li>Target Time to First Byte (TTFB) under <strong>800ms</strong>. Over 1.8s is considered poor.</li>
+        <li>Use server-side caching (Redis, Varnish) to avoid recomputing responses.</li>
+        <li>Review slow database queries — N+1 problems are a common culprit.</li>
+        <li>Consider edge compute (Cloudflare Workers, Vercel Edge Functions) for global TTFB reduction.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Performance budget -->
+  <section>
+    <div class="card">
+      <h2>Performance Budget</h2>
+      <p>A performance budget is a set of limits your team agrees not to exceed — for example, total page weight under 300KB, LCP under 2.5s, or Lighthouse performance score above 85.</p>
+      <p>Budgets are most powerful when enforced in CI. Tools like <strong>Lighthouse CI</strong>, <strong>Bundlesize</strong>, and <strong>Size-Limit</strong> will fail a build if a PR pushes the bundle over the agreed threshold.</p>
+      <pre><code>// .lighthouserc.js
+module.exports = {
+  assert: {
+    assertions: {
+      'categories:performance': ['error', { minScore: 0.85 }],
+      'largest-contentful-paint': ['warn', { maxNumericValue: 2500 }],
+      'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
+    },
+  },
+};</code></pre>
+      <p>A budget forces the conversation to happen <em>before</em> a feature ships, not after a customer complains.</p>
+    </div>
+  </section>
+
+  <!-- For PMs -->
+  <section>
+    <div class="card">
+      <h2>For PMs: Prioritising Performance Work</h2>
+      <h3>How to Frame It</h3>
+      <p>Performance is often invisible until it's bad. Frame perf work in business terms: conversion rate, bounce rate, SEO ranking, and support ticket volume. "LCP went from 4.2s to 1.9s" is less compelling to stakeholders than "we expect a 5% uplift in trial signups based on industry benchmarks for this load time improvement."</p>
+      <h3>Fitting Into OKRs</h3>
+      <ul>
+        <li><strong>Objective:</strong> Improve the quality and reliability of the core product experience.</li>
+        <li><strong>KR:</strong> Achieve a Lighthouse performance score ≥ 85 across all key pages by Q3.</li>
+        <li><strong>KR:</strong> Reduce LCP on the landing page from 3.8s to under 2.5s.</li>
+        <li><strong>KR:</strong> Reduce mobile bounce rate by 10% through performance improvements.</li>
+      </ul>
+      <h3>When to Prioritise</h3>
+      <ul>
+        <li>If Core Web Vitals are in the red in Google Search Console — SEO risk is immediate.</li>
+        <li>Before a major marketing push or launch — you want the funnel to convert.</li>
+        <li>When growth is plateauing — perf improvements can unlock conversion gains without new features.</li>
+        <li>When your largest customers operate in bandwidth-constrained regions.</li>
+      </ul>
+      <div class="callout">
+        <strong>Rule of thumb:</strong> performance improvements have compounding returns. A 1s improvement today saves engineering time tomorrow because less performance debt accumulates.
+      </div>
+    </div>
+  </section>
+
+  <div class="tags">
+    <span class="tag">performance</span>
+    <span class="tag">web</span>
+    <span class="tag">core-web-vitals</span>
+    <span class="tag">frontend</span>
+    <span class="tag">lighthouse</span>
+    <span class="tag">lcp</span>
+    <span class="tag">cls</span>
+  </div>
+</main>
+</body>
+</html>
