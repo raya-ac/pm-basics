@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Writing for Engineers — ref.guide</title>
+<style>:root{--bg:#0f0f13;--surface:#17171d;--surface2:#1e1e27;--border:#2a2a36;--accent:#7c6af7;--acc2:#f06292;--acc3:#4dd0e1;--acc4:#66bb6a;--text:#e8e8f0;--muted:#888899;--radius:10px;--nav-h:56px}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:17px;line-height:1.7}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}h1,h2,h3{line-height:1.25;font-weight:700;letter-spacing:-0.3px}h1{font-size:clamp(2rem,5vw,3rem)}h2{font-size:clamp(1.3rem,3vw,1.75rem);margin:3rem 0 1rem;padding-top:1rem;border-top:1px solid var(--border)}h3{font-size:1.15rem;margin:2rem 0 0.75rem}p{margin-bottom:1rem}ul,ol{padding-left:1.5rem;margin-bottom:1rem}li{margin-bottom:0.4rem}blockquote{border-left:3px solid var(--accent);padding:0.75rem 1.5rem;margin:1.5rem 0;background:var(--surface);border-radius:0 var(--radius) var(--radius) 0;color:var(--muted);font-style:italic}code{font-family:'Fira Code',monospace;font-size:0.88em;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0.15em 0.45em}#progress-bar{position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,var(--accent),var(--acc2));z-index:1000}.site-nav{position:sticky;top:0;height:var(--nav-h);background:rgba(15,15,19,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);z-index:100;display:flex;align-items:center;gap:1rem;padding:0 2rem}.site-nav .logo{font-weight:700;font-size:1rem;color:var(--accent);white-space:nowrap}.site-nav .logo span{color:var(--text)}.nav-scroll{display:flex;align-items:center;gap:0.25rem;overflow-x:auto;scrollbar-width:none;flex:1}.nav-scroll::-webkit-scrollbar{display:none}.nav-scroll a{white-space:nowrap;font-size:0.82rem;color:var(--muted);padding:0.3rem 0.65rem;border-radius:20px;transition:color 0.15s,background 0.15s}.nav-scroll a:hover,.nav-scroll a.active{color:var(--text);text-decoration:none;background:var(--surface2)}.page-wrap{max-width:780px;margin:0 auto;padding:3rem 1.5rem 6rem}.hero{padding:4rem 0 3rem;border-bottom:1px solid var(--border);margin-bottom:3rem}.eyebrow{display:inline-block;background:var(--surface2);border:1px solid rgba(240,98,146,0.3);color:var(--acc2);font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.3rem 0.85rem;border-radius:20px;margin-bottom:1.25rem}.hero h1 span{background:linear-gradient(135deg,var(--acc2),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.lead{font-size:1.1rem;color:var(--muted);max-width:600px;margin-top:1rem}.callout{border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.75rem 0;border-left:4px solid}.callout-info{background:rgba(124,106,247,0.08);border-color:var(--accent)}.callout-warn{background:rgba(255,183,77,0.08);border-color:#ffb74d}.callout strong{display:block;margin-bottom:0.4rem;font-size:0.85rem;letter-spacing:0.05em;text-transform:uppercase}.callout-info strong{color:var(--accent)}.callout-warn strong{color:#ffb74d}.do-dont{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.75rem 0}.do-col,.dont-col{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem}.do-col{border-top:3px solid var(--acc4)}.dont-col{border-top:3px solid var(--acc2)}.do-col h4{color:var(--acc4);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.85rem}.dont-col h4{color:var(--acc2);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.85rem}.do-col li,.dont-col li{font-size:0.9rem;color:var(--muted)}.site-footer{margin-top:6rem;padding:2rem 1.5rem;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:0.85rem}@media(max-width:600px){.do-dont{grid-template-columns:1fr}.page-wrap{padding:2rem 1rem 5rem}.site-nav{padding:0 1rem}}</style>
+</head>
+<body>
+<div id="progress-bar"></div>
+<nav class="site-nav"><a href="index.html" class="logo">ref<span>.guide</span></a><div class="nav-scroll"><a href="index.html">Home</a><a href="engineering-basics.html">Eng Basics</a><a href="git-guide.html">Git</a><a href="code-review.html">Code Review</a><a href="ci-cd.html">CI/CD</a><a href="incident-response.html">Incidents</a><a href="system-design.html">System Design</a><a href="sql-basics.html">SQL</a><a href="data-modeling.html">Data Modeling</a><a href="analytics-basics.html">Analytics</a><a href="ab-testing.html">A/B Testing</a><a href="writing-for-engineers.html" class="active">Writing</a><a href="rfc-guide.html">RFCs</a><a href="postmortem-guide.html">Postmortems</a><a href="technical-docs.html">Tech Docs</a><a href="pm-basics.html">PM Basics</a><a href="roadmapping.html">Roadmapping</a><a href="user-research.html">User Research</a><a href="metrics-guide.html">Metrics</a><a href="prioritisation.html">Prioritisation</a><a href="devops-basics.html">DevOps</a><a href="docker-basics.html">Docker</a><a href="kubernetes-intro.html">Kubernetes</a><a href="observability.html">Observability</a><a href="seo-basics.html">SEO</a><a href="web-performance.html">Web Perf</a><a href="accessibility-basics.html">A11y</a><a href="api-design.html">API Design</a><a href="engineering-career.html">Career</a><a href="agile-basics.html">Agile</a><a href="onboarding-guide.html">Onboarding</a><a href="security-basics.html">Security</a></div></nav>
+<div class="page-wrap">
+<div class="hero"><div class="eyebrow">Writing</div><h1>Writing for <span>Engineers</span></h1><p class="lead">Why engineers write badly, how to fix it, and the practical formats for docs, Slack messages, and RFCs that people actually read.</p></div>
+
+<h2>Why engineers write badly</h2>
+<p>It's not a skill gap. Most engineers write badly because they're writing for themselves: they know the context, they understand the constraints, and they unconsciously assume the reader does too. The result is writing that's dense, jargon-heavy, and skips straight to conclusions without establishing why those conclusions matter.</p>
+<p>The fix isn't "write more clearly" — it's to write for a specific person who doesn't have your context. Picture them. What do they already know? What do they need to understand to act on this? Start there.</p>
+
+<h2>The inverted pyramid</h2>
+<p>Journalists put the most important information first. Technical writers often do the opposite: they build up context, explain the background, walk through the process, and reveal the conclusion at the end. By paragraph four, most readers have stopped.</p>
+<p>Lead with the conclusion. Follow with the reasoning. End with context for anyone who wants the full picture. This feels backwards when you're writing — you spent hours thinking through the problem and you want to show your work. Resist it. The reader wants to know what to do, then why, then how you got there.</p>
+
+<blockquote>"The checkout API is down. We're rolling back v2.4.1. ETAs in 20 minutes." — this is a good incident update. It leads with the fact, states the action, sets expectations. Don't bury the lede.</blockquote>
+
+<h2>Slack messages that don't generate follow-ups</h2>
+<p>Most Slack messages that generate three follow-up questions could have answered those questions if the sender had paused for 60 seconds before hitting send.</p>
+<ul>
+<li>State what you need, not just the situation. "FYI the build is broken" gives someone information but no action. "The build is broken on main — can you take a look, or should I?" has a clear ask.</li>
+<li>Async questions: include the context someone needs to answer without asking you a clarifying question. Yes, this takes longer to write. It saves more time overall.</li>
+<li>Long threads: when a thread has gone past eight messages without resolution, summarise the current state and the open question at the top of a new message. Don't make people read the whole thread to understand where things stand.</li>
+</ul>
+
+<h2>When to write a doc vs send a message vs call a meeting</h2>
+<ul>
+<li><strong>Slack message</strong>: time-sensitive, low-stakes, quick question, status update. Ephemeral by design.</li>
+<li><strong>Doc or RFC</strong>: decision that will outlast the conversation, design that others need to review, process that new team members will need to read. Persistent by design.</li>
+<li><strong>Meeting</strong>: when the async back-and-forth has reached three rounds without convergence, or when emotional dynamics make text the wrong medium. Not the default for anything that could be a doc.</li>
+</ul>
+
+<div class="callout callout-warn"><strong>The documentation trap</strong>
+Writing a doc doesn't mean it will be read. A 4,000-word RFC that requires 45 minutes of careful reading will get skimmed or ignored by everyone except the people who already agree with you. Write the shortest version that contains the necessary information. Use headers. Front-load your conclusions. If someone can't get the gist in 2 minutes, most of them won't.</div>
+
+<h2>Writing good commit messages and PR descriptions</h2>
+<p>A commit message is a gift to your future self at 11pm trying to understand why this line changed. "fix bug" is not a gift. "fix race condition in payment processing when two sessions submit simultaneously" is.</p>
+<p>PR descriptions should answer: what does this change do, why is it being made, and what should the reviewer pay particular attention to? A PR description that is literally the ticket title copy-pasted is not a description.</p>
+
+<div class="do-dont">
+<div class="do-col"><h4>Writing habits worth building</h4><ul>
+<li>Lead with the most important thing</li>
+<li>State your ask explicitly</li>
+<li>Edit out half your adjectives</li>
+<li>Read it aloud before sending</li>
+<li>Give docs a summary section at the top</li>
+</ul></div>
+<div class="dont-col"><h4>Patterns that slow teams down</h4><ul>
+<li>"Just wanted to check in on..." — delete this opener always</li>
+<li>Passive voice hiding ownership ("a decision was made")</li>
+<li>Hedge stacking ("it might perhaps be worth considering")</li>
+<li>Context dumps with no clear ask</li>
+<li>Documenting things nobody will look up</li>
+</ul></div>
+</div>
+</div>
+<footer class="site-footer"><p>ref.guide &mdash; <a href="index.html">back to home</a></p></footer>
+<script>window.addEventListener('scroll',()=>{const e=document.getElementById('progress-bar');if(!e)return;const h=document.documentElement;e.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%'});</script>
+</body></html>
